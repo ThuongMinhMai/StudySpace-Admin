@@ -1,5 +1,5 @@
 import background from '@/assets/background1.jpg'
-import Icon from '@/assets/LogoMini.png'
+import Icon from '@/assets/LOGO SS 04.png'
 import { useAuth } from '@/auth/AuthProvider'
 import { TSignInSchema, signInSchema } from '@/components/Schema/LoginSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -62,21 +62,21 @@ function SignInForm() {
           {/* <div className='relative z-20 flex items-center text-lg font-medium'>
           <img alt='logo' className='h-16' src={Logo} />
         </div> */}
-         <div className='flex-1 flex items-center justify-center bg-gray-200 lg:block md:block hidden'>
-              <img
-                src='https://p16-va.lemon8cdn.com/tos-alisg-v-a3e477-sg/oQADpfn1Q8ETg9C1MADQAk9ABQiBbtxYkGeNgN~tplv-tej9nj120t-origin.webp'
-                alt='Sign Up'
-                className='lg:max-w-full lg:h-auto h-full w-auto object-cover'
-              />
-            </div>
+          <div className='absolute inset-0 bg-left-top bg-cover overflow-hidden'>
+            <img
+              src='https://p16-va.lemon8cdn.com/tos-alisg-v-a3e477-sg/oQADpfn1Q8ETg9C1MADQAk9ABQiBbtxYkGeNgN~tplv-tej9nj120t-origin.webp'
+              alt='Sign Up'
+              className='lg:max-w-full lg:h-auto h-full w-auto object-cover'
+            />
+          </div>
         </div>
         <div className='py-4 lg:p-8'>
           <div className='py-4 lg:p-8'>
             <div className='mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]'>
               <div className='flex flex-col space-y-2 text-center'>
-                <h1 className='text-2xl font-semibold tracking-tight'>Đăng nhập</h1>
+                <h1 className='text-2xl font-semibold tracking-tight'>Sign In</h1>
                 <p className='text-sm text-muted-foreground'>
-                  để tiếp tục với <img className='inline w-5 h-5 mb-1' alt='icon' src={Icon} /> The Bus Journey
+                to continue with <img className='inline w-5 h-5 mb-3' alt='icon' src={Icon} /> StudySpace
                 </p>
               </div>
               <>
@@ -112,6 +112,7 @@ function SignInForm() {
                     <Button disabled={loading} type='submit' className='w-full text-white'>
                       {loading && <Loader className='w-4 h-4 animate-spin' />} Đăng nhập
                     </Button>
+                  
                   </form>
                 </Form>
               </>
