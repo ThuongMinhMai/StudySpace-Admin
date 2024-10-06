@@ -11,36 +11,40 @@ import { Button } from '../atoms/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../atoms/ui/form'
 import { Input } from '../atoms/ui/input'
 import { useToast } from '../atoms/ui/use-toast'
+import { RadioGroup, RadioGroupItem } from '../atoms/ui/radio-group'
+
 function SignInForm() {
-  const { login, loading } = useAuth()
+  const { loginSupplier, loginAdmin, loading } = useAuth()
   const navigate = useNavigate()
   const { toast } = useToast()
   const form = useForm<TSignInSchema>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: '',
-      password: ''
+      password: '',
+      role: 'supplier' // Default to supplier
     }
   })
+
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isLoggingGoogle, setIsLoggingGoogle] = useState(false)
 
   async function onSubmit(values: TSignInSchema) {
-    // console.log('value loig', values)
-    // setIsSubmitting(true)
+    setIsSubmitting(true)
     try {
-      // await new Promise((resolve) => setTimeout(resolve, 1000));
-      await login(values.email, values.password)
+      if (values.role === 'admin') {
+        await loginAdmin(values.email, values.password)
+      } else {
+        await loginSupplier(values.email, values.password)
+      }
 
-      // navigate("/home")
-      // console.log('vo ne')
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // Navigate to home or dashboard
+      // navigate('/home')
     } catch (error: any) {
-      const messageError = error.response.data.message
+      const messageError = error.response?.data?.message || 'Unknown error'
       toast({
         variant: 'destructive',
-        description: messageError || 'Không rõ nguyên nhân',
-        title: 'Lỗi đăng nhập'
+        description: messageError,
+        title: 'Login Error'
       })
       if (messageError === 'Email chưa được xác thực.') {
         navigate(`/auth/${error.response.data.userId}/verify-email?email=${error.response.data.email}`)
@@ -53,15 +57,6 @@ function SignInForm() {
     <main>
       <div className='container relative grid flex-col items-center justify-center min-h-screen lg:max-w-none lg:grid-cols-2 lg:px-0'>
         <div className='relative flex-col hidden h-full p-10 text-white bg-muted dark:border-r lg:flex'>
-          {/* <div
-            style={{
-              backgroundImage: `url(${background})`
-            }}
-            className='absolute inset-0 bg-left-top bg-cover'
-          /> */}
-          {/* <div className='relative z-20 flex items-center text-lg font-medium'>
-          <img alt='logo' className='h-16' src={Logo} />
-        </div> */}
           <div className='absolute inset-0 bg-left-top bg-cover overflow-hidden'>
             <img
               src='https://p16-va.lemon8cdn.com/tos-alisg-v-a3e477-sg/oQADpfn1Q8ETg9C1MADQAk9ABQiBbtxYkGeNgN~tplv-tej9nj120t-origin.webp'
@@ -76,7 +71,7 @@ function SignInForm() {
               <div className='flex flex-col space-y-2 text-center'>
                 <h1 className='text-2xl font-semibold tracking-tight'>Sign In</h1>
                 <p className='text-sm text-muted-foreground'>
-                to continue with <img className='inline w-5 h-5 mb-3' alt='icon' src={Icon} /> StudySpace
+                  to continue with <img className='inline w-5 h-5 mb-3' alt='icon' src={Icon} /> StudySpace
                 </p>
               </div>
               <>
@@ -95,7 +90,6 @@ function SignInForm() {
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={form.control}
                       name='password'
@@ -109,10 +103,33 @@ function SignInForm() {
                         </FormItem>
                       )}
                     />
+
+                    <FormField
+                      control={form.control}
+                      name='role'
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Login As</FormLabel>
+                          <FormControl>
+                            <RadioGroup onValueChange={field.onChange} value={field.value} className='flex space-x-4'>
+                              <div className='flex items-center space-x-2'>
+                                <RadioGroupItem value='supplier' id='supplier' />
+                                <label htmlFor='supplier'>Supplier</label>
+                              </div>
+                              <div className='flex items-center space-x-2'>
+                                <RadioGroupItem value='admin' id='admin' />
+                                <label htmlFor='admin'>Admin</label>
+                              </div>
+                            </RadioGroup>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
                     <Button disabled={loading} type='submit' className='w-full text-white'>
                       {loading && <Loader className='w-4 h-4 animate-spin' />} Đăng nhập
                     </Button>
-                  
                   </form>
                 </Form>
               </>
@@ -123,4 +140,5 @@ function SignInForm() {
     </main>
   )
 }
+
 export default SignInForm

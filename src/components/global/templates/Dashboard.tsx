@@ -9,12 +9,13 @@ import { HandCoins, Ticket, Building2, UserRound } from 'lucide-react'
 import { fetchDashboardAdmin } from '@/apis/dashboardAPI'
 import Loading from '../molecules/Loading'
 import { formatPrice } from '@/lib/utils'
+import Loader from '../molecules/Loader'
 
 export default function Home() {
   const { data, isLoading } = fetchDashboardAdmin();
   const today = new Date();
   const title = `Dashboard tháng ${today.getMonth() + 1}`;
-  if (isLoading) return <Loading />;
+  if (isLoading) return <Loader />;
   return (
     <div className='flex flex-col gap-5  w-full'>
       <PageTitle title={title} />

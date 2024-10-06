@@ -1,13 +1,13 @@
 import axios from "axios"
 
-const busAPI = axios.create({
-    baseURL: 'https://ticket-booking-swd392-project.azurewebsites.net',
-    timeout: 50000,
+const studySpaceAPI = axios.create({
+    baseURL: 'https://api-ss.diavan-valuation.asia',
+    timeout: 10000,
     headers: {
       "Content-Type": "application/json"
     }
   })
-  busAPI.interceptors.request.use(
+  studySpaceAPI.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
         if (token) {
@@ -37,4 +37,4 @@ const busAPI = axios.create({
 // 		return Promise.reject(error)
 // 	},
 // )
-export default busAPI
+export default studySpaceAPI

@@ -21,7 +21,7 @@ const TripPage = React.lazy(() => import('./components/global/templates/Trips'))
 const RoutePage = React.lazy(() => import('./components/global/templates/Routes'))
 const StationPage = React.lazy(() => import('./components/global/templates/Stations'))
 const ServicePage = React.lazy(() => import('./components/global/templates/Services'))
-const DashboardManager = React.lazy(() => import('./components/global/templates/DashboardManager'))
+const DashboardStore = React.lazy(() => import('./components/global/templates/DashboardStore'))
 function App() {
   const [loading, setLoading] = useState<boolean>(true)
   const { user } = useAuth()
@@ -41,12 +41,12 @@ function App() {
   // }, [loading, user, navigate])
   return loading ? (
     <div className='h-screen w-screen flex justify-center items-center'>
-      <Loading />
+      <Loader />
     </div>
   ) : (
     <Routes>
       <Route element={<RouteLayout />}>
-      <Route
+        <Route
           path='/home/admin'
           element={
             <AdminProtectedRoute>
@@ -57,12 +57,12 @@ function App() {
           }
         />
         <Route
-          path='/home/manager'
+          path='/home/store'
           element={
             <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}>
-                <DashboardManager />
-              </Suspense>
+            <Suspense fallback={<Loader />}>
+              <DashboardStore />
+            </Suspense>
             </ManagerProtectedRoute>
           }
         />
@@ -158,10 +158,9 @@ function App() {
           </ProtectedRoute>
         }
       />
-      
+
       <Route path='/not-authorized' element={<NotAuthorized />} />
       <Route path='*' element={<NotFoundPage />} />
-
     </Routes>
   )
 }

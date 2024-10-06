@@ -1,5 +1,5 @@
 import { useAuth } from '@/auth/AuthProvider'
-import busAPI from '@/lib/busAPI'
+import studySpaceAPI from '@/lib/studySpaceAPI'
 import { Button as ButtonAnt, ConfigProvider, Form, Input, message, Modal, Spin } from 'antd'
 import React, { useEffect, useState } from 'react'
 import TemplateDisplay from '../organisms/TemplateDisplay'
@@ -15,7 +15,7 @@ function Template() {
   const [form] = Form.useForm()
   const fetchData = async () => {
     try {
-      const response = await busAPI.get(`company-management/managed-companies/${user?.CompanyID}/templates`)
+      const response = await studySpaceAPI.get(`company-management/managed-companies/${user?.CompanyID}/templates`)
       setTemplates(response.data.Result)
     } catch (error) {
       message.error('Không thể tải chuyến xe mẫu')
@@ -31,7 +31,7 @@ function Template() {
 
   const handleCreateTemplate = async (values: any) => {
     try {
-      await busAPI.post(`company-management/managed-companies/${user?.CompanyID}/templates`, values)
+      await studySpaceAPI.post(`company-management/managed-companies/${user?.CompanyID}/templates`, values)
       message.success('Tạo chuyến xe mẫu thành công')
       setIsModalVisible(false)
       form.resetFields()
@@ -51,7 +51,7 @@ function Template() {
   }
 
   const handleAddTemplateSuccess = (newData: any) => {
-    setTemplates((prevTemplates) => [...prevTemplates, newData])
+    // setTemplates((prevTemplates) => [...prevTemplates, newData])
   }
   if (loading) {
     return <Spin size='large' />

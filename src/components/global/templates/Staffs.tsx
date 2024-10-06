@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../atoms/ui/avatar'
 import { Check, X } from 'lucide-react'
 import { Select, SelectContent, SelectItem,SelectTrigger, SelectValue } from '../atoms/ui/select'
 import { Badge } from '../atoms/ui/badge'
-import busAPI from '@/lib/busAPI'
+import studySpaceAPI from '@/lib/studySpaceAPI'
 import { toast } from '../atoms/ui/use-toast'
 import { useSearchParams } from 'react-router-dom'
 import ListStaff from '../organisms/StaffList'
@@ -103,7 +103,7 @@ function Staff() {
   
   const changeRole = async (userId: string, role: Role) => {
     try {
-      await busAPI.put(`/api/users/${userId}/role`, { role })
+      await studySpaceAPI.put(`/api/users/${userId}/role`, { role })
 
       // toast({
       //   variant: 'success',

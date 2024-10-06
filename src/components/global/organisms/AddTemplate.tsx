@@ -16,7 +16,7 @@ import {
   message
 } from 'antd'
 import { toast } from '../atoms/ui/use-toast'
-import busAPI from '@/lib/busAPI'
+import studySpaceAPI from '@/lib/studySpaceAPI'
 import { useAuth } from '@/auth/AuthProvider'
 import { UploadOutlined } from '@ant-design/icons'
 import { Loader, Minus, Plus } from 'lucide-react'
@@ -83,7 +83,7 @@ const AddTemplate: React.FC<AddTripModalProps> = ({ isModalVisible, handleOk, ha
       })
       const fetchRoutes = async () => {
         try {
-          const { data } = await busAPI.get<Route[]>(
+          const { data } = await studySpaceAPI.get<Route[]>(
             `route-management/managed-routes/company-routes/${user?.CompanyID}`
           )
           setRoutes(data)
@@ -99,7 +99,7 @@ const AddTemplate: React.FC<AddTripModalProps> = ({ isModalVisible, handleOk, ha
 
       const fetchStaff = async () => {
         try {
-          const { data } = await busAPI.get<Staff[]>(`user-management/managed-users/staff/${user?.CompanyID}`)
+          const { data } = await studySpaceAPI.get<Staff[]>(`user-management/managed-users/staff/${user?.CompanyID}`)
           setStaff(data)
         } catch (error) {
           toast({
@@ -112,7 +112,7 @@ const AddTemplate: React.FC<AddTripModalProps> = ({ isModalVisible, handleOk, ha
       }
       const fetchUtilities = async () => {
         try {
-          const { data } = await busAPI.get('utility-management/managed-utilities') // Replace with the correct path
+          const { data } = await studySpaceAPI.get('utility-management/managed-utilities') // Replace with the correct path
           setUtilities(data) // Set the fetched utilities
         } catch (error) {
           toast({
@@ -126,7 +126,7 @@ const AddTemplate: React.FC<AddTripModalProps> = ({ isModalVisible, handleOk, ha
 
       const fetchTicketTypes = async () => {
         try {
-          const { data } = await busAPI.get('trip-management/managed-trips/ticket-type') // Replace with the correct path
+          const { data } = await studySpaceAPI.get('trip-management/managed-trips/ticket-type') // Replace with the correct path
           setTicketTypes(data) // Set the fetched ticket types
         } catch (error) {
           toast({
@@ -229,7 +229,7 @@ const AddTemplate: React.FC<AddTripModalProps> = ({ isModalVisible, handleOk, ha
       console.log(`${key}: ${value}`)
     }
     setLoading(true)
-    const response =await busAPI
+    const response =await studySpaceAPI
       .post('trip-management/managed-trips', formData)
       .then((response) => {
         setImageFiles([]) // Reset the uploaded images

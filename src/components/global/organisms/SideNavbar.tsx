@@ -72,7 +72,7 @@ export default function SideNavbar({ isAdmin }: SideNavbarProps) {
   const managerLinks = [
     {
       title: 'Dashboard',
-      href: '/home/manager',
+      href: '/home/store',
       icon: LayoutDashboard,
       variant: 'default' as 'default' | 'ghost'
     },

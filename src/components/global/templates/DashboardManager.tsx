@@ -13,7 +13,7 @@ import PopularTripCard from '../organisms/PopularTripCard'
 
 export default function DashboardManager() {
   const { user } = useAuth()
-  const { data, isLoading } = fetchDashboardManager(user?.CompanyID || '')
+  const { data, isLoading } = fetchDashboardManager(user?.userID || 0)
 
   if (isLoading) return <Loading />
   return (

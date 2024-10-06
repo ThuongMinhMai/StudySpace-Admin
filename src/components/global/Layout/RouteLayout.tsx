@@ -15,6 +15,7 @@ import { useAuth } from '@/auth/AuthProvider'
 
 function RouteLayout() {
   const { user, loading, logout } = useAuth()
+  console.log("user", user)
   // console.log('user ở layout', user)
   const [isAdmin, setIsAdmin] = useState<boolean>(false)
   // const {userDetail} = useAuth();
@@ -22,7 +23,7 @@ function RouteLayout() {
 
   useEffect(() => {
     if (user) {
-      setIsAdmin(user.RoleName === 'Admin')
+      setIsAdmin(user.roleName === 'Admin')
     }
   }, [user])
   if (loading) {
@@ -65,14 +66,14 @@ function RouteLayout() {
             <DropdownMenuTrigger asChild>
               <img
                 className='h-12 w-12 cursor-pointer rounded-full object-cover'
-                src={user?.Avatar || 'https://api.dicebear.com/8.x/adventurer/svg?seed=Oliver'}
+                src={user?.avaURL || 'https://api.dicebear.com/8.x/adventurer/svg?seed=Oliver'}
                 alt='avatar'
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent className='w-fit'>
-              <DropdownMenuLabel className='py-0'>{user?.UserName}</DropdownMenuLabel>
+              <DropdownMenuLabel className='py-0'>{user?.name}</DropdownMenuLabel>
               <DropdownMenuItem className='py-0 text-xs' disabled>
-                {user?.Email}
+                {user?.email}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <Link to='/profile'>
