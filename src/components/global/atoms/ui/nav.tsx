@@ -53,7 +53,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                         size: "icon"
                       }),
                       "h-10 w-10",
-                      link.href === pathName && "text-white bg-[#F9802D]",
+                      link.href === pathName && "text-white bg-primary",
                       link.variant === "default" &&
                         "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
                     )}
@@ -83,7 +83,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                     variant: link.href === pathName ? "default" : "ghost",
                     size: "lg"
                   }),
-                  link.href === pathName && "text-white bg-[#F9802D]",
+                  link.href === pathName && "text-white bg-primary",
 
                   link.variant === "default" &&
                     "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",

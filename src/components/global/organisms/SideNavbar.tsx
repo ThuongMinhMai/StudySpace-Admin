@@ -123,7 +123,7 @@ export default function SideNavbar({ isAdmin }: SideNavbarProps) {
             className=' rounded-full p-2 transition-transform duration-300'
             style={{ transform: isCollapsed ? 'rotate(180deg)' : 'rotate(0deg)' }}
           >
-            <ChevronRight className='text-[#F9802D]' />
+            <ChevronRight className='text-primary' />
           </Button>
         </div>
       )}
