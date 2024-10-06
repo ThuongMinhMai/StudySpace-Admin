@@ -3,7 +3,7 @@ function Loader() {
   return (
     <div className='flex min-h-screen items-center justify-center'>
       <svg
-        className='w-16 h-16 animate-spin text-orange-200'
+        className='w-16 h-16 animate-spin text-green-200'
         viewBox='0 0 64 64'
         fill='none'
         xmlns='http://www.w3.org/2000/svg'

@@ -102,57 +102,54 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Function for fetching user data for Supplier role
 
   // Decode user details from JWT
-//   useEffect(() => {
-//     const fetchUser = async () => {
-//       if (token) {
-//         try {
-//           // Decode the JWT to get user data
-//           const decodedToken: any = jwtDecode(token)
-//           const roleName = decodedToken.RoleName // Assuming your JWT has RoleName
-//           console.log('ơ dat', decodedToken)
-//           const decodedTokens = jwtDecode(token);
-// console.log(decodedTokens); // Check if roleName exists here
-//           setUser({
-//             userID: decodedToken.UserID,
-//             name: decodedToken.FullName,
-//             email: decodedToken.Email,
-//             phone: decodedToken.PhoneNumber,
-//             address: decodedToken.Address,
-//             gender: decodedToken.Gender,
-//             roleName: roleName,
-//             avaURL: decodedToken.Avatar
-//           })
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (token) {
+        try {
+          // Decode the JWT to get user data
+          const decodedToken: any = jwtDecode(token)
+          const roleName = decodedToken.RoleName // Assuming your JWT has RoleName
+          console.log('ơ dat', decodedToken)
 
-//           // Fetch user detail based on role if needed
-//           let userDetailResponse
-//           switch (roleName) {
-//             case 'Store':
-//               userDetailResponse = await studySpaceAPI.post('/Stores/token-decode', {
-//                 token: token
-//               })
-//               break
-//             case 'Admin':
-//               userDetailResponse = await studySpaceAPI.post('/Accounts/token-decode', {
-//                 token: token
-//               })
-//               break
-//             // Add additional cases for other roles here
-//             default:
-//               console.warn(`No API endpoint defined for role: ${roleName}`)
-//               return
-//           }
+          const decodedTokens = jwtDecode(token)
+          console.log(decodedTokens) // Check if roleName exists here
+          const result = {
+            userID: decodedToken.nameid || 'Unknown',
+            name: decodedToken.given_name || 'Unknown',
+            email: decodedToken.email || 'Unknown',
+            phone: decodedToken.PhoneNumber || 'Unknown',
+            address: decodedToken.Address || 'Unknown',
+            gender: decodedToken.Gender || 'unknown',
+            roleName: decodedToken.RoleName,
+            avaURL: decodedToken.Avatar || ''
+          }
 
-//           setUserDetail(userDetailResponse.data)
-//         } catch (error) {
-//           localStorage.removeItem('token')
-//           console.error('Error decoding token:', error)
-//           toast.error('Failed to fetch user information. Please login again.')
-//         }
-//       }
-//     }
+          // Fetch user detail based on role if needed
+          let userDetailResponse
+          switch (result.roleName) {
+            case 'Store':
+              userDetailResponse = await studySpaceAPI.post('/Stores/token-decode', token)
+              break
+            case 'Admin':
+              userDetailResponse = await studySpaceAPI.post('/Accounts/token-decode', token)
+              break
+            // Add additional cases for other roles here
+            default:
+              console.warn(`No API endpoint defined for role: ${roleName}`)
+              return
+          }
+          console.log('hhe', userDetailResponse.data)
+          setUser(userDetailResponse.data)
+        } catch (error) {
+          localStorage.removeItem('token')
+          console.error('Error decoding token:', error)
+          toast.error('Failed to fetch user information. Please login again.')
+        }
+      }
+    }
 
-//     fetchUser()
-//   }, [token])
+    fetchUser()
+  }, [token])
   const fetchSupplierData = async (newToken: any) => {
     try {
       const response = await studySpaceAPI.post<User>('/Stores/token-decode', newToken)
@@ -208,7 +205,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     } catch (error) {
       setLoading(false)
       toast.error('Email hoặc mật khẩu không đúng')
-    }finally {
+    } finally {
       setLoading(false)
     }
   }
