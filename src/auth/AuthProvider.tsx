@@ -33,6 +33,8 @@ interface User {
   gender: string | null
   roleName: string
   avaURL: string
+  isPackaged:string
+
 }
 interface IUserDetail {
   UserID: string

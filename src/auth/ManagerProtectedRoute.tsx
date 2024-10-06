@@ -18,7 +18,10 @@ const ManagerProtectedRoute: React.FC<ManagerProtectedRouteProps> = ({ children 
     // Redirect to not authorized page if user is not a manager or admin
     return <Navigate to='/not-authorized' />
   }
-
+  if (user.roleName==="Store" && user.isPackaged === "False") {
+    // Redirect to register package page if user does not have a package
+    return <Navigate to='/register-package' />
+  }
   return <>{children}</>
 }
 
