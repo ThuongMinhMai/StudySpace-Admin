@@ -41,7 +41,8 @@ export interface IStoreDetail {
   rooms: IRoomDetail[]; 
   storePackages: IStorePackage[];
   transactions: ITransaction[]; 
-  avatarUrl?:string
+  avatarUrl?:string;
+  roleName?:string
 }
 
 export interface IAdminDetail {
@@ -58,6 +59,10 @@ export interface IAdminDetail {
   wallet: number;
   avatarUrl: string;
   thumbnailUrl?:string;
+  description?:string;
+  openTime?:string;
+  closeTime?:string;
+  isOverNight?:boolean
 }
 
 interface IRoomDetail {

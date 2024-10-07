@@ -122,10 +122,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             phone: decodedToken.PhoneNumber || 'Unknown',
             address: decodedToken.Address || 'Unknown',
             gender: decodedToken.Gender || 'unknown',
-            roleName: decodedToken.RoleName,
+            roleName: decodedToken.RoleName ||decodedToken.role,
             avaURL: decodedToken.Avatar || ''
           }
-
+console.log("decode", result)
           // Fetch user detail based on role if needed
           let userDetailResponse
           switch (result.roleName) {

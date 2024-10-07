@@ -13,6 +13,7 @@ import ProfilePage from './components/global/templates/ProfilePage'
 import Template from './components/global/templates/Template'
 import RegisterPackage from './components/global/organisms/RegisterPackage'
 import ProtectPackageRegister from './auth/ProtectPackageRegister'
+import ProtectProfile from './auth/ProtectProfile'
 const RouteLayout = React.lazy(() => import('./components/global/Layout/RouteLayout'))
 const UsersPage = React.lazy(() => import('./components/global/templates/Users'))
 const CompaniesPage = React.lazy(() => import('./components/global/templates/Companies'))
@@ -150,7 +151,14 @@ function App() {
             </ManagerProtectedRoute>
           }
         />
-        <Route path='/profile' element={<ProfilePage />} />
+        <Route
+          path='/profile'
+          element={
+            <ProtectProfile>
+              <ProfilePage />
+            </ProtectProfile>
+          }
+        />
       </Route>
       <Route
         path='/register-package'
