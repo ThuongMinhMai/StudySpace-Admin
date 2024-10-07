@@ -48,25 +48,25 @@ export default function SideNavbar({ isAdmin }: SideNavbarProps) {
       variant: 'default' as 'default' | 'ghost'
     },
     {
-      title: 'Store',
+      title: 'Cửa hàng',
       href: '/stores',
       icon: Store ,
       variant: 'ghost' as 'default' | 'ghost'
     },
     {
-      title: 'Room',
+      title: 'Quản lí phòng',
       href: '/allRooms',
       icon: DoorOpen ,
       variant: 'ghost' as 'default' | 'ghost'
     },
     {
-      title: 'Booking Management',
+      title: 'Quản lý đặt chỗ',
       href: '/bookingAll',
       icon: FileBox,
       variant: 'default' as 'default' | 'ghost'
     },
     {
-      title: 'User Account',
+      title: 'Tài khoản người dùng',
       href: '/accounts',
       icon: UsersRound ,
       variant: 'ghost' as 'default' | 'ghost'
@@ -87,19 +87,19 @@ export default function SideNavbar({ isAdmin }: SideNavbarProps) {
       variant: 'default' as 'default' | 'ghost'
     },
     {
-      title: 'Room Management',
+      title: 'Quản lý phòng',
       href: '/roomStore',
       icon: DoorOpen,
       variant: 'default' as 'default' | 'ghost'
     },
     {
-      title: 'Booking Management',
+      title: 'Quản lý đặt chỗ',
       href: '/bookingStore',
       icon: FileBox,
       variant: 'default' as 'default' | 'ghost'
     },
     {
-      title: 'Amity Management',
+      title: 'Quản lí cơ sở vật chất',
       href: '/amities',
       icon: Presentation,
       variant: 'default' as 'default' | 'ghost'

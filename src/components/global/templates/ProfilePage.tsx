@@ -197,8 +197,8 @@ function ProfilePage() {
                   <div className='relative flex h-36 w-full justify-center rounded-xl bg-cover'>
                     <img
                       alt='banner'
-                      src='https://cdn.eva.vn/upload/4-2017/images/2017-12-20/1513760778-721-cover-1513760779-width1920height1113.jpg'
-                      className='absolute flex h-36  w-full object-cover justify-center rounded-xl bg-cover'
+                      src='https://cdn.prod.website-files.com/5f4a004f01308268d80d6e85/667085ef95151c9a4d5488bd_653000a337042e7bc6074ef8_modern%2520office-cafe-experience.png'
+                      className='absolute flex h-40  w-full object-cover justify-center rounded-xl bg-cover'
                     />
                     <div
                       {...getRootProps()}
@@ -231,27 +231,27 @@ function ProfilePage() {
 
                   <Form.Item
                     name='Name'
-                    label={<span className='font-medium'>Username</span>}
+                    label={<span className='font-medium'>Tên người dùng</span>}
                     rules={[{ required: true }]}
                   >
-                    <Input placeholder='Enter username' />
+                    <Input placeholder='Nhập tên người dùng' />
                   </Form.Item>
                  
                   <Form.Item
                     name='Address'
-                    label={<span className='font-medium'>Address</span>}
+                    label={<span className='font-medium'>Địa chỉ</span>}
                     rules={[{ required: true }]}
                   >
-                    <Input placeholder='Enter address' />
+                    <Input placeholder='Nhập địa chỉ' />
                   </Form.Item>
                   <Form.Item className='hidden' name='avatar' label='Avatar' />
 
                   <Form.Item
                     name='Phone'
-                    label={<span className='font-medium'>PhoneNumber</span>}
+                    label={<span className='font-medium'>Số điện thoại</span>}
                     rules={[{ required: true }, { validator: validatePhoneNumber }]}
                   >
-                    <Input placeholder='Enter phone number' />
+                    <Input placeholder='Nhập số điện thoại' />
                   </Form.Item>
                   <Form.Item
                     name='email'
@@ -266,31 +266,31 @@ function ProfilePage() {
                 </Button> */}
                   {data?.password && ( // Check if data.Password has a value
                     <Button type='link' className='mb-2 p-0 text-tertiary' onClick={handleTogglePasswordFields}>
-                      {showPasswordFields ? 'Hide password change' : 'Change password'}
+                      {showPasswordFields ? 'Ẩn đổi mật khẩu' : 'Đổi mật khẩu'}
                     </Button>
                   )}
                   <Form.Item
                     name='Password'
-                    label={<span className='font-medium'>Old Password</span>}
+                    label={<span className='font-medium'>Mật khẩu cũ</span>}
                     hidden={!showPasswordFields}
                   >
-                    <Input.Password placeholder='Enter old password' />
+                    <Input.Password placeholder='Nhập mật khẩu cũ' />
                   </Form.Item>
                   <Form.Item
                     name='NewPassword'
-                    label={<span className='font-medium'>New Password</span>}
+                    label={<span className='font-medium'>Mật khẩu mới</span>}
                     hidden={!showPasswordFields}
                   >
-                    <Input.Password placeholder='Enter new password' />
+                    <Input.Password placeholder='Nhập mật khẩu mới' />
                   </Form.Item>
 
                   <Form.Item
                     name='ConfirmPassword'
-                    label={<span className='font-medium'>Confirm New Password</span>}
+                    label={<span className='font-medium'>Xác nhận mật khẩu mới</span>}
                     rules={[{ validator: validateConfirmPassword }]}
                     hidden={!showPasswordFields}
                   >
-                    <Input.Password placeholder='Confirm new password' />
+                    <Input.Password placeholder='Xác nhận mật khẩu mới' />
                   </Form.Item>
                   <Form.Item className='mb-2 flex justify-center'>
                     <Button
@@ -300,7 +300,7 @@ function ProfilePage() {
                       disabled={!hasChanges}
                     >
                       {/* {loading && <Loading />} */}
-                      Update
+                      Cập nhật
                     </Button>
                   </Form.Item>
                 </div>
@@ -368,10 +368,10 @@ function ProfilePage() {
 
                   <Form.Item
                     name='Name'
-                    label={<span className='font-medium'>Store Name</span>}
+                    label={<span className='font-medium'>Tên cửa hàng</span>}
                     rules={[{ required: true }]}
                   >
-                    <Input placeholder='Store Name' />
+                    <Input placeholder='Tên cửa hàng' />
                   </Form.Item>
                   {/* <Form.Item
                     name='FullName'
@@ -382,42 +382,42 @@ function ProfilePage() {
                   </Form.Item> */}
                   <Form.Item
                     name='Address'
-                    label={<span className='font-medium'>Address</span>}
+                    label={<span className='font-medium'>Địa chỉ</span>}
                     rules={[{ required: true }]}
                   >
-                    <Input placeholder='Address' />
+                    <Input placeholder='Nhập địa chỉ' />
                   </Form.Item>
                   <Form.Item className='hidden' name='avatar' label='Avatar' />
                   <Row gutter={16}>
                     <Col span={12}>
                       <Form.Item
-                        label={<span className='font-medium'>Is Overnight Service Available?</span>}
+                        label={<span className='font-medium'>Có sẵn dịch vụ 24h?</span>}
                         name='IsOverNight'
-                        rules={[{ required: true, message: 'Please choose an option!' }]}
+                        rules={[{ required: true, message: 'Vui lòng chọn 1 lựa chọn!' }]}
                       >
                         <Radio.Group onChange={handleOverNightChange}>
-                          <Radio value={true}>Yes</Radio>
-                          <Radio value={false}>No</Radio>
+                          <Radio value={true}>Có</Radio>
+                          <Radio value={false}>Không</Radio>
                         </Radio.Group>
                       </Form.Item>
                     </Col>
 
                     <Col span={12}>
                       <Form.Item
-                        label={<span className='font-medium'>Description</span>}
+                        label={<span className='font-medium'>Mô tả</span>}
                         name='Description'
-                        rules={[{ required: true, message: 'Please input a description!' }]}
+                        rules={[{ required: true, message: 'Vui lòng nhập mô tả cửa hàng!' }]}
                       >
-                        <Input.TextArea placeholder='Enter a brief description' size='middle' rows={4} />
+                        <Input.TextArea placeholder='Nhập mô tả ngắn gọn' size='middle' rows={4} />
                       </Form.Item>
                     </Col>
                   </Row>
                   <Form.Item
                     name='Phone'
-                    label={<span className='font-medium'>PhoneNumber</span>}
+                    label={<span className='font-medium'>Số điện thoại</span>}
                     rules={[{ required: true }, { validator: validatePhoneNumber }]}
                   >
-                    <Input placeholder='PhoneNumber' />
+                    <Input placeholder='Nhập số điện thoại' />
                   </Form.Item>
                   <Form.Item
                     name='email'
@@ -429,9 +429,9 @@ function ProfilePage() {
                   <Row gutter={16}>
                     <Col span={12}>
                       <Form.Item
-                        label={<span className='font-medium'>Open Time</span>}
+                        label={<span className='font-medium'>Giờ mở cửa</span>}
                         name='OpenTime'
-                        rules={[{ required: true, message: 'Please select open time!' }]}
+                        rules={[{ required: true, message: 'Vui lòng chọn thời gian mở cửa!' }]}
                       >
                         <TimePicker className='w-full' format='HH:mm' disabled={data?.isOverNight} />
                       </Form.Item>
@@ -439,9 +439,9 @@ function ProfilePage() {
 
                     <Col span={12}>
                       <Form.Item
-                        label={<span className='font-medium'>Close Time</span>}
+                        label={<span className='font-medium'>Giờ đóng cửa</span>}
                         name='CloseTime'
-                        rules={[{ required: true, message: 'Please select close time!' }]}
+                        rules={[{ required: true, message: 'Vui lòng chọn thời gian đóng cửa!' }]}
                       >
                         <TimePicker className='w-full' format='HH:mm' disabled={data?.isOverNight} />
                       </Form.Item>
@@ -452,31 +452,31 @@ function ProfilePage() {
               </Button> */}
                   {data?.password && ( // Check if data.Password has a value
                     <Button type='link' className='mb-2 p-0 text-tertiary' onClick={handleTogglePasswordFields}>
-                      {showPasswordFields ? 'Hide password change' : 'Change password'}
+                      {showPasswordFields ? 'Ẩn đổi mật khẩu' : 'Đổi mật khẩu'}
                     </Button>
                   )}
                   <Form.Item
                     name='Password'
-                    label={<span className='font-medium'>Old Password</span>}
+                    label={<span className='font-medium'>Mật khẩu cũ</span>}
                     hidden={!showPasswordFields}
                   >
-                    <Input.Password placeholder='Enter old password' />
+                    <Input.Password placeholder='Nhập mật khẩu cũ' />
                   </Form.Item>
                   <Form.Item
                     name='NewPassword'
-                    label={<span className='font-medium'>New Password</span>}
+                    label={<span className='font-medium'>Mật khẩu mới</span>}
                     hidden={!showPasswordFields}
                   >
-                    <Input.Password placeholder='Enter new password' />
+                    <Input.Password placeholder='Nhập mật khẩu mới' />
                   </Form.Item>
 
                   <Form.Item
                     name='ConfirmPassword'
-                    label={<span className='font-medium'>Confirm New Password</span>}
+                    label={<span className='font-medium'>Xác nhận mật khẩu mới</span>}
                     rules={[{ validator: validateConfirmPassword }]}
                     hidden={!showPasswordFields}
                   >
-                    <Input.Password placeholder='Confirm new password' />
+                    <Input.Password placeholder='Xác nhận mật khẩu mới' />
                   </Form.Item>
                   <Form.Item className='mb-2 flex justify-center'>
                     <Button
@@ -486,7 +486,7 @@ function ProfilePage() {
                       disabled={!hasChanges}
                     >
                       {/* {loading && <Loading />} */}
-                      Update
+                      Cập nhật
                     </Button>
                   </Form.Item>
                 </div>

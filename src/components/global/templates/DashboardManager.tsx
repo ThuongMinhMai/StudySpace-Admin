@@ -4,7 +4,7 @@ import PageTitle from '@/components/global/organisms/PageTitle'
 // import Image from "next/image";
 import Card, { CardContent } from '@/components/global/organisms/Card'
 import { Bus, Ticket, Route, HandCoins } from 'lucide-react'
-import { fetchDashboardManager } from '@/apis/dashboardAPI'
+import { fetchDashboardStore } from '@/apis/dashboardAPI'
 import { useAuth } from '@/auth/AuthProvider'
 import Loading from '../molecules/Loading'
 import { formatPrice } from '@/lib/utils'
@@ -13,7 +13,7 @@ import PopularTripCard from '../organisms/PopularTripCard'
 
 export default function DashboardManager() {
   const { user } = useAuth()
-  const { data, isLoading } = fetchDashboardManager(user?.userID || 0)
+  const { data, isLoading } = fetchDashboardStore(user?.userID || 0)
 
   if (isLoading) return <Loading />
   return (

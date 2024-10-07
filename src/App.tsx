@@ -14,6 +14,7 @@ import Template from './components/global/templates/Template'
 import RegisterPackage from './components/global/organisms/RegisterPackage'
 import ProtectPackageRegister from './auth/ProtectPackageRegister'
 import ProtectProfile from './auth/ProtectProfile'
+import RoomStore from './components/global/templates/RoomStore'
 const RouteLayout = React.lazy(() => import('./components/global/Layout/RouteLayout'))
 const UsersPage = React.lazy(() => import('./components/global/templates/Users'))
 const CompaniesPage = React.lazy(() => import('./components/global/templates/Companies'))
@@ -71,67 +72,63 @@ function App() {
         />
 
         <Route
-          path='/users'
+          path='/stores'
           element={
             <AdminProtectedRoute>
-              <Suspense fallback={<Loader />}>
-                <UsersPage />
-              </Suspense>
+              <Suspense fallback={<Loader />}>{/* <UsersPage /> */}</Suspense>
             </AdminProtectedRoute>
           }
         />
         <Route
-          path='/companies'
+          path='/allRooms'
           element={
             <AdminProtectedRoute>
-              <Suspense fallback={<Loader />}>
-                <CompaniesPage />
-              </Suspense>
+              <Suspense fallback={<Loader />}>{/* <CompaniesPage /> */}</Suspense>
             </AdminProtectedRoute>
           }
         />
         <Route
-          path='/settings'
+          path='/bookingAll'
           element={
             <AdminProtectedRoute>
-              <Suspense fallback={<Loader />}>
-                <SettingsPage />
-              </Suspense>
+              <Suspense fallback={<Loader />}>{/* <SettingsPage /> */}</Suspense>
             </AdminProtectedRoute>
           }
         />
         <Route
-          path='/staffs'
+          path='/accounts'
+          element={
+            <AdminProtectedRoute>
+              <Suspense fallback={<Loader />}>{/* <SettingsPage /> */}</Suspense>
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path='/roomStore'
           element={
             <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}>
-                <StaffPage />
-              </Suspense>
+              <Suspense fallback={<Loader />}>{ <RoomStore /> }</Suspense>
             </ManagerProtectedRoute>
           }
         />
         <Route
-          path='/trips'
+          path='/bookingStore'
           element={
             <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}>
-                <TripPage />
-              </Suspense>
+              <Suspense fallback={<Loader />}>{/* <TripPage /> */}</Suspense>
             </ManagerProtectedRoute>
           }
         />
 
         <Route
-          path='/routes'
+          path='/amities'
           element={
             <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}>
-                <RoutePage />
-              </Suspense>
+              <Suspense fallback={<Loader />}>{/* <RoutePage /> */}</Suspense>
             </ManagerProtectedRoute>
           }
         />
-        <Route
+        {/* <Route
           path='/stations'
           element={
             <ManagerProtectedRoute>
@@ -140,8 +137,8 @@ function App() {
               </Suspense>
             </ManagerProtectedRoute>
           }
-        />
-        <Route
+        /> */}
+        {/* <Route
           path='/templates'
           element={
             <ManagerProtectedRoute>
@@ -150,7 +147,7 @@ function App() {
               </Suspense>
             </ManagerProtectedRoute>
           }
-        />
+        /> */}
         <Route
           path='/profile'
           element={

@@ -44,7 +44,7 @@ function SignInForm() {
       toast({
         variant: 'destructive',
         description: messageError,
-        title: 'Login Error'
+        title: 'Lỗi đăng nhập'
       })
       if (messageError === 'Email chưa được xác thực.') {
         navigate(`/auth/${error.response.data.userId}/verify-email?email=${error.response.data.email}`)
@@ -69,9 +69,9 @@ function SignInForm() {
           <div className='py-4 lg:p-8'>
             <div className='mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]'>
               <div className='flex flex-col space-y-2 text-center'>
-                <h1 className='text-2xl font-semibold tracking-tight'>Sign In</h1>
+                <h1 className='text-2xl font-semibold tracking-tight'>Đăng nhập</h1>
                 <p className='text-sm text-muted-foreground'>
-                  to continue with <img className='inline w-5 h-5 mb-3' alt='icon' src={Icon} /> StudySpace
+                  để tiếp tục với <img className='inline w-5 h-5 mb-3' alt='icon' src={Icon} /> StudySpace
                 </p>
               </div>
               <>
@@ -84,7 +84,7 @@ function SignInForm() {
                         <FormItem>
                           <FormLabel>Email</FormLabel>
                           <FormControl>
-                            <Input placeholder='Enter email ...' {...field} />
+                            <Input placeholder='Nhập email ...' {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -97,7 +97,7 @@ function SignInForm() {
                         <FormItem>
                           <FormLabel>Mật khẩu</FormLabel>
                           <FormControl>
-                            <Input type='password' placeholder='Enter password ...' {...field} />
+                            <Input type='password' placeholder='Nhập mật khẩu ...' {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -109,12 +109,12 @@ function SignInForm() {
                       name='role'
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Login As</FormLabel>
+                          <FormLabel>Đăng nhập với vai trờ</FormLabel>
                           <FormControl>
                             <RadioGroup onValueChange={field.onChange} value={field.value} className='flex space-x-4'>
                               <div className='flex items-center space-x-2'>
                                 <RadioGroupItem value='supplier' id='supplier' />
-                                <label htmlFor='supplier'>Supplier</label>
+                                <label htmlFor='supplier'>Nhà cung cấp</label>
                               </div>
                               <div className='flex items-center space-x-2'>
                                 <RadioGroupItem value='admin' id='admin' />

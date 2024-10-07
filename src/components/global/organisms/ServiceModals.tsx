@@ -20,7 +20,7 @@ import { formatPrice } from '@/lib/utils'
 import { EditServiceModal } from './EditServiceModal'
 import { UploadOutlined } from '@ant-design/icons'
 
-import busAPI from '@/lib/busAPI'
+import studySpaceAPI from '@/lib/studySpaceAPI'
 interface Service {
   Service_StationID: string
   ServiceID: string
@@ -178,7 +178,7 @@ export const AddServiceModal: React.FC<AddServiceModalProps> = ({ visible, onOk 
   const [options, setOptions] = useState([]);
   const fetchItems = async () => {
     try {
-      const response = await busAPI.get('service-management/managed-services')
+      const response = await studySpaceAPI.get('service-management/managed-services')
       const flattenedItems = response.data.flatMap((serviceType: any) =>
         serviceType.Services.map((service: any) => ({
           label: service.ServiceName,

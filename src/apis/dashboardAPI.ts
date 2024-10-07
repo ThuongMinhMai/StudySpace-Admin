@@ -2,7 +2,7 @@ import studySpace from "@/lib/studySpaceAPI";
 import { DashboardAdminProps, DashboardManagerProps } from "@/types";
 import { useQuery } from "@tanstack/react-query"
 
-export const fetchDashboardManager = (CompanyID: number) => {
+export const fetchDashboardStore = (CompanyID: number) => {
     return useQuery<DashboardManagerProps>({
         queryKey: ['dashboardManager', CompanyID],
         queryFn: async () => {
