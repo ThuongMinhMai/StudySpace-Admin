@@ -259,13 +259,13 @@ function ListStation() {
   return (
     <div className='flex h-full flex-1 flex-col'>
       <div className='flex justify-between'>
-        <h1 className='my-4 border-b pb-2 text-3xl font-semibold tracking-wider first:mt-0'>Danh sách trạm dừng</h1>
+        <h1 className='my-4 border-b pb-2 text-3xl font-semibold tracking-wider first:mt-0'>Danh sách phòng</h1>
         <Button
           className='flex justify-center items-center bg-white border-primary border-[1px] text-primary hover:bg-primary hover:text-white'
           onClick={handleAddStation}
         >
           <Plus className='w-6 mr-1' />
-          Thêm trạm dừng
+          Thêm phòng
         </Button>
       </div>
       <DataTable

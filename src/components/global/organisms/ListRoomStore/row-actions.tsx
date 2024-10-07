@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Row } from '@tanstack/react-table'
 import axios from 'axios'
 import { toast } from '../../atoms/ui/use-toast'
-import busAPI from '@/lib/busAPI'
+import studySpaceAPI from '@/lib/studySpaceAPI'
 import { Badge } from '../../atoms/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../atoms/ui/select'
 import { useAuth } from '@/auth/AuthProvider'
@@ -10,48 +10,73 @@ import { Dialog, DialogContent, DialogOverlay } from '../../atoms/ui/dialog'
 import { Button } from '@/components/global/atoms/ui/button'
 import { Loader } from 'lucide-react'
 
-interface DataTableRowActionsProps<TData extends Station> {
+interface DataTableRowActionsProps<TData extends Room> {
   // Add extends Route
   row: Row<TData>
-  handleStatusChange: (station: Station, status: string) => void;
+  handleStatusChange: (room: Room, status: string) => void;
 
 }
 
 // Define the interface for the Service
-interface Service {
-  Service_StationID:string
-	ServiceID: string;
-	Price: number;
-	Name: string;
-	ImageUrl: string;
-  }
+// interface Service {
+//   Service_StationID:string
+// 	ServiceID: string;
+// 	Price: number;
+// 	Name: string;
+// 	ImageUrl: string;
+//   }
   
-  // Define the interface for the ServiceType
-  interface ServiceType {
-	ServiceTypeID: string;
-	ServiceTypeName: string;
-	ServiceInStation: Service[];
-  }
+//   // Define the interface for the ServiceType
+//   interface ServiceType {
+// 	ServiceTypeID: string;
+// 	ServiceTypeName: string;
+// 	ServiceInStation: Service[];
+//   }
   
-  // Define the interface for the Station
-  interface Station {
-	StationID: string;
-	CityID: string;
-	CityName: string;
-	StationName: string;
-	Status: string;
-	ServiceTypeInStation: ServiceType[];
-  }
-export function DataTableRowActions<TData extends Station>({ row,handleStatusChange }: DataTableRowActionsProps<TData>) {
+//   // Define the interface for the Station
+//   interface Station {
+// 	StationID: string;
+// 	CityID: string;
+// 	CityName: string;
+// 	StationName: string;
+// 	Status: string;
+// 	ServiceTypeInStation: ServiceType[];
+//   }
+
+
+interface Amenity {
+  id: number;
+  name: string;
+  type: string;
+  status: boolean;
+  quantity: number;
+  description: string;
+}
+
+ interface Room {
+  roomId: number;
+  roomName: string;
+  storeName: string;
+  capacity: number;
+  pricePerHour: number;
+  description: string;
+  status: string;
+  area: number;
+  type: string;
+  image: string;
+  address: string;
+  amitiesInRoom: Amenity[];
+}
+export function DataTableRowActions<TData extends Room>({ row,handleStatusChange }: DataTableRowActionsProps<TData>) {
   const { user } = useAuth()
   // console.log('user o route', user)
   // const [routes, setRoutes] = useState<Station[]>([])
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedStation, setSelectedStation] = useState<Station | null>(null)
+  const [selectedStation, setSelectedStation] = useState<Room | null>(null)
   const [newStatus, setNewStatus] = useState<string>('')
   const [tempStatus, setTempStatus] = useState<{ [key: string]: string }>({
-    [row.original.StationID]: row.original.Status
+    [row.original.roomId]: row.original.status
   })
 
   // const handleStatusChange = (station: Station, status: string) => {
@@ -108,7 +133,7 @@ export function DataTableRowActions<TData extends Station>({ row,handleStatusCha
   return (
     <div>
       <Select
-        value={row.original.Status}
+        value={row.original.status}
         onValueChange={(value) => handleStatusChange(row.original, value)}
       >
         <SelectTrigger className='w-fit'>

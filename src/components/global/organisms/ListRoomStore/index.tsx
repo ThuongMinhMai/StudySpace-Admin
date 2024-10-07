@@ -13,7 +13,7 @@ import { Loader, Plus } from 'lucide-react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../atoms/ui/form'
 import { Input } from '../../atoms/ui/input'
 import { useForm } from 'react-hook-form'
-import { StationNameSchema } from '@/components/Schema/StationNameSchema'
+import { RoomNameSchema } from '@/components/Schema/StationNameSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { AddStationSchema } from '@/components/Schema/AddStationSchema'
@@ -50,19 +50,49 @@ interface City {
   Name: string
   Status: string
 }
+
+ interface Amenity {
+  id: number;
+  name: string;
+  type: string;
+  status: boolean;
+  quantity: number;
+  description: string;
+}
+
+ interface Room {
+  roomId: number;
+  roomName: string;
+  storeName: string;
+  capacity: number;
+  pricePerHour: number;
+  description: string;
+  status: string;
+  area: number;
+  type: string;
+  image: string;
+  address: string;
+  amitiesInRoom: Amenity[];
+}
+interface ApiResponse<T> {
+  data: T;
+}
 function ListStation() {
   const { user } = useAuth()
   const [stations, setStations] = useState<Station[]>([])
-  const [cities, setCities] = useState<City[]>([])
-  const [isLoadingStations, setIsLoadingStations] = useState(true)
+  const [rooms, setRooms] = useState<Room[]>([])
+  // const [cities, setCities] = useState<City[]>([])
+  const [isLoadingRooms, setIsLoadingRooms] = useState(true)
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedStation, setSelectedStation] = useState<Station | null>(null)
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null)
   const [newStatus, setNewStatus] = useState<string>('')
   const [tempStatus, setTempStatus] = useState<{ [key: string]: string }>({})
-  const [isEditing, setIsEditing] = useState<Station | null>(null)
+  const [isEditing, setIsEditing] = useState<Room | null>(null)
   const [isAdding, setIsAdding] = useState(false)
   const [isServiceModalVisible, setServiceModalVisible] = useState(false)
+  const [isAmentiModalVisible, setAmentiModalVisible] = useState(false)
   const [isAddServiceModalVisible, setAddServiceModalVisible] = useState(false)
   // const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   const handleUpdateService = (updatedService: any) => {
@@ -77,9 +107,9 @@ function ListStation() {
       )
     )
   }
-  const handleShowServiceModal = (station: Station) => {
-    setSelectedStation(station)
-    setServiceModalVisible(true)
+  const handleShowAmentiModal = (room: Room) => {
+    setSelectedRoom(room)
+    setAmentiModalVisible(true)
   }
 
   const handleShowAddServiceModal = () => {
@@ -94,51 +124,54 @@ function ListStation() {
     // Handle the logic for adding a service
     setAddServiceModalVisible(false)
   }
-  const formStation = useForm<z.infer<typeof StationNameSchema>>({
-    resolver: zodResolver(StationNameSchema),
+  const formRoom = useForm<z.infer<typeof RoomNameSchema>>({
+    resolver: zodResolver(RoomNameSchema),
     defaultValues: {
-      StationName: ''
+      roomName: ''
     }
   })
-  const formAddStation = useForm<z.infer<typeof AddStationSchema>>({
-    resolver: zodResolver(AddStationSchema),
-    defaultValues: {
-      StationName: '',
-      CityID: '',
-      CompanyID: user?.CompanyID || ''
-    }
-  })
+  // const formAddStation = useForm<z.infer<typeof AddStationSchema>>({
+  //   resolver: zodResolver(AddStationSchema),
+  //   defaultValues: {
+  //     StationName: '',
+  //     CityID: '',
+  //     CompanyID: user?.CompanyID || ''
+  //   }
+  // })
   useEffect(() => {
-    const fetchStations = async () => {
-      setIsLoadingStations(true)
+    const fetchRooms = async () => {
+      setIsLoadingRooms(true)
       try {
-        const { data } = await studySpaceAPI.get<Station[]>(`station-management/managed-stations/company/${user?.CompanyID}`)
-        setStations(data || [])
+        const response = await studySpaceAPI.get<ApiResponse<Room[]>>(`/Room/supplier/${user?.userID}`)
+
+        const result=response.data.data
+        console.log("rome ne", result)
+        setRooms(result || [])
         const initialStatuses: { [key: string]: string } = {}
-        data.forEach((station) => {
-          initialStatuses[station.StationID] = station.Status
+        result.forEach((room:Room) => {
+          initialStatuses[room.roomId] = room.status
         })
         setTempStatus(initialStatuses)
       } catch (error) {
         console.log(error)
       } finally {
-        setIsLoadingStations(false)
+        setIsLoadingRooms(false)
       }
     }
-    const fetchCities = async () => {
-      try {
-        const { data } = await studySpaceAPI.get<City[]>('city-management/managed-cities')
-        setCities(data || [])
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    fetchStations()
-    fetchCities()
-  }, [user?.CompanyID])
+    // const fetchCities = async () => {
+    //   try {
+    //     const { data } = await studySpaceAPI.get<City[]>('city-management/managed-cities')
+    //     setCities(data || [])
+    //   } catch (error) {
+    //     console.log(error)
+    //   }
+    // }
+    fetchRooms()
+    // fetchCities()
+  }, [user?.userID])
 
-  const handleStatusChange = (station: Station, status: string) => {
-    setSelectedStation(station)
+  const handleStatusChange = (room: Room, status: string) => {
+    setSelectedRoom(room)
     setNewStatus(status)
     setIsModalOpen(true)
   }
@@ -176,21 +209,21 @@ function ListStation() {
     }
   }
 
-  const handleEditName = (station: Station, currentName: string) => {
-    setIsEditing(station)
-    formStation.reset({ StationName: currentName })
+  const handleEditName = (room: Room, currentName: string) => {
+    setIsEditing(room)
+    formRoom.reset({ roomName: currentName })
   }
 
-  const confirmEditName = async (values: z.infer<typeof StationNameSchema>) => {
+  const confirmEditName = async (values: z.infer<typeof RoomNameSchema>) => {
     if (isEditing) {
       setIsLoadingUpdate(true)
       try {
-        await studySpaceAPI.put(`station-management/managed-stations/${isEditing.StationID}`, {
-          StationName: values.StationName
+        await studySpaceAPI.put(`station-management/managed-stations/${isEditing.roomName}`, {
+          roomName: values.roomName
         })
-        setStations(
-          stations.map((station) =>
-            station.StationID === isEditing.StationID ? { ...station, StationName: values.StationName } : station
+        setRooms(
+          rooms.map((room) =>
+            room.roomId === isEditing.roomId ? { ...room, roomName: values.roomName } : room
           )
         )
         toast({
@@ -219,7 +252,7 @@ function ListStation() {
   }
   const handleModalAddClose = () => {
     setIsAdding(false)
-    formAddStation.reset() // Reset form when closing
+    // formAddStation.reset() 
   }
   const confirmAddStation = async (values: z.infer<typeof AddStationSchema>) => {
     setIsLoadingUpdate(true)
@@ -227,7 +260,7 @@ function ListStation() {
       const { data } = await studySpaceAPI.post('station-management/managed-stations', {
         stationName: values.StationName,
         cityID: values.CityID,
-        companyID: user?.CompanyID
+        // companyID: user?.CompanyID
       })
       const newStation = { ...data, ServiceTypeInStation: [] }
       console.log('fjhhfjhkjg', newStation)
@@ -238,7 +271,7 @@ function ListStation() {
         description: 'Trạm dừng mới đã được thêm thành công'
       })
       setIsAdding(false)
-      formAddStation.reset()
+      // formAddStation.reset()
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const message = error.response.data.Result.message
@@ -252,27 +285,27 @@ function ListStation() {
       setIsLoadingUpdate(false)
     }
   }
-  if (isLoadingStations) {
+  if (isLoadingRooms) {
     return <TableSkeleton />
   }
 
   return (
     <div className='flex h-full flex-1 flex-col'>
       <div className='flex justify-between'>
-        <h1 className='my-4 border-b pb-2 text-3xl font-semibold tracking-wider first:mt-0'>Danh sách trạm dừng</h1>
+        <h1 className='my-4 border-b pb-2 text-3xl font-semibold tracking-wider first:mt-0'>Danh sách phòng</h1>
         <Button
           className='flex justify-center items-center bg-white border-primary border-[1px] text-primary hover:bg-primary hover:text-white'
           onClick={handleAddStation}
         >
           <Plus className='w-6 mr-1' />
-          Thêm trạm dừng
+          Thêm phòng
         </Button>
       </div>
       <DataTable
-        data={stations}
-        columns={columns(handleStatusChange, handleEditName, handleShowServiceModal)}
+        data={rooms}
+        columns={columns(handleStatusChange, handleEditName, handleShowAmentiModal)}
         Toolbar={DataTableToolbar}
-        rowString='Trạm'
+        rowString='Phòng'
       />
       {isModalOpen && (
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -280,7 +313,7 @@ function ListStation() {
           <DialogContent>
             <h3 className='text-lg font-medium leading-6 text-gray-900'>Xác nhận thay đổi trạng thái</h3>
             <div className='mt-2'>
-              <p>Bạn có chắc chắn muốn thay đổi trạng thái của trạm dừng này?</p>
+              <p>Bạn có chắc chắn muốn thay đổi trạng thái của phòng này?</p>
             </div>
             <div className='mt-4 flex justify-end space-x-2'>
               <Button variant='secondary' onClick={() => setIsModalOpen(false)}>

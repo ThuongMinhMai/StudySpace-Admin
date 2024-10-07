@@ -26,9 +26,9 @@ export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
     <div className='ml-2 mb-2 flex justify-between'>
       <div className='flex space-x-2 '>
         <Input
-          placeholder='Tìm tên trạm... '
-          value={(table.getColumn('StationName')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('StationName')?.setFilterValue(event.target.value)}
+          placeholder='Tìm tên phòng... '
+          value={(table.getColumn('roomName')?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn('roomName')?.setFilterValue(event.target.value)}
           className='h-8 w-[150px] lg:w-[250px]'
         />
 
