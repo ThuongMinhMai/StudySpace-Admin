@@ -20,7 +20,11 @@ import {
   HandPlatter,
   Users,
   UsersRound,
-  SwatchBook
+  SwatchBook,
+  Store ,
+  DoorOpen ,
+  FileBox,
+  Presentation
 } from 'lucide-react'
 import { Button } from '../atoms/ui/button'
 import { Handshake } from 'lucide-react'
@@ -44,21 +48,27 @@ export default function SideNavbar({ isAdmin }: SideNavbarProps) {
       variant: 'default' as 'default' | 'ghost'
     },
     {
-      title: 'Người dùng',
-      href: '/users',
-      icon: UsersRound,
+      title: 'Store',
+      href: '/stores',
+      icon: Store ,
       variant: 'ghost' as 'default' | 'ghost'
     },
     {
-      title: 'Công ty',
-      href: '/companies',
-      icon: Handshake,
+      title: 'Room',
+      href: '/allRooms',
+      icon: DoorOpen ,
       variant: 'ghost' as 'default' | 'ghost'
     },
     {
-      title: 'Cài đặt',
-      href: '/settings',
-      icon: Settings,
+      title: 'Booking Management',
+      href: '/bookingAll',
+      icon: FileBox,
+      variant: 'default' as 'default' | 'ghost'
+    },
+    {
+      title: 'User Account',
+      href: '/accounts',
+      icon: UsersRound ,
       variant: 'ghost' as 'default' | 'ghost'
     }
     // {
@@ -77,35 +87,35 @@ export default function SideNavbar({ isAdmin }: SideNavbarProps) {
       variant: 'default' as 'default' | 'ghost'
     },
     {
-      title: 'Nhân viên',
-      href: '/staffs',
-      icon: Users,
+      title: 'Room Management',
+      href: '/roomStore',
+      icon: DoorOpen,
       variant: 'default' as 'default' | 'ghost'
     },
     {
-      title: 'Chuyến đi',
-      href: '/trips',
-      icon: Bus,
+      title: 'Booking Management',
+      href: '/bookingStore',
+      icon: FileBox,
       variant: 'default' as 'default' | 'ghost'
     },
     {
-      title: 'Tuyến đường',
-      href: '/routes',
-      icon: Route,
+      title: 'Amity Management',
+      href: '/amities',
+      icon: Presentation,
       variant: 'default' as 'default' | 'ghost'
     },
-    {
-      title: 'Trạm dừng',
-      href: '/stations',
-      icon: LandPlot,
-      variant: 'default' as 'default' | 'ghost'
-    },
-    {
-      title: 'Chuyến xe mẫu',
-      href: '/templates',
-      icon: SwatchBook,
-      variant: 'default' as 'default' | 'ghost'
-    },
+    // {
+    //   title: 'Trạm dừng',
+    //   href: '/stations',
+    //   icon: LandPlot,
+    //   variant: 'default' as 'default' | 'ghost'
+    // },
+    // {
+    //   title: 'Chuyến xe mẫu',
+    //   href: '/templates',
+    //   icon: SwatchBook,
+    //   variant: 'default' as 'default' | 'ghost'
+    // },
     // {
     //   title: 'Đăng xuất',
     //   href: '/login',

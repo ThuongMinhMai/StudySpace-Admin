@@ -13,7 +13,7 @@ import { toast } from 'sonner'
 import Loading from '@/components/global/molecules/Loading'
 function ProfilePage() {
   const { user } = useAuth()
-  const { data, isLoading, isError, refetch } = fetchUserDetail(user?.UserID || '')
+  const { data, isLoading, isError, refetch } = fetchUserDetail(user?.userID || 0, user?.roleName || '')
   const [loading, setLoading] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
   const [form] = Form.useForm()

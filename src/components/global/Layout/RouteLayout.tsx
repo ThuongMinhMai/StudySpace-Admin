@@ -9,13 +9,16 @@ import {
 import SideNavbar from '@/components/global/organisms/SideNavbar'
 import { BookUser, Loader, LogOut } from 'lucide-react'
 import { Link, Outlet } from 'react-router-dom'
-import LogoFull2 from '../../../assets/LogoFull.png'
+import LogoFull2 from '../../../assets/LOGO SS ()-01.png'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/auth/AuthProvider'
+import { fetchUserDetail } from '../../../apis/userAPI'
 
 function RouteLayout() {
   const { user, loading, logout } = useAuth()
-  console.log("user", user)
+  console.log('user', user)
+  const { data: userDetail, isLoading, error } = fetchUserDetail(user?.userID || 0, user?.roleName || '')
+  console.log('detail ne', userDetail)
   // console.log('user ở layout', user)
   const [isAdmin, setIsAdmin] = useState<boolean>(false)
   // const {userDetail} = useAuth();
@@ -61,19 +64,28 @@ function RouteLayout() {
         <div className='h-14'>
           <img src={LogoFull2} className='h-full' alt='Logo' />
         </div>
-        {user && (
+        {userDetail && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <img
+              {/* <img
                 className='h-12 w-12 cursor-pointer rounded-full object-cover'
                 src={user?.avaURL || 'https://api.dicebear.com/8.x/adventurer/svg?seed=Oliver'}
+                alt='avatar'
+              /> */}
+              <img
+                className='h-12 w-12 cursor-pointer rounded-full object-cover'
+                src={
+                  user?.roleName === 'Admin'
+                    ? userDetail?.avatarUrl|| 'https://api.dicebear.com/8.x/adventurer/svg?seed=Oliver'
+                    : userDetail?.thumbnailUrl || 'https://api.dicebear.com/8.x/adventurer/svg?seed=Oliver'
+                }
                 alt='avatar'
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent className='w-fit'>
-              <DropdownMenuLabel className='py-0'>{user?.name}</DropdownMenuLabel>
+              <DropdownMenuLabel className='py-0'>{userDetail?.name}</DropdownMenuLabel>
               <DropdownMenuItem className='py-0 text-xs' disabled>
-                {user?.email}
+                {userDetail?.email}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <Link to='/profile'>

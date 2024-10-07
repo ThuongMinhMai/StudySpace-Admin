@@ -87,7 +87,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
 
                   link.variant === "default" &&
                     "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
-                  "justify-start mr-5"
+                  "justify-start mr-5  py-7"
                 )}
               >
                 <link.icon className="mr-3 h-5 w-5" />
@@ -97,7 +97,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                     className={cn(
                       "ml-auto",
                       link.variant === "default" &&
-                        "text-background dark:text-white "
+                        "text-background dark:text-white  "
                     )}
                   >
                     {link.label}

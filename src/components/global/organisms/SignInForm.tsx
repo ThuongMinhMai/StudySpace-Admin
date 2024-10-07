@@ -84,7 +84,7 @@ function SignInForm() {
                         <FormItem>
                           <FormLabel>Email</FormLabel>
                           <FormControl>
-                            <Input placeholder='Nhập email ...' {...field} />
+                            <Input placeholder='Enter email ...' {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -97,7 +97,7 @@ function SignInForm() {
                         <FormItem>
                           <FormLabel>Mật khẩu</FormLabel>
                           <FormControl>
-                            <Input type='password' placeholder='Nhập mật khẩu ...' {...field} />
+                            <Input type='password' placeholder='Enter password ...' {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
