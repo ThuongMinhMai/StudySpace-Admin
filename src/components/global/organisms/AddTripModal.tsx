@@ -17,7 +17,7 @@ import {
   Spin
 } from 'antd'
 import { toast } from '../atoms/ui/use-toast'
-import busAPI from '@/lib/busAPI'
+import studySpaceAPI from '@/lib/studySpaceAPI'
 import { useAuth } from '@/auth/AuthProvider'
 import { DownOutlined } from '@ant-design/icons' // Import an icon of your choice
 import { UploadOutlined } from '@ant-design/icons'

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Modal, Input, Form, ConfigProvider, Upload, Button, message } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { ArrowRightLeft, Pen } from 'lucide-react'
-import busAPI from '@/lib/busAPI'
+import studySpaceAPI from '@/lib/studySpaceAPI'
 
 interface Service {
   Service_StationID: string

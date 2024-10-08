@@ -3,7 +3,7 @@ import { columns } from './columns'
 import { DataTable } from '../table/main'
 import { DataTableToolbar } from './toolbar'
 import { useAuth } from '@/auth/AuthProvider'
-import busAPI from '@/lib/busAPI'
+import studySpaceAPI from '@/lib/studySpaceAPI'
 import { toast } from '../../atoms/ui/use-toast'
 import axios from 'axios'
 import TableSkeleton from '../TableSkeleton'
@@ -105,14 +105,14 @@ function ListStation() {
     defaultValues: {
       StationName: '',
       CityID: '',
-      CompanyID: user?.CompanyID || ''
+      CompanyID: user?.email || '' //loi o day nhe
     }
   })
   useEffect(() => {
     const fetchStations = async () => {
       setIsLoadingStations(true)
       try {
-        const { data } = await busAPI.get<Station[]>(`station-management/managed-stations/company/${user?.CompanyID}`)
+        const { data } = await studySpaceAPI.get<Station[]>(`station-management/managed-stations/company/${user?.userID}`)
         setStations(data || [])
         const initialStatuses: { [key: string]: string } = {}
         data.forEach((station) => {
@@ -127,7 +127,7 @@ function ListStation() {
     }
     const fetchCities = async () => {
       try {
-        const { data } = await busAPI.get<City[]>('city-management/managed-cities')
+        const { data } = await studySpaceAPI.get<City[]>('city-management/managed-cities')
         setCities(data || [])
       } catch (error) {
         console.log(error)
@@ -135,7 +135,7 @@ function ListStation() {
     }
     fetchStations()
     fetchCities()
-  }, [user?.CompanyID])
+  }, [user?.userID])
 
   const handleStatusChange = (station: Station, status: string) => {
     setSelectedStation(station)
@@ -147,7 +147,7 @@ function ListStation() {
     setIsLoadingUpdate(true)
     if (selectedStation) {
       try {
-        await busAPI.put(`status-management?entity=STATION&id=${selectedStation.StationID}`)
+        await studySpaceAPI.put(`status-management?entity=STATION&id=${selectedStation.StationID}`)
         setStations(
           stations.map((station) =>
             station.StationID === selectedStation.StationID ? { ...station, Status: newStatus } : station
@@ -185,7 +185,7 @@ function ListStation() {
     if (isEditing) {
       setIsLoadingUpdate(true)
       try {
-        await busAPI.put(`station-management/managed-stations/${isEditing.StationID}`, {
+        await studySpaceAPI.put(`station-management/managed-stations/${isEditing.StationID}`, {
           StationName: values.StationName
         })
         setStations(
@@ -224,10 +224,10 @@ function ListStation() {
   const confirmAddStation = async (values: z.infer<typeof AddStationSchema>) => {
     setIsLoadingUpdate(true)
     try {
-      const { data } = await busAPI.post('station-management/managed-stations', {
+      const { data } = await studySpaceAPI.post('station-management/managed-stations', {
         stationName: values.StationName,
         cityID: values.CityID,
-        companyID: user?.CompanyID
+        companyID: user?.userID
       })
       const newStation = { ...data, ServiceTypeInStation: [] }
       console.log('fjhhfjhkjg', newStation)

@@ -16,7 +16,7 @@
 import { DataTable } from '@/components/local/data-table-manager/data-table'
 import PageTitle from '@/components/global/organisms/PageTitle'
 import { columns } from '@/components/local/data-table-manager/column'
-import busAPI from '@/lib/busAPI'
+import studySpaceAPI from '@/lib/studySpaceAPI'
 import { User } from '@/types/User'
 import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
@@ -40,7 +40,7 @@ export default function OrdersPage({}: Props) {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const { data } = await busAPI.get<User[]>('/user-management/managed-users/role-name/Manager')
+        const { data } = await studySpaceAPI.get<User[]>('/user-management/managed-users/role-name/Manager')
         setData(data)
         if (!toastShown.current) {
           toast.success('Tìm kiếm nhà xe thành công')

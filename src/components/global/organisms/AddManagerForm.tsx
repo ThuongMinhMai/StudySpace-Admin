@@ -8,7 +8,7 @@ import { Button } from '../atoms/ui/button'
 import { PlusCircle } from 'lucide-react'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../atoms/ui/form'
 import { Input } from '../atoms/ui/input'
-import busAPI from '@/lib/busAPI'
+import studySpaceAPI from '@/lib/studySpaceAPI'
 import { toast } from 'sonner'
 
 function AddManager() {

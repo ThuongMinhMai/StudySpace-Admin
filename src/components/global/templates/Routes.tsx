@@ -7,7 +7,7 @@ import { Button } from '../atoms/ui/button'
 import axios from 'axios'
 import { toast } from '../atoms/ui/use-toast'
 import { useAuth } from '@/auth/AuthProvider'
-import busAPI from '@/lib/busAPI'
+import studySpaceAPI from '@/lib/studySpaceAPI'
 import { Loader } from 'lucide-react'
 import ListRoute from '../organisms/RouteList'
 import TableSkeleton from '../organisms/TableSkeleton'
@@ -41,7 +41,7 @@ function Routes() {
     const fetchRoutes = async () => {
       setIsLoadingRoutes(true)
       try {
-        const { data } = await busAPI.get<Route[]>(`route-management/managed-routes/company-routes/${user?.CompanyID}`)
+        const { data } = await studySpaceAPI.get<Route[]>(`route-management/managed-routes/company-routes/${user?.userID}`)
         console.log('data', data)
         setRoutes(data || [])
         // Initialize tempStatus with current statuses
@@ -75,7 +75,7 @@ function Routes() {
     setIsLoadingUpdate(true)
     if (selectedRoute) {
       try {
-        const response = await busAPI.put(`status-management?entity=ROUTE_COMPANY&id=${selectedRoute.Route_CompanyID}`)
+        const response = await studySpaceAPI.put(`status-management?entity=ROUTE_COMPANY&id=${selectedRoute.Route_CompanyID}`)
         setRoutes(
           routes.map((route) =>
             route.Route_CompanyID === selectedRoute.Route_CompanyID ? { ...route, Status: newStatus } : route

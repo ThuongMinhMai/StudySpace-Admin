@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Modal, Form, Input, Button, TimePicker, Select, message } from 'antd'
 import moment, { Moment } from 'moment'
-import busAPI from '@/lib/busAPI'
+import studySpaceAPI from '@/lib/studySpaceAPI'
 import { useAuth } from '@/auth/AuthProvider'
 import { toast } from '../atoms/ui/use-toast'
 import axios from 'axios'

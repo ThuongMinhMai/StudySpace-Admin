@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { DataTable } from '../table/main';
 import { DataTableToolbar } from './toolbar';
 import { useAuth } from '@/auth/AuthProvider';
-import busAPI from '@/lib/busAPI';
+import studySpaceAPI from '@/lib/studySpaceAPI'
 import { toast } from '../../atoms/ui/use-toast';
 import { Dialog, DialogContent, DialogOverlay } from '../../atoms/ui/dialog';
 import { Button } from '../../atoms/ui/button';
@@ -29,7 +29,7 @@ function ListStaff() {
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStaff, setSelectedStaff] = useState<Staff | null>(null);
-  const { data, refetch } = fetchStaff(user?.CompanyID || '');
+  const { data, refetch } = fetchStaff(user?.name || ''); //loi cho nay ne
 
   useEffect(() => {
     if (data) {
@@ -47,7 +47,7 @@ function ListStaff() {
     if (!selectedStaff) return;
     setIsLoadingUpdate(true);
     try {
-      await busAPI.put(`status-management?entity=USER&id=${selectedStaff.StaffID}`);
+      await studySpaceAPI.put(`status-management?entity=USER&id=${selectedStaff.StaffID}`);
       refetch();
       toast({
         variant: 'success',

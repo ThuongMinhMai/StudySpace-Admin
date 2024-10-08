@@ -13,7 +13,7 @@ import { Input } from '@/components/global/atoms/ui/input'
 import { useAuth } from '@/auth/AuthProvider'
 import { AddStaffSchema } from '@/components/Schema/AddStaffSchema'
 import { PasswordInput } from '../../atoms/ui/password-input'
-import busAPI from '@/lib/busAPI'
+import studySpaceAPI from '@/lib/studySpaceAPI'
 import Loading from '@/components/local/login/Loading'
 import { useQueryClient } from '@tanstack/react-query'
 

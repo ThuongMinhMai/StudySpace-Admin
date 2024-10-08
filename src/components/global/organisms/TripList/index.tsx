@@ -7,7 +7,7 @@ import { DataTable } from '../table/main'
 // import { RootState } from '@/store'
 import { DataTableToolbar } from './toolbar'
 import { useAuth } from '@/auth/AuthProvider'
-import busAPI from '@/lib/busAPI'
+import studySpaceAPI from '@/lib/studySpaceAPI'
 import { toast } from '../../atoms/ui/use-toast'
 import axios from 'axios'
 import TableSkeleton from '../TableSkeleton'
@@ -54,7 +54,7 @@ function ListTrip() {
     const fetchTrips = async () => {
       setIsLoadingTrips(true)
       try {
-        const { data } = await busAPI.get<Trip[]>(`trip-management/manage-trips/${user?.CompanyID}`)
+        const { data } = await studySpaceAPI.get<Trip[]>(`trip-management/manage-trips/${user?.userID}`) //loi day ne
         console.log('data', data)
         setTrips(data || [])
         // Initialize tempStatus with current statuses
@@ -88,7 +88,7 @@ function ListTrip() {
     setIsLoadingUpdate(true)
     if (selectedTrip) {
       try {
-        const response = await busAPI.put(`status-management?entity=TRIP&id=${selectedTrip.TripID}`)
+        const response = await studySpaceAPI.put(`status-management?entity=TRIP&id=${selectedTrip.TripID}`)
 
         setTrips(trips.map((trip) => (trip.TripID === selectedTrip.TripID ? { ...trip, Status: newStatus } : trip)))
         setTempStatus({ ...tempStatus, [selectedTrip.TripID]: newStatus })
@@ -131,7 +131,7 @@ function ListTrip() {
   const handleViewDetails = async (tripID: string) => {
     setIsLoadingDetailTrips(true)
     try {
-      const { data } = await busAPI.get<any>(`trip-management/manage-trips/${tripID}/details`)
+      const { data } = await studySpaceAPI.get<any>(`trip-management/manage-trips/${tripID}/details`)
       console.log('chi tiey xe', data)
 
       setSelectedTripDetails(data)

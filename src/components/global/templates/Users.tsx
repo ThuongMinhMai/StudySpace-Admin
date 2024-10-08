@@ -4,7 +4,7 @@
 import { DataTable } from '@/components/local/data-table-user/data-table'
 import { columns } from '@/components/local/data-table-user/column'
 import PageTitle from '@/components/global/organisms/PageTitle'
-import busAPI from '@/lib/busAPI'
+import studySpaceAPI from '@/lib/studySpaceAPI'
 import { User } from '@/types/User'
 import { useEffect, useState, useRef } from 'react'
 import { toast } from 'sonner'
@@ -72,7 +72,7 @@ export default function UsersPage({}: Props) {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const { data } = await busAPI.get<User[]>('/user-management/managed-users/role-name/Customer')
+        const { data } = await studySpaceAPI.get<User[]>('/user-management/managed-users/role-name/Customer')
         setData(data)
         if (!toastShown.current) {
           toast.success('Tìm kiếm người dùng thành công')

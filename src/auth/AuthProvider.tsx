@@ -140,7 +140,7 @@ console.log("decode", result)
               console.warn(`No API endpoint defined for role: ${roleName}`)
               return
           }
-          console.log('hhe', userDetailResponse.data)
+          console.log('hehe', userDetailResponse.data)
           setUser(userDetailResponse.data)
         } catch (error) {
           localStorage.removeItem('token')
