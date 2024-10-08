@@ -109,7 +109,7 @@ function SignInForm() {
                       name='role'
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Đăng nhập với vai trờ</FormLabel>
+                          <FormLabel>Đăng nhập với vai trò</FormLabel>
                           <FormControl>
                             <RadioGroup onValueChange={field.onChange} value={field.value} className='flex space-x-4'>
                               <div className='flex items-center space-x-2'>

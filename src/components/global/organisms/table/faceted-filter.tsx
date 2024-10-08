@@ -45,8 +45,17 @@ export function DataTableFacetedFilter<TData, TValue>({
 }: DataTableFacetedFilterProps<TData, TValue>) {
 	const facets = column?.getFacetedUniqueValues()
 	const selectedValues = new Set(column?.getFilterValue() as any[])
-	// console.log('Facets:', facets)
-	// console.log('Selected Values:', selectedValues)
+	console.log('Facets:', facets)
+	console.log('Selected Values:', selectedValues.size)
+
+	// Get the labels of the selected values
+	const selectedLabels = Array.from(selectedValues).map((value) => {
+		const option = options.find((opt) =>
+			typeof opt === 'string' ? opt === value : opt.value === value
+		)
+		return typeof option === 'string' ? option : option?.label
+	})
+
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
@@ -64,28 +73,22 @@ export function DataTableFacetedFilter<TData, TValue>({
 										{selectedValues.size} đã chọn
 									</Badge>
 								) : (
-									options
-										.filter((option) =>
-											typeof option === 'string'
-												? selectedValues.has(option)
-												: selectedValues.has(String(option.value)),
-										)
-										.map((option) => (
-											<Badge
-												variant="primary"
-												key={typeof option === 'string' ? option : String(option.value)}
-												className="rounded-sm  text-primary font-medium px-1 "
-											>
-												{typeof option === 'string' ? option : option.label}
-											</Badge>
-										))
+									selectedLabels.map((label, index) => (
+										<Badge
+											variant="primary"
+											key={index}
+											className="rounded-sm text-primary font-medium px-1"
+										>
+											{label}
+										</Badge>
+									))
 								)}
 							</div>
 						</>
 					)}
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="w-[200px] p-0" align="start" >
+			<PopoverContent className="w-[200px] p-0" align="start">
 				<Command>
 					<CommandInput placeholder={title} />
 					<CommandList>

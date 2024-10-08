@@ -52,7 +52,7 @@ interface Amenity {
   capacity: number;
   pricePerHour: number;
   description: string;
-  status: string;
+  status: boolean;
   area: number;
   type: string;
   image: string;
@@ -60,23 +60,24 @@ interface Amenity {
   amitiesInRoom: Amenity[];
 }
 export const columns = (
-  handleStatusChange: (route: Room, status: string) => void,
-  handleEditName: (station: Room, newName: string) => void,
-  handleShowAmentiModal: (station: Room) => void 
+  handleStatusChange: (route: Room, status: boolean) => void,
+  handleEditName: (room: Room, newName: string) => void,
+  handleShowAmentiModal: (room: Room) => void 
 ): ColumnDef<Room>[] => [
   {
     accessorKey: 'roomId',
     header: ({ column }) => null,
-    cell: ({ row }) => null
+    cell: ({ row }) => null,
+    enableHiding: false, 
   },
   {
     accessorKey: 'roomName',
     header: ({ column }) => <DataTableColumnHeader column={column} title='Tên phòng' />,
     cell: ({ row }) => (
       <div className='flex space-x-2'>
-        <Tooltip title='Chỉnh sửa' className='mr-1'>
+        {/* <Tooltip title='Chỉnh sửa' className='mr-1'>
           <Edit2 className='cursor-pointer w-4 text-primary' onClick={() => handleEditName(row.original, row.getValue('roomName'))} />
-        </Tooltip>
+        </Tooltip> */}
         <span className='max-w-[500px] truncate font-medium'>{row.getValue('roomName')}</span>
       </div>
     ),
@@ -108,9 +109,15 @@ export const columns = (
     filterFn: (row, id, value) => value.includes(row.getValue(id))
   },
   {
-    accessorKey: 'type',
+    accessorKey: 'roomType',
     header: ({ column }) => <DataTableColumnHeader column={column} title='Loại phòng' />,
-    cell: ({ row }) => <div>{row.getValue('type')}</div>,
+    cell: ({ row }) => <div>{row.getValue('roomType')}</div>,
+    filterFn: (row, id, value) => value.includes(row.getValue(id))
+  },
+  {
+    accessorKey: 'spaceType',
+    header: ({ column }) => <DataTableColumnHeader column={column} title='Loại không gian' />,
+    cell: ({ row }) => <div>{row.getValue('spaceType')}</div>,
     filterFn: (row, id, value) => value.includes(row.getValue(id))
   },
   {
@@ -133,20 +140,20 @@ export const columns = (
       return (
         <div>
           <div
-          className='text-primary flex gap-2 items-center cursor-pointer'
-          onClick={() => handleShowAmentiModal(row.original)} // Use the handler here
+         // Use the handler here
         >
           {amenti.length === 0 ? (
             <>
-              <Plus className="w-4 h-4 mr-2" />
-              Thêm tiện ích
+              {/* <Plus className="w-4 h-4 mr-2" /> */}
+              Chưa có tiện ích
             </>
           ) : (
-            <>
+            <div  className='text-primary flex gap-2 items-center cursor-pointer'
+            onClick={() => handleShowAmentiModal(row.original)} >
               <Eye className="w-4 h-4 mr-2" />
               Xem tiện ích
-            </>
-          )}
+            </div>
+          )}  
         </div>
         </div>
       )
@@ -157,6 +164,12 @@ export const columns = (
     accessorKey: 'status',
     header: ({ column }) => <DataTableColumnHeader column={column} title='Trạng thái' />,
     cell: ({ row }) => <DataTableRowActions row={row} handleStatusChange={handleStatusChange} />,
-    filterFn: (row, id, value) => value.includes(row.getValue(id))
+    filterFn: (row, id, value) => {
+      const rowValue = row.getValue(id);
+      if (typeof rowValue === 'boolean') {
+        return Array.isArray(value) ? value.includes(rowValue) : rowValue === value;
+      }
+      return false; 
+    }
   }
 ]

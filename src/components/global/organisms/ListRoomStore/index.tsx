@@ -18,38 +18,38 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { AddStationSchema } from '@/components/Schema/AddStationSchema'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../atoms/ui/select'
-import { ServiceModal, AddServiceModal } from '../ServiceModals'
+import { ServiceModal } from '../ServiceModals'
 
 // Define the interface for the Service
-interface Service {
-  Service_StationID: string
-  ServiceID: string
-  Price: number
-  Name: string
-  ImageUrl: string
-}
+// interface Service {
+//   Service_StationID: string
+//   ServiceID: string
+//   Price: number
+//   Name: string
+//   ImageUrl: string
+// }
 
-// Define the interface for the ServiceType
-interface ServiceType {
-  ServiceTypeID: string
-  ServiceTypeName: string
-  ServiceInStation: Service[]
-}
+// // Define the interface for the ServiceType
+// interface ServiceType {
+//   ServiceTypeID: string
+//   ServiceTypeName: string
+//   ServiceInStation: Service[]
+// }
 
-// Define the interface for the Station
-interface Station {
-  StationID: string
-  CityID: string
-  CityName: string
-  StationName: string
-  Status: string
-  ServiceTypeInStation: ServiceType[]
-}
-interface City {
-  CityID: string
-  Name: string
-  Status: string
-}
+// // Define the interface for the Station
+// interface Station {
+//   StationID: string
+//   CityID: string
+//   CityName: string
+//   StationName: string
+//   Status: string
+//   ServiceTypeInStation: ServiceType[]
+// }
+// interface City {
+//   CityID: string
+//   Name: string
+//   Status: string
+// }
 
  interface Amenity {
   id: number;
@@ -67,7 +67,7 @@ interface City {
   capacity: number;
   pricePerHour: number;
   description: string;
-  status: string;
+  status: boolean;
   area: number;
   type: string;
   image: string;
@@ -79,31 +79,31 @@ interface ApiResponse<T> {
 }
 function ListStation() {
   const { user } = useAuth()
-  const [stations, setStations] = useState<Station[]>([])
+  // const [stations, setStations] = useState<Station[]>([])
   const [rooms, setRooms] = useState<Room[]>([])
   // const [cities, setCities] = useState<City[]>([])
   const [isLoadingRooms, setIsLoadingRooms] = useState(true)
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedStation, setSelectedStation] = useState<Station | null>(null)
+  // const [selectedStation, setSelectedStation] = useState<Station | null>(null)
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null)
-  const [newStatus, setNewStatus] = useState<string>('')
-  const [tempStatus, setTempStatus] = useState<{ [key: string]: string }>({})
+  const [newStatus, setNewStatus] = useState<boolean>()
+  const [tempStatus, setTempStatus] = useState<{ [key: string]: boolean }>({})
   const [isEditing, setIsEditing] = useState<Room | null>(null)
   const [isAdding, setIsAdding] = useState(false)
-  const [isServiceModalVisible, setServiceModalVisible] = useState(false)
+  // const [isServiceModalVisible, setServiceModalVisible] = useState(false)
   const [isAmentiModalVisible, setAmentiModalVisible] = useState(false)
-  const [isAddServiceModalVisible, setAddServiceModalVisible] = useState(false)
+  const [isAddAmentiModalVisible, setAddAmentiModalVisible] = useState(false)
   // const [selectedStation, setSelectedStation] = useState<Station | null>(null);
-  const handleUpdateService = (updatedService: any) => {
-    console.log("update ơ bang", updatedService)
-    setStations((prevStations) =>
-      prevStations.map((station) =>
-        station.StationID === updatedService.StationID // Ensure you're matching with Service_StationID
+  const handleUpdateAmenti = (updatedAmenti: any) => {
+    console.log("update ơ bang", updatedAmenti)
+    setRooms((prevRooms) =>
+      prevRooms.map((room) =>
+        room.roomId === updatedAmenti.StationID // Ensure you're matching with Service_StationID
           ? {
-              ...updatedService
+              ...updatedAmenti
             }
-          : station
+          : room
       )
     )
   }
@@ -113,16 +113,16 @@ function ListStation() {
   }
 
   const handleShowAddServiceModal = () => {
-    setAddServiceModalVisible(true)
+    setAddAmentiModalVisible(true)
   }
 
-  const handleServiceModalOk = () => {
-    setServiceModalVisible(false)
+  const handleAmentiModalOk = () => {
+    setAmentiModalVisible(false)
   }
 
   const handleAddServiceModalOk = () => {
     // Handle the logic for adding a service
-    setAddServiceModalVisible(false)
+    setAddAmentiModalVisible(false)
   }
   const formRoom = useForm<z.infer<typeof RoomNameSchema>>({
     resolver: zodResolver(RoomNameSchema),
@@ -147,7 +147,7 @@ function ListStation() {
         const result=response.data.data
         console.log("rome ne", result)
         setRooms(result || [])
-        const initialStatuses: { [key: string]: string } = {}
+        const initialStatuses: { [key: string]: boolean } = {}
         result.forEach((room:Room) => {
           initialStatuses[room.roomId] = room.status
         })
@@ -170,45 +170,96 @@ function ListStation() {
     // fetchCities()
   }, [user?.userID])
 
-  const handleStatusChange = (room: Room, status: string) => {
+  const handleStatusChange = (room: Room, status: boolean) => {
     setSelectedRoom(room)
     setNewStatus(status)
     setIsModalOpen(true)
   }
 
+  // const confirmStatusChange = async () => {
+  //   setIsLoadingUpdate(true)
+  //   if (selectedRoom) {
+  //     try {
+  //       await studySpaceAPI.put(`status-management?entity=STATION&id=${selectedRoom.roomId}`)
+  //       setRooms(
+  //         rooms.map((room) =>
+  //           room.roomId === selectedRoom.roomId ? { ...room, status: newStatus } : room
+  //         )
+  //       )
+  //       setTempStatus({ ...tempStatus, [selectedRoom.roomId]: newStatus })
+  //       toast({
+  //         variant: 'success',
+  //         title: 'Cập nhật thành công',
+  //         description: 'Đã đổi trạng thái phòng này thành ' + newStatus
+  //       })
+  //     } catch (error) {
+  //       if (axios.isAxiosError(error) && error.response) {
+  //         const message = error.response.data.Result.message
+  //         setTempStatus({ ...tempStatus, [selectedRoom.roomId]: selectedRoom.status })
+  //         toast({
+  //           variant: 'destructive',
+  //           title: 'Không thể cập nhật trạng thái phòng',
+  //           description: message || 'Vui lòng thử lại sau'
+  //         })
+  //       }
+  //     } finally {
+  //       setIsLoadingUpdate(false)
+  //       setIsModalOpen(false)
+  //     }
+  //   }
+  // }
+
   const confirmStatusChange = async () => {
-    setIsLoadingUpdate(true)
-    if (selectedStation) {
+    setIsLoadingUpdate(true);
+    if (selectedRoom) {
       try {
-        await studySpaceAPI.put(`status-management?entity=STATION&id=${selectedStation.StationID}`)
-        setStations(
-          stations.map((station) =>
-            station.StationID === selectedStation.StationID ? { ...station, Status: newStatus } : station
+        console.log("nre sta", newStatus)
+        // Ensure `newStatus` is correctly defined as a boolean before making the API call
+        const statusToUpdate = newStatus !== undefined ? newStatus : selectedRoom.status; // Convert to boolean if necessary
+  
+        // Send the API request to update the status
+        await studySpaceAPI.put(`/Room/status/${selectedRoom.roomId}`);
+  
+        // Update the rooms state
+        setRooms((prevRooms) =>
+          prevRooms.map((room) =>
+            room.roomId === selectedRoom.roomId ? { ...room, status: statusToUpdate } : room
           )
-        )
-        setTempStatus({ ...tempStatus, [selectedStation.StationID]: newStatus })
+        );
+  
+        // Update temp status
+        setTempStatus((prevTempStatus) => ({
+          ...prevTempStatus,
+          [selectedRoom.roomId]: statusToUpdate,
+        }));
+  
+        // Display success toast notification
         toast({
           variant: 'success',
           title: 'Cập nhật thành công',
-          description: 'Đã đổi trạng thái tuyến đường này thành ' + newStatus
-        })
+          description: 'Đã đổi trạng thái phòng này thành ' + (statusToUpdate ? 'Hoạt động' : 'Không hoạt động'),
+        });
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
-          const message = error.response.data.Result.message
-          setTempStatus({ ...tempStatus, [selectedStation.StationID]: selectedStation.Status })
+          const message = error.response.data.Result.message || 'Vui lòng thử lại sau';
+          // Reset the temporary status if there's an error
+          setTempStatus((prevTempStatus) => ({
+            ...prevTempStatus,
+            [selectedRoom.roomId]: selectedRoom.status,
+          }));
+          // Display error toast notification
           toast({
             variant: 'destructive',
-            title: 'Không thể cập nhật trạng thái tuyến đường',
-            description: message || 'Vui lòng thử lại sau'
-          })
+            title: 'Không thể cập nhật trạng thái phòng',
+            description: message,
+          });
         }
       } finally {
-        setIsLoadingUpdate(false)
-        setIsModalOpen(false)
+        setIsLoadingUpdate(false);
+        setIsModalOpen(false);
       }
     }
-  }
-
+  };
   const handleEditName = (room: Room, currentName: string) => {
     setIsEditing(room)
     formRoom.reset({ roomName: currentName })
@@ -254,37 +305,37 @@ function ListStation() {
     setIsAdding(false)
     // formAddStation.reset() 
   }
-  const confirmAddStation = async (values: z.infer<typeof AddStationSchema>) => {
-    setIsLoadingUpdate(true)
-    try {
-      const { data } = await studySpaceAPI.post('station-management/managed-stations', {
-        stationName: values.StationName,
-        cityID: values.CityID,
-        // companyID: user?.CompanyID
-      })
-      const newStation = { ...data, ServiceTypeInStation: [] }
-      console.log('fjhhfjhkjg', newStation)
-      setStations([...stations, newStation])
-      toast({
-        variant: 'success',
-        title: 'Thêm trạm dừng thành công',
-        description: 'Trạm dừng mới đã được thêm thành công'
-      })
-      setIsAdding(false)
-      // formAddStation.reset()
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        const message = error.response.data.Result.message
-        toast({
-          variant: 'destructive',
-          title: 'Không thể thêm trạm dừng',
-          description: message || 'Vui lòng thử lại sau'
-        })
-      }
-    } finally {
-      setIsLoadingUpdate(false)
-    }
-  }
+  // const confirmAddStation = async (values: z.infer<typeof AddStationSchema>) => {
+  //   setIsLoadingUpdate(true)
+  //   try {
+  //     const { data } = await studySpaceAPI.post('station-management/managed-stations', {
+  //       stationName: values.StationName,
+  //       cityID: values.CityID,
+  //       // companyID: user?.CompanyID
+  //     })
+  //     const newStation = { ...data, ServiceTypeInStation: [] }
+  //     console.log('fjhhfjhkjg', newStation)
+  //     setStations([...stations, newStation])
+  //     toast({
+  //       variant: 'success',
+  //       title: 'Thêm trạm dừng thành công',
+  //       description: 'Trạm dừng mới đã được thêm thành công'
+  //     })
+  //     setIsAdding(false)
+  //     // formAddStation.reset()
+  //   } catch (error) {
+  //     if (axios.isAxiosError(error) && error.response) {
+  //       const message = error.response.data.Result.message
+  //       toast({
+  //         variant: 'destructive',
+  //         title: 'Không thể thêm trạm dừng',
+  //         description: message || 'Vui lòng thử lại sau'
+  //       })
+  //     }
+  //   } finally {
+  //     setIsLoadingUpdate(false)
+  //   }
+  // }
   if (isLoadingRooms) {
     return <TableSkeleton />
   }
@@ -423,14 +474,14 @@ function ListStation() {
           </DialogContent>
         </Dialog>
       )} */}
-      {/* <ServiceModal
-        visible={isServiceModalVisible}
-        onOk={handleServiceModalOk}
-        station={selectedStation}
-        onAddService={handleShowAddServiceModal}
-        onUpdateService={handleUpdateService} // Pass the update handler
-      />
-      <AddServiceModal visible={isAddServiceModalVisible} onOk={handleAddServiceModalOk} /> */}
+       <ServiceModal
+        visible={isAmentiModalVisible}
+        onOk={handleAmentiModalOk}
+        room={selectedRoom}
+        onAddAmenti={handleShowAddServiceModal}
+        onUpdateAmenti={handleUpdateAmenti} 
+      /> 
+      {/* <AddServiceModal visible={isAddServiceModalVisible} onOk={handleAddServiceModalOk} />  */}
     </div>
   )
 }

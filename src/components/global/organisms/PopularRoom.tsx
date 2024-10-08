@@ -23,13 +23,13 @@ const PopularRoom: React.FC<PopularRoomProps> = ({ rooms }) => {
       key: 'image',
       render: (image: string) => (
         <Image
-          src={image}
-          alt="Room"
-          width={100}
-          height={70}
-          style={{ objectFit: 'cover' }}
-          preview={false}
-        />
+        className='rounded-md'
+        src={image}
+        alt="Room"
+        width={100}
+        height={70}
+        style={{ objectFit: 'cover', cursor: 'pointer' }}
+      />
       ),
     },
     {
