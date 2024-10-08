@@ -106,7 +106,21 @@ export const columns = (
     accessorKey: 'area',
     header: ({ column }) => <DataTableColumnHeader column={column} title='Diện tích' />,
     cell: ({ row }) => <div>{row.getValue('area')}</div>,
-    filterFn: (row, id, value) => value.includes(row.getValue(id))
+    // filterFn: (row, id, value) => value.includes(row.getValue(id))
+    filterFn: (row, id, value) => {
+      const { min, max } = value || {};
+      const area = row.getValue<number>(id);
+
+      // Check if the area falls within the range
+      if (min !== undefined && max !== undefined) {
+        return area >= min && area <= max;
+      } else if (min !== undefined) {
+        return area >= min;
+      } else if (max !== undefined) {
+        return area <= max;
+      }
+      return true; // If no filter is set, include the row
+    },
   },
   {
     accessorKey: 'roomType',
