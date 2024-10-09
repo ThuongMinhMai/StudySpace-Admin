@@ -348,7 +348,7 @@ function ListRoomStore() {
         <h1 className='my-4 border-b pb-2 text-3xl font-semibold tracking-wider first:mt-0'>Danh sách phòng</h1>
         <Button
           className='flex justify-center items-center bg-white border-primary border-[1px] text-primary hover:bg-primary hover:text-white'
-          onClick={handleAddStation}
+          onClick={()=>navigate("/roomStore/CreateNew")}
         >
           <Plus className='w-6 mr-1' />
           Thêm phòng

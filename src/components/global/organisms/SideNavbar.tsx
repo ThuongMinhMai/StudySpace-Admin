@@ -99,7 +99,7 @@ export default function SideNavbar({ isAdmin }: SideNavbarProps) {
       variant: 'default' as 'default' | 'ghost'
     },
     {
-      title: 'Quản lí cơ sở vật chất',
+      title: 'Quản lí tiện ích',
       href: '/amities',
       icon: Presentation,
       variant: 'default' as 'default' | 'ghost'

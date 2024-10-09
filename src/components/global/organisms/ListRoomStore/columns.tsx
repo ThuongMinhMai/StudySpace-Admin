@@ -134,9 +134,20 @@ export const columns = (
     {
       accessorKey: 'roomType',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Loại phòng' />,
-      cell: ({ row }) => (
-        <div className='cursor-pointer' onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}>{row.getValue('roomType')}</div>
-      ),
+      cell: ({ row }) => {
+        const roomType = row.getValue<string>('roomType');
+    
+        // Determine the badge variant based on roomType
+        const badgeVariant = roomType === 'BASIC' ? 'info' : roomType === 'PREMIUM' ? 'warning' : 'default';
+    
+        return (
+          <div className='cursor-pointer' onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}>
+            <Badge variant={badgeVariant ||"default"}>
+              {roomType}
+            </Badge>
+          </div>
+        );
+      },
       filterFn: (row, id, value) => value.includes(row.getValue(id))
     },
     {
@@ -163,7 +174,7 @@ export const columns = (
     // },
     {
       accessorKey: 'amitiesInRoom',
-      header: ({ column }) => <DataTableColumnHeader column={column} title='Cơ sở vật chất' />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Tiện ích hiện có' />,
       cell: ({ row }) => {
         const amenti = row.original.amitiesInRoom
         return (

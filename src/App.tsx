@@ -16,6 +16,8 @@ import ProtectPackageRegister from './auth/ProtectPackageRegister'
 import ProtectProfile from './auth/ProtectProfile'
 import RoomStore from './components/global/templates/RoomStore'
 import RoomStoreDetail from './components/global/organisms/RoomStoreDetail'
+import CreateRoomStore from './components/global/organisms/CreateRoomStore'
+import AmityStore from './components/global/templates/AmityStore'
 const RouteLayout = React.lazy(() => import('./components/global/Layout/RouteLayout'))
 const UsersPage = React.lazy(() => import('./components/global/templates/Users'))
 const CompaniesPage = React.lazy(() => import('./components/global/templates/Companies'))
@@ -121,6 +123,14 @@ function App() {
           }
         />
         <Route
+          path='/roomStore/CreateNew'
+          element={
+            <ManagerProtectedRoute>
+              <Suspense fallback={<Loader />}>{ <CreateRoomStore /> }</Suspense>
+            </ManagerProtectedRoute>
+          }
+        />
+        <Route
           path='/bookingStore'
           element={
             <ManagerProtectedRoute>
@@ -133,7 +143,7 @@ function App() {
           path='/amities'
           element={
             <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}>{/* <RoutePage /> */}</Suspense>
+              <Suspense fallback={<Loader />}> <AmityStore /> </Suspense>
             </ManagerProtectedRoute>
           }
         />

@@ -128,7 +128,7 @@ export const ServiceModal: React.FC<AmentiModalProps> = ({ visible, onOk, room, 
         }
       }}
     >
-      <Modal title='Thông tin cơ sở vật chất' visible={visible} onOk={onOk} onCancel={onOk} footer={null}>
+      <Modal title='Thông tin tiện ích' visible={visible} onOk={onOk} onCancel={onOk} footer={null}>
         <div className='p-4 h-[500px] overflow-y-auto'>
           <h2 className='text-lg font-semibold mb-2'>
             <span className='text-primary'>{room?.roomName}</span>
