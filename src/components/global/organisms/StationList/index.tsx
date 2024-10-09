@@ -13,12 +13,12 @@ import { Loader, Plus } from 'lucide-react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../atoms/ui/form'
 import { Input } from '../../atoms/ui/input'
 import { useForm } from 'react-hook-form'
-import { StationNameSchema } from '@/components/Schema/StationNameSchema'
+// import { StationNameSchema } from '@/components/Schema/StationNameSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { AddStationSchema } from '@/components/Schema/AddStationSchema'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../atoms/ui/select'
-import { ServiceModal, AddServiceModal } from '../ServiceModals'
+// import { ServiceModal, AddServiceModal } from '../ServiceModals'
 
 // Define the interface for the Service
 interface Service {
@@ -94,12 +94,12 @@ function ListStation() {
     // Handle the logic for adding a service
     setAddServiceModalVisible(false)
   }
-  const formStation = useForm<z.infer<typeof StationNameSchema>>({
-    resolver: zodResolver(StationNameSchema),
-    defaultValues: {
-      StationName: ''
-    }
-  })
+  // const formStation = useForm<z.infer<typeof StationNameSchema>>({
+  //   resolver: zodResolver(StationNameSchema),
+  //   defaultValues: {
+  //     StationName: ''
+  //   }
+  // })
   const formAddStation = useForm<z.infer<typeof AddStationSchema>>({
     resolver: zodResolver(AddStationSchema),
     defaultValues: {
@@ -178,10 +178,10 @@ function ListStation() {
 
   const handleEditName = (station: Station, currentName: string) => {
     setIsEditing(station)
-    formStation.reset({ StationName: currentName })
+    // formStation.reset({ StationName: currentName })
   }
 
-  const confirmEditName = async (values: z.infer<typeof StationNameSchema>) => {
+  const confirmEditName = async (values:any) => {
     if (isEditing) {
       setIsLoadingUpdate(true)
       try {
@@ -293,7 +293,7 @@ function ListStation() {
           </DialogContent>
         </Dialog>
       )}
-      {isEditing && (
+      {/* {isEditing && (
         <Dialog open={isEditing !== null} onOpenChange={() => setIsEditing(null)}>
           <DialogOverlay className='bg-/60' />
           <DialogContent>
@@ -328,8 +328,8 @@ function ListStation() {
             </Form>
           </DialogContent>
         </Dialog>
-      )}
-      {isAdding && (
+      )} */}
+      {/* {isAdding && (
         <Dialog open={isAdding} onOpenChange={handleModalAddClose}>
           <DialogOverlay className='bg-/60' />
           <DialogContent>
@@ -389,15 +389,15 @@ function ListStation() {
             </Form>
           </DialogContent>
         </Dialog>
-      )}
-      <ServiceModal
+      )} */}
+      {/* <ServiceModal
         visible={isServiceModalVisible}
         onOk={handleServiceModalOk}
         station={selectedStation}
         onAddService={handleShowAddServiceModal}
         onUpdateService={handleUpdateService} // Pass the update handler
       />
-      <AddServiceModal visible={isAddServiceModalVisible} onOk={handleAddServiceModalOk} />
+      <AddServiceModal visible={isAddServiceModalVisible} onOk={handleAddServiceModalOk} /> */}
     </div>
   )
 }
