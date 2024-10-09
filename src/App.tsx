@@ -15,6 +15,7 @@ import RegisterPackage from './components/global/organisms/RegisterPackage'
 import ProtectPackageRegister from './auth/ProtectPackageRegister'
 import ProtectProfile from './auth/ProtectProfile'
 import RoomStore from './components/global/templates/RoomStore'
+import RoomStoreDetail from './components/global/organisms/RoomStoreDetail'
 const RouteLayout = React.lazy(() => import('./components/global/Layout/RouteLayout'))
 const UsersPage = React.lazy(() => import('./components/global/templates/Users'))
 const CompaniesPage = React.lazy(() => import('./components/global/templates/Companies'))
@@ -108,6 +109,14 @@ function App() {
           element={
             <ManagerProtectedRoute>
               <Suspense fallback={<Loader />}>{ <RoomStore /> }</Suspense>
+            </ManagerProtectedRoute>
+          }
+        />
+        <Route
+          path='/roomStore/room-detail/:id'
+          element={
+            <ManagerProtectedRoute>
+              <Suspense fallback={<Loader />}>{ <RoomStoreDetail /> }</Suspense>
             </ManagerProtectedRoute>
           }
         />

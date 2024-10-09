@@ -19,6 +19,7 @@ import { z } from 'zod'
 import { AddStationSchema } from '@/components/Schema/AddStationSchema'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../atoms/ui/select'
 import { ServiceModal } from '../ServiceModals'
+import { useNavigate } from 'react-router-dom'
 
 // Define the interface for the Service
 // interface Service {
@@ -77,8 +78,9 @@ import { ServiceModal } from '../ServiceModals'
 interface ApiResponse<T> {
   data: T;
 }
-function ListStation() {
+function ListRoomStore() {
   const { user } = useAuth()
+  const navigate = useNavigate();
   // const [stations, setStations] = useState<Station[]>([])
   const [rooms, setRooms] = useState<Room[]>([])
   // const [cities, setCities] = useState<City[]>([])
@@ -354,7 +356,7 @@ function ListStation() {
       </div>
       <DataTable
         data={rooms}
-        columns={columns(handleStatusChange, handleEditName, handleShowAmentiModal)}
+        columns={columns(navigate,handleStatusChange, handleEditName, handleShowAmentiModal)}
         Toolbar={DataTableToolbar}
         rowString='Phòng'
       />
@@ -486,4 +488,4 @@ function ListStation() {
   )
 }
 
-export default ListStation
+export default ListRoomStore
