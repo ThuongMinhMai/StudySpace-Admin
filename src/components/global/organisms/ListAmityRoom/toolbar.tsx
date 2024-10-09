@@ -14,13 +14,14 @@ export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
   const isFiltered = table.getState().columnFilters.length > 0
 
   
-  const uniqueCityName = Array.from(table.getColumn('CityName')?.getFacetedUniqueValues()?.entries() || []).map(
+  const uniqueAmytiType = Array.from(table.getColumn('amityType')?.getFacetedUniqueValues()?.entries() || []).map(
     ([key]) => key
   )
  
-  const uniqueStatus = Array.from(table.getColumn('Status')?.getFacetedUniqueValues()?.entries() || []).map(
+  const uniqueStatus = Array.from(table.getColumn('amityStatus')?.getFacetedUniqueValues()?.entries() || []).map(
     ([key]) => key
   )
+  console.log("status nè", uniqueStatus)
 
   return (
     <div className='ml-2 mb-2 flex justify-between'>
@@ -34,12 +35,12 @@ export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
 
        
         <DataTableFacetedFilter
-          column={table.getColumn('CityName')}
-          title='Thành phố'
-          options={uniqueCityName}
+          column={table.getColumn('amityType')}
+          title='Loại tiện ích'
+          options={uniqueAmytiType}
         />
     
-        <DataTableFacetedFilter column={table.getColumn('Status')} title='Trạng thái' options={uniqueStatus} />
+        <DataTableFacetedFilter column={table.getColumn('amityStatus')} title='Trạng thái' options={uniqueStatus} />
 
         {isFiltered && (
           <Button variant='ghost' onClick={() => table.resetColumnFilters()} className='h-8 px-2 lg:px-3'>
