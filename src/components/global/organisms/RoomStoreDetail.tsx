@@ -90,31 +90,34 @@ const RoomStoreDetail: React.FC = () => {
   const [pricePerHour, setPricePerHour] = useState(room?.pricePerHour || 0)
   const [description, setDescription] = useState(room?.description) || ''
   const [newRule, setNewRule] = useState('')
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false)
+  const [isEditModalVisible, setEditModalVisible] = useState(false)
+  const [currentAmity, setCurrentAmity] = useState<Amity>()
   const showModal = () => {
     setIsModalVisible(true)
   }
 
-  const handleOk =async  () => {
-    const formData = new FormData();
-    formData.append('PricePerHour', pricePerHour !== undefined ? pricePerHour.toString() : "0");
-    formData.append('Description', description || "");
+  const handleOk = async () => {
+    const formData = new FormData()
+    formData.append('PricePerHour', pricePerHour !== undefined ? pricePerHour.toString() : '0')
+    formData.append('Description', description || '')
     // formData.append("HouseRule",houseRules)
     houseRules.forEach((rule) => {
-      formData.append('HouseRule', rule); // Note: Use 'HouseRule' instead of 'HouseRule[]'
-    });
+      formData.append('HouseRule', rule) // Note: Use 'HouseRule' instead of 'HouseRule[]'
+    })
     try {
       // Make API request to update the room
-      await studySpaceAPI.put(`/Room/${id}`, formData);
-  
+      await studySpaceAPI.put(`/Room/${id}`, formData)
+
       // If successful, show a success message
-      toast.success('Cập nhật thông tin phòng thành công');
-      
+      toast.success('Cập nhật thông tin phòng thành công')
+
       // Optionally refresh the room data
-      fetchRoomData(); // Fetch updated room data
-      setIsModalVisible(false);
+      fetchRoomData() // Fetch updated room data
+      setIsModalVisible(false)
     } catch (error) {
-      console.error('Error updating room:', error);
-      toast.error('Cập nhật thông tin phòng thất bại. Vui lòng thử lại.');
+      console.error('Error updating room:', error)
+      toast.error('Cập nhật thông tin phòng thất bại. Vui lòng thử lại.')
     }
   }
 
@@ -176,6 +179,18 @@ const RoomStoreDetail: React.FC = () => {
   const handleRemoveRule = (index: any, e: any) => {
     e.preventDefault()
     setHouseRules(houseRules.filter((_, i) => i !== index)) // Remove the rule
+  }
+
+  // Confirmation Modal for Deletion
+  const handleDeleteConfirm = () => {
+    // Call your delete API here using currentAmity.id
+    setDeleteModalVisible(false)
+  }
+
+  // Edit Modal
+  const handleEditConfirm = () => {
+    // Call your edit API here using currentAmity data
+    setEditModalVisible(false)
   }
   useEffect(() => {
     fetchRoomData()
@@ -376,8 +391,20 @@ const RoomStoreDetail: React.FC = () => {
                         <p className='text-gray-500'>{amity.description || 'Không có mô tả'}</p>
                       </TableCell>
                       <TableCell className='p-2 flex items-center'>
-                        <Edit className='h-5 w-5 text-green-500 cursor-pointer mr-2' onClick={() => {}} />
-                        <Trash className='h-5 w-5 text-red-500 cursor-pointer' onClick={() => {}} />
+                        <Edit
+                          className='h-5 w-5 text-green-500 cursor-pointer mr-2'
+                          onClick={() => {
+                            setCurrentAmity(amity)
+                            setEditModalVisible(true)
+                          }}
+                        />
+                        <Trash
+                          className='h-5 w-5 text-red-500 cursor-pointer'
+                          onClick={() => {
+                            setCurrentAmity(amity)
+                            setDeleteModalVisible(true)
+                          }}
+                        />
                       </TableCell>
                     </TableRow>
                   ))
@@ -422,7 +449,13 @@ const RoomStoreDetail: React.FC = () => {
           }
         }}
       >
-        <Modal title='Cập nhật thông tin phòng' visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}  footer={null} >
+        <Modal
+          title='Cập nhật thông tin phòng'
+          visible={isModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={null}
+        >
           <h2 className='text-lg text-primary font-bold'>{room.roomName}</h2>
           <form className='flex flex-col gap-4'>
             {/* Include your form fields here for updating room details */}
@@ -457,7 +490,7 @@ const RoomStoreDetail: React.FC = () => {
                   placeholder='Thêm quy định mới'
                   className=''
                 />
-                <Button variant="outline_primary" onClick={handleAddRule} className=''>
+                <Button variant='outline_primary' onClick={handleAddRule} className=''>
                   <Plus />
                   Thêm
                 </Button>
@@ -465,12 +498,86 @@ const RoomStoreDetail: React.FC = () => {
             </div>
           </form>
           <div className='flex justify-end mt-4'>
-            <Button variant="outline" onClick={handleCancel} className='mr-2'>
+            <Button variant='outline' onClick={handleCancel} className='mr-2'>
               Hủy
             </Button>
-            <Button onClick={handleOk}>
-              Cập nhật
+            <Button onClick={handleOk}>Cập nhật</Button>
+          </div>
+        </Modal>
+
+        <Modal
+          title='Xác nhận xóa'
+          visible={isDeleteModalVisible}
+          onOk={handleDeleteConfirm}
+          onCancel={() => setDeleteModalVisible(false)}
+          footer={null}
+
+        >
+          <p>Bạn có chắc chắn muốn xóa tiện ích này không?</p>
+          <div className='flex justify-end mt-4'>
+            <Button variant='outline' onClick={() => setDeleteModalVisible(false)} className='mr-2'>
+              Hủy
             </Button>
+            <Button onClick={handleDeleteConfirm}>Xóa</Button>
+          </div>
+        </Modal>
+
+        {/* Edit Modal */}
+        <Modal
+          title='Chỉnh sửa tiện ích'
+          visible={isEditModalVisible}
+          onOk={handleEditConfirm}
+          onCancel={() => setEditModalVisible(false)}
+          footer={null}
+
+        >
+          <div className='flex flex-col gap-4'>
+            <Label>Tên:</Label>
+            <Input
+              value={currentAmity?.name}
+              onChange={(e) => {
+                if (currentAmity) {
+                  setCurrentAmity({ ...currentAmity, name: e.target.value })
+                }
+              }}
+            />
+
+            <Label>Số lượng:</Label>
+            <Input
+              type='number'
+              value={currentAmity?.quantity}
+              onChange={(e) => {
+                if (currentAmity) {
+                  setCurrentAmity({ ...currentAmity, quantity: Number(e.target.value) })
+                }
+              }}
+            />
+
+            <Label>Mô tả:</Label>
+            <Textarea
+              value={currentAmity?.description}
+              onChange={(e) => {
+                if (currentAmity) {
+                  setCurrentAmity({ ...currentAmity, description: e.target.value })
+                }
+              }}
+            />
+
+            <Label>Loại:</Label>
+            <Input
+              value={currentAmity?.type}
+              onChange={(e) => {
+                if (currentAmity) {
+                  setCurrentAmity({ ...currentAmity, type: e.target.value })
+                }
+              }}
+            />
+          </div>
+          <div className='flex justify-end mt-4'>
+            <Button variant='outline' onClick={() => setEditModalVisible(false)} className='mr-2'>
+              Hủy
+            </Button>
+            <Button onClick={handleEditConfirm}>Cập nhật</Button>
           </div>
         </Modal>
       </ConfigProvider>
