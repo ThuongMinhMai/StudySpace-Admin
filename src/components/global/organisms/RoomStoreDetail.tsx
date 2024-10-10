@@ -9,13 +9,16 @@ import {
   DollarSign,
   DoorClosed,
   Edit,
+  Edit2,
   Home,
   Info,
   Loader,
   MapIcon,
   MapPin,
   OctagonAlert,
+  Pen,
   Pill,
+  Plus,
   Rocket,
   Trash,
   Users,
@@ -27,6 +30,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from '../atoms/ui/se
 import { Dialog, DialogContent, DialogOverlay } from '../atoms/ui/dialog'
 import { toast } from 'sonner'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../atoms/ui/table'
+import { ConfigProvider, Modal, Tooltip } from 'antd'
+import { Input } from '../atoms/ui/input'
+import { Textarea } from '../atoms/ui/textarea'
+import { Label } from '../atoms/ui/label'
 
 interface Amity {
   id: number
@@ -74,10 +81,50 @@ const RoomStoreDetail: React.FC = () => {
   const [room, setRoom] = useState<Room | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [showModal, setShowModal] = useState(false)
+  // const [showModal, setShowModal] = useState(false)
   const [newStatus, setNewStatus] = useState<string>('')
   const [dialogOpen, setDialogOpen] = useState(false)
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false)
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [houseRules, setHouseRules] = useState(room?.houseRule || [])
+  const [pricePerHour, setPricePerHour] = useState(room?.pricePerHour || 0)
+  const [description, setDescription] = useState(room?.description) || ''
+  const [newRule, setNewRule] = useState('')
+  const showModal = () => {
+    setIsModalVisible(true)
+  }
+
+  const handleOk =async  () => {
+    const formData = new FormData();
+    formData.append('PricePerHour', pricePerHour !== undefined ? pricePerHour.toString() : "0");
+    formData.append('Description', description || "");
+    // formData.append("HouseRule",houseRules)
+    houseRules.forEach((rule) => {
+      formData.append('HouseRule', rule); // Note: Use 'HouseRule' instead of 'HouseRule[]'
+    });
+    try {
+      // Make API request to update the room
+      await studySpaceAPI.put(`/Room/${id}`, formData);
+  
+      // If successful, show a success message
+      toast.success('Cập nhật thông tin phòng thành công');
+      
+      // Optionally refresh the room data
+      fetchRoomData(); // Fetch updated room data
+      setIsModalVisible(false);
+    } catch (error) {
+      console.error('Error updating room:', error);
+      toast.error('Cập nhật thông tin phòng thất bại. Vui lòng thử lại.');
+    }
+  }
+
+  const handleCancel = () => {
+    setPricePerHour(room?.pricePerHour || 0)
+    setDescription(room?.description || '')
+    setHouseRules(room?.houseRule || [])
+    setNewRule('')
+    setIsModalVisible(false)
+  }
 
   const handleGoBack = () => {
     navigate(-1) // Navigate to the previous page
@@ -90,6 +137,9 @@ const RoomStoreDetail: React.FC = () => {
       )
       console.log('Room data:', response.data.data)
       setRoom(response.data.data)
+      setHouseRules(response.data.data.houseRule)
+      setDescription(response.data.data.description)
+      setPricePerHour(response.data.data.pricePerHour)
     } catch (err) {
       setError('Failed to fetch room data')
     } finally {
@@ -98,7 +148,6 @@ const RoomStoreDetail: React.FC = () => {
   }
 
   const handleStatusChange = (status: string) => {
-    console.log('change', status)
     setNewStatus(status) // Set the new status
     setDialogOpen(true) // Open the dialog
   }
@@ -116,6 +165,17 @@ const RoomStoreDetail: React.FC = () => {
         setDialogOpen(false) // Close the dialog after confirmation
       }
     }
+  }
+  const handleAddRule = (e: any) => {
+    e.preventDefault() // Prevent page reload
+    if (newRule.trim()) {
+      setHouseRules([...houseRules, newRule])
+      setNewRule('')
+    }
+  }
+  const handleRemoveRule = (index: any, e: any) => {
+    e.preventDefault()
+    setHouseRules(houseRules.filter((_, i) => i !== index)) // Remove the rule
   }
   useEffect(() => {
     fetchRoomData()
@@ -189,61 +249,66 @@ const RoomStoreDetail: React.FC = () => {
         <div className='flex flex-col md:flex-row'>
           {/* Room Information Column */}
           <div className='md:w-1/2 p-4'>
-            <h2 className='text-xl font-medium mb-2'>Thông tin phòng</h2>
+            <div className='flex justify-center items-center gap-3'>
+              <h2 className='text-xl font-medium mb-2'>Thông tin phòng</h2>
+              <Tooltip title='Chỉnh sửa' className='mr-1'>
+                <Edit2 strokeWidth={3} className='cursor-pointer w-4 text-primary' onClick={showModal} />
+              </Tooltip>
+            </div>
             <table className='w-full table-auto border-collapse border border-gray-300'>
               <tbody>
                 <tr className='border-b'>
                   <td className='p-2 flex items-center'>
-                    <Home className='h-5 w-5 mr-2 text-gray-500' />
+                    <Home strokeWidth={2} className='h-5 w-5 mr-2 text-primary' />
                     <p className='text-primary font-medium'>Tên cửa hàng:</p>
                   </td>
                   <td className='p-2'>{room?.storeName || 'No Data'}</td>
                 </tr>
                 <tr className='border-b'>
                   <td className='p-2 flex items-center'>
-                    <Users className='h-5 w-5 mr-2 text-gray-500' />
+                    <Users strokeWidth={2} className='h-5 w-5 mr-2 text-primary' />
                     <p className='text-primary font-medium'>Sức chứa:</p>
                   </td>
                   <td className='p-2'>{room?.capacity || 'No Data'} (người)</td>
                 </tr>
                 <tr className='border-b'>
                   <td className='p-2 flex items-center'>
-                    <DollarSign className='h-5 w-5 mr-2 text-gray-500' />
+                    <DollarSign strokeWidth={2} className='h-5 w-5 mr-2 text-primary' />
                     <p className='text-primary font-medium'>Giá tiền/giờ:</p>
                   </td>
                   <td className='p-2'>{room?.pricePerHour !== undefined ? room.pricePerHour : 'No Data'}</td>
                 </tr>
                 <tr className='border-b'>
                   <td className='p-2 flex items-center'>
-                    <Pill className='h-5 w-5 mr-2 text-gray-500' />
+                    <Pill strokeWidth={2} className='h-5 w-5 mr-2 text-primary' />
                     <p className='text-primary font-medium'>Mô tả:</p>
                   </td>
                   <td className='p-2'>{room?.description || 'No Data'}</td>
                 </tr>
                 <tr className='border-b'>
                   <td className='p-2 flex items-center'>
-                    <Rocket className='h-5 w-5 mr-2 text-gray-500' />
+                    <Rocket strokeWidth={2} className='h-5 w-5 mr-2 text-primary' />
                     <p className='text-primary font-medium'>Loại không gian:</p>
                   </td>
                   <td className='p-2'>{room?.typeSpace || 'No Data'}</td>
                 </tr>
                 <tr className='border-b'>
                   <td className='p-2 flex items-center'>
-                    <DoorClosed className='h-5 w-5 mr-2 text-gray-500' />
+                    <DoorClosed strokeWidth={2} className='h-5 w-5 mr-2 text-primary' />
                     <p className='text-primary font-medium'>Loại phòng:</p>
                   </td>
                   <td className='p-2'>{room?.typeRoom || 'No Data'}</td>
                 </tr>
                 <tr className='border-b'>
                   <td className='p-2 flex items-center'>
-                    <Info className='h-5 w-5 mr-2 text-gray-500' />
+                    <Info strokeWidth={2} className='h-5 w-5 mr-2 text-primary' />
                     <p className='text-primary font-medium'>Diện tích:</p>
                   </td>
                   <td className='p-2'>{room?.area ? `${room.area} m²` : 'No Data'}</td>
                 </tr>
                 <tr className='border-b'>
                   <td className='p-2 flex items-center'>
-                    <MapPin className='h-5 w-5 mr-2 text-gray-500' />
+                    <MapPin strokeWidth={2} className='h-5 w-5 mr-2 text-primary' />
                     <p className='text-primary font-medium'>Địa chỉ:</p>
                   </td>
                   <td className='p-2'>{room?.address || 'No Data'}</td>
@@ -254,6 +319,7 @@ const RoomStoreDetail: React.FC = () => {
 
           <div className='md:w-1/2 p-4'>
             <h2 className='text-xl font-semibold mb-2'>Quy tắc phòng:</h2>
+
             <table className='w-full table-auto border-collapse border border-gray-300 mb-4'>
               <tbody>
                 {room?.houseRule.length > 0 ? (
@@ -272,7 +338,13 @@ const RoomStoreDetail: React.FC = () => {
                 )}
               </tbody>
             </table>
-            <h2 className='text-xl font-semibold mb-2'>Tiện ích trong phòng</h2>
+            <div className='flex justify-between items-center mb-4 mt-10'>
+              <h2 className='text-xl font-semibold mb-2'>Tiện ích trong phòng</h2>
+              <Button variant='outline' className='text-primary'>
+                <Plus />
+                Thêm tiện ích
+              </Button>
+            </div>
             <Table className='w-full border border-gray-300'>
               <TableHeader>
                 <TableRow className='bg-gray-100'>
@@ -304,14 +376,8 @@ const RoomStoreDetail: React.FC = () => {
                         <p className='text-gray-500'>{amity.description || 'Không có mô tả'}</p>
                       </TableCell>
                       <TableCell className='p-2 flex items-center'>
-                        <Edit
-                          className='h-5 w-5 text-blue-500 cursor-pointer mr-2'
-                          onClick={() => handleEditAmity(amity.id)}
-                        />
-                        <Trash
-                          className='h-5 w-5 text-red-500 cursor-pointer'
-                          onClick={() => handleDeleteAmity(amity.id)}
-                        />
+                        <Edit className='h-5 w-5 text-green-500 cursor-pointer mr-2' onClick={() => {}} />
+                        <Trash className='h-5 w-5 text-red-500 cursor-pointer' onClick={() => {}} />
                       </TableCell>
                     </TableRow>
                   ))
@@ -346,6 +412,68 @@ const RoomStoreDetail: React.FC = () => {
           </DialogContent>
         </Dialog>
       )}
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: '#647c6c'
+          },
+          components: {
+            Button: {}
+          }
+        }}
+      >
+        <Modal title='Cập nhật thông tin phòng' visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}  footer={null} >
+          <h2 className='text-lg text-primary font-bold'>{room.roomName}</h2>
+          <form className='flex flex-col gap-4'>
+            {/* Include your form fields here for updating room details */}
+            <div className='flex flex-col gap-4'>
+              <Label>Giá:</Label>
+              <Input
+                type='text'
+                value={pricePerHour}
+                className='w-full'
+                onChange={(e) => setPricePerHour(Number(e.target.value) || 0)}
+              />
+            </div>
+            <div className='flex flex-col gap-4'>
+              <Label>Mô tả:</Label>
+              <Textarea value={description} className='w-full' onChange={(e) => setDescription(e.target.value)} />
+            </div>
+            <div className='flex flex-col gap-4'>
+              <Label>House Rules:</Label>
+              <ul>
+                {houseRules.map((rule, index) => (
+                  <li key={index} className='flex justify-between items-center mb-2'>
+                    <span>{rule}</span>
+                    <Trash className='w-5 h-5 text-primary' onClick={(e) => handleRemoveRule(index, e)} />
+                  </li>
+                ))}
+              </ul>
+              <div className='flex justify-between items-center gap-5'>
+                <Input
+                  type='text'
+                  value={newRule}
+                  onChange={(e) => setNewRule(e.target.value)}
+                  placeholder='Thêm quy định mới'
+                  className=''
+                />
+                <Button variant="outline_primary" onClick={handleAddRule} className=''>
+                  <Plus />
+                  Thêm
+                </Button>
+              </div>
+            </div>
+          </form>
+          <div className='flex justify-end mt-4'>
+            <Button variant="outline" onClick={handleCancel} className='mr-2'>
+              Hủy
+            </Button>
+            <Button onClick={handleOk}>
+              Cập nhật
+            </Button>
+          </div>
+        </Modal>
+      </ConfigProvider>
     </div>
   )
 }
