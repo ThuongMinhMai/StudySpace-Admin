@@ -41,11 +41,11 @@ interface Amyti {
   amityType: string;    
   amityStatus: string;  
   quantity: number;     
-  description: string | null; 
+  description: string | null | undefined;
 }
 export const columns = (
   handleStatusChange: (amyti: Amyti, status: string) => void,
-  handleEditName: (amyti: Amyti, newName: string) => void,
+  handleEditAmity: (amyti: Amyti) => void,
   handleShowServiceModal: (amyti: Amyti) => void 
 ): ColumnDef<Amyti>[] => [
   {
@@ -124,5 +124,19 @@ export const columns = (
     header: ({ column }) => <DataTableColumnHeader column={column} title='Trạng thái' />,
     cell: ({ row }) => <DataTableRowActions row={row} handleStatusChange={handleStatusChange} />,
     filterFn: (row, id, value) => value.includes(row.getValue(id))
+  },
+  {
+    // This is the column with the edit icon and no title
+    accessorKey: 'edit',
+    header: () => null,
+    cell: ({ row }) => (
+      <Tooltip title='Chỉnh sửa'>
+        <Edit2 
+          className='cursor-pointer w-4 text-primary' 
+          onClick={() => handleEditAmity(row.original)}
+        />
+      </Tooltip>
+    ),
+    enableHiding: false,
   }
 ]

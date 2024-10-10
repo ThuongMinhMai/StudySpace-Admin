@@ -13,12 +13,12 @@ import { Loader, Plus } from 'lucide-react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../atoms/ui/form'
 import { Input } from '../../atoms/ui/input'
 import { useForm } from 'react-hook-form'
-import { amityNameSchema } from '@/components/Schema/StationNameSchema'
+import { amitySchema, AddAmytiSchema } from '@/components/Schema/AmitySchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { AddStationSchema } from '@/components/Schema/AddStationSchema'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../atoms/ui/select'
 import { ServiceModal } from '../ServiceModals'
+import { DialogTitle } from '@radix-ui/react-dialog'
 
 // Define the interface for the Service
 interface Service {
@@ -51,15 +51,15 @@ interface City {
   Status: string
 }
 interface Amyti {
-  amityId: number;      
-  amityName: string;   
-  amityType: string;    
-  amityStatus: string;  
-  quantity: number;     
-  description: string | null; 
+  amityId: number
+  amityName: string
+  amityType: string
+  amityStatus: string
+  quantity: number
+  description: string | null | undefined
 }
 interface ApiResponse<T> {
-  data: T;
+  data: T
 }
 function ListAmityStore() {
   const { user } = useAuth()
@@ -105,18 +105,22 @@ function ListAmityStore() {
     // Handle the logic for adding a service
     setAddServiceModalVisible(false)
   }
-  const formAmtiy = useForm<z.infer<typeof amityNameSchema>>({
-    resolver: zodResolver(amityNameSchema),
+  const formAmtiy = useForm<z.infer<typeof amitySchema>>({
+    resolver: zodResolver(amitySchema),
     defaultValues: {
-      amityName: ''
+      amityName: '',
+      type: '',
+      quantity: 0,
+      description: ''
     }
   })
-  const formAddStation = useForm<z.infer<typeof AddStationSchema>>({
-    resolver: zodResolver(AddStationSchema),
+  const formAddAmyti = useForm<z.infer<typeof AddAmytiSchema>>({
+    resolver: zodResolver(AddAmytiSchema),
     defaultValues: {
-      StationName: '',
-      CityID: '',
-      CompanyID: user?.email || '' //loi o day nhe
+      name: '',
+      type: '',
+      quantity: 0,
+      description: ''
     }
   })
   useEffect(() => {
@@ -170,9 +174,10 @@ function ListAmityStore() {
           variant: 'success',
           title: 'Cập nhật thành công',
           // description: 'Đã đổi trạng thái tiện ích này thành ' + newStatus
-          description: newStatus === "Active"
-          ? 'Đã thay đổi trạng thái tiện ích này thành hoạt động'
-          : 'Đã thay đổi trạng thái tiện ích này thành không hoạt động'
+          description:
+            newStatus === 'Active'
+              ? 'Đã thay đổi trạng thái tiện ích này thành hoạt động'
+              : 'Đã thay đổi trạng thái tiện ích này thành không hoạt động'
         })
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
@@ -191,81 +196,109 @@ function ListAmityStore() {
     }
   }
 
-  const handleEditName = (amyti: Amyti, currentName: string) => {
+  const handleEditAmity = (amyti: Amyti) => {
+    console.log('edit tien tích', amyti)
     setIsEditing(amyti)
-    formAmtiy.reset({ amityName: currentName })
+    // formAmtiy.reset()
+    formAmtiy.reset({
+      amityName: amyti.amityName,
+      type: amyti.amityType,
+      quantity: amyti.quantity,
+      description: amyti.description || ''
+    })
   }
 
-  const confirmEditName = async (values: z.infer<typeof amityNameSchema>) => {
+  const confirmEditAmity = async (values: z.infer<typeof amitySchema>) => {
     if (isEditing) {
       setIsLoadingUpdate(true)
-      // try {
-      //   await studySpaceAPI.put(`station-management/managed-stations/${isEditing.StationID}`, {
-      //     StationName: values.StationName
-      //   })
-      //   setStations(
-      //     stations.map((station) =>
-      //       station.StationID === isEditing.StationID ? { ...station, StationName: values.StationName } : station
-      //     )
-      //   )
-      //   toast({
-      //     variant: 'success',
-      //     title: 'Cập nhật thành công',
-      //     description: 'Đã cập nhật tên trạm dừng'
-      //   })
-      //   setIsEditing(null)
-      // } catch (error) {
-      //   if (axios.isAxiosError(error) && error.response) {
-      //     const message = error.response.data.Result.message
-      //     toast({
-      //       variant: 'destructive',
-      //       title: 'Không thể cập nhật tên trạm dừng',
-      //       description: message || 'Vui lòng thử lại sau'
-      //     })
-      //   }
-      // } finally {
-      //   setIsLoadingUpdate(false)
-      // }
+      try {
+        await studySpaceAPI.put(`/Amity/${isEditing.amityId}`, {
+          name: values.amityName,
+          type: values.type,
+          quantity: values.quantity,
+          description: values.description
+        })
+
+        const updatedData = {
+          amityName: values.amityName,
+          quantity: values.quantity,
+          description: values.description,
+          amityType: isEditing.amityType,
+          amityStatus: isEditing.amityStatus
+        }
+        setAmyties(
+          amyties.map((amyti) =>
+            amyti.amityId === isEditing.amityId
+              ? { ...amyti, ...updatedData } // Update the amity with new values
+              : amyti
+          )
+        )
+        toast({
+          variant: 'success',
+          title: 'Cập nhật thành công',
+          description: 'Đã cập nhật tiện ích'
+        })
+        setIsEditing(null)
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          const message = error.response.data.Result.message
+          toast({
+            variant: 'destructive',
+            title: 'Không thể cập nhật tiện ích',
+            description: message || 'Vui lòng thử lại sau'
+          })
+        }
+      } finally {
+        setIsLoadingUpdate(false)
+      }
     }
   }
 
-  const handleAddStation = () => {
+  const handleAddAmyti = () => {
     setIsAdding(true)
   }
   const handleModalAddClose = () => {
     setIsAdding(false)
-    formAddStation.reset() // Reset form when closing
+    formAddAmyti.reset() // Reset form when closing
   }
-  const confirmAddStation = async (values: z.infer<typeof AddStationSchema>) => {
+  const confirmAddAmyti = async (values: z.infer<typeof AddAmytiSchema>) => {
     setIsLoadingUpdate(true)
-    // try {
-    //   const { data } = await studySpaceAPI.post('station-management/managed-stations', {
-    //     stationName: values.StationName,
-    //     cityID: values.CityID,
-    //     companyID: user?.userID
-    //   })
-    //   const newStation = { ...data, ServiceTypeInStation: [] }
-    //   console.log('fjhhfjhkjg', newStation)
-    //   setStations([...stations, newStation])
-    //   toast({
-    //     variant: 'success',
-    //     title: 'Thêm trạm dừng thành công',
-    //     description: 'Trạm dừng mới đã được thêm thành công'
-    //   })
-    //   setIsAdding(false)
-    //   formAddStation.reset()
-    // } catch (error) {
-    //   if (axios.isAxiosError(error) && error.response) {
-    //     const message = error.response.data.Result.message
-    //     toast({
-    //       variant: 'destructive',
-    //       title: 'Không thể thêm trạm dừng',
-    //       description: message || 'Vui lòng thử lại sau'
-    //     })
-    //   }
-    // } finally {
-    //   setIsLoadingUpdate(false)
-    // }
+    try {
+      const response = await studySpaceAPI.post('/Amity', {
+        name: values.name,
+        type: values.type,
+        quantity: values.quantity,
+        description: values.description
+      })
+      const result = response.data.data
+      const newAmyti = {
+        amityId: result.id,
+        amityName: result.name,
+        amityType: result.type,
+        amityStatus: result.status,
+        quantity: result.quantity,
+        description: result.description
+      }
+      setAmyties([...amyties, newAmyti])
+      toast({
+        variant: 'success',
+        title: 'Thêm tiện ích thành công',
+        description: 'Tiện ích mới đã được thêm thành công'
+      })
+      setIsAdding(false)
+      formAddAmyti.reset()
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const message = error.response.data.Result.message
+        toast({
+          variant: 'destructive',
+          title: 'Không thể thêm tiện ích',
+          description: message || 'Vui lòng thử lại sau'
+        })
+      }
+    } finally {
+      setIsLoadingUpdate(false)
+    }
   }
   if (isLoadingAmyties) {
     return <TableSkeleton />
@@ -277,7 +310,7 @@ function ListAmityStore() {
         <h1 className='my-4 border-b pb-2 text-3xl font-semibold tracking-wider first:mt-0'>Danh sách tiện ích</h1>
         <Button
           className='flex justify-center items-center bg-white border-primary border-[1px] text-primary hover:bg-primary hover:text-white'
-          onClick={handleAddStation}
+          onClick={handleAddAmyti}
         >
           <Plus className='w-6 mr-1' />
           Thêm tiện ích
@@ -285,7 +318,7 @@ function ListAmityStore() {
       </div>
       <DataTable
         data={amyties}
-        columns={columns(handleStatusChange, handleEditName, handleShowServiceModal)}
+        columns={columns(handleStatusChange, handleEditAmity, handleShowServiceModal)}
         Toolbar={DataTableToolbar}
         rowString='Tiện ích'
       />
@@ -308,24 +341,68 @@ function ListAmityStore() {
           </DialogContent>
         </Dialog>
       )}
-      {/* {isEditing && (
+      {isEditing && (
         <Dialog open={isEditing !== null} onOpenChange={() => setIsEditing(null)}>
           <DialogOverlay className='bg-/60' />
           <DialogContent>
-            <Form {...formStation}>
+            <DialogTitle>Cập nhật tiện ích</DialogTitle>
+            <Form {...formAmtiy}>
               <form
-                onSubmit={formStation.handleSubmit(confirmEditName)}
-                className='w-full flex  gap-5 flex-col h-full text-center mr-20'
+                onSubmit={formAmtiy.handleSubmit(confirmEditAmity)}
+                className='w-full flex gap-5 flex-col h-full text-center mr-20'
               >
-                <h3 className='text-lg font-medium leading-6 text-gray-900'>Cập nhật tên trạm dừng</h3>
                 <FormField
-                  control={formStation.control}
-                  name='StationName'
+                  control={formAmtiy.control}
+                  name='amityName'
                   render={({ field }) => (
                     <FormItem className='w-full flex flex-col justify-center items-start'>
-                      <FormLabel>Tên trạm dừng</FormLabel>
+                      <FormLabel>Tên tiện ích</FormLabel>
                       <FormControl>
-                        <Input placeholder='Nhập tên trạm dừng' {...field} />
+                        <Input placeholder='Nhập tên tiện ích' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={formAmtiy.control}
+                  name='type'
+                  render={({ field }) => (
+                    <FormItem className='w-full flex flex-col justify-center items-start'>
+                      <FormLabel>Loại tiện ích</FormLabel>
+                      <FormControl>
+                        <Input placeholder='Nhập loại tiện ích' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={formAmtiy.control}
+                  name='quantity'
+                  render={({ field }) => (
+                    <FormItem className='w-full flex flex-col justify-center items-start'>
+                      <FormLabel>Số lượng</FormLabel>
+                      <FormControl>
+                        <Input
+                          type='number'
+                          {...field}
+                          value={field.value || ''} // Ensures a controlled component
+                          onChange={(e) => field.onChange(e.target.valueAsNumber)} // Converts string to number
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={formAmtiy.control}
+                  name='description'
+                  render={({ field }) => (
+                    <FormItem className='w-full flex flex-col justify-center items-start'>
+                      <FormLabel>Mô tả</FormLabel>
+                      <FormControl>
+                        <Input placeholder='Nhập mô tả (tuỳ chọn)' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -343,20 +420,20 @@ function ListAmityStore() {
             </Form>
           </DialogContent>
         </Dialog>
-      )} */}
+      )}
       {isAdding && (
         <Dialog open={isAdding} onOpenChange={handleModalAddClose}>
           <DialogOverlay className='bg-/60' />
           <DialogContent>
-            <Form {...formAddStation}>
+            <DialogTitle>Thêm tiện ích mới</DialogTitle>
+            <Form {...formAddAmyti}>
               <form
-                onSubmit={formAddStation.handleSubmit(confirmAddStation)}
+                onSubmit={formAddAmyti.handleSubmit(confirmAddAmyti)}
                 className='w-full flex gap-5 flex-col h-full text-center mr-20'
               >
-                <h3 className='text-lg font-medium leading-6 text-gray-900'>Thêm trạm dừng mới</h3>
-                <FormField
-                  control={formAddStation.control}
-                  name='CityID'
+                {/* <FormField
+                  control={formAddAmyti.control}
+                  name='name'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Chọn thành phố</FormLabel>
@@ -378,15 +455,60 @@ function ListAmityStore() {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
                 <FormField
-                  control={formAddStation.control}
-                  name='StationName'
+                  control={formAddAmyti.control}
+                  name='name'
                   render={({ field }) => (
                     <FormItem className='w-full flex flex-col justify-center items-start'>
-                      <FormLabel>Tên trạm dừng</FormLabel>
+                      <FormLabel>Tên tiện ích</FormLabel>
                       <FormControl>
-                        <Input placeholder='Nhập tên trạm dừng' {...field} />
+                        <Input placeholder='Nhập tên tiện ích' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={formAddAmyti.control}
+                  name='type'
+                  render={({ field }) => (
+                    <FormItem className='w-full flex flex-col justify-center items-start'>
+                      <FormLabel>Tên tiện ích</FormLabel>
+                      <FormControl>
+                        <Input placeholder='Nhập loại tiện ích' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={formAddAmyti.control}
+                  name='quantity'
+                  render={({ field }) => (
+                    <FormItem className='w-full flex flex-col justify-center items-start'>
+                      <FormLabel>Số lượng</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder='Nhập số lượng'
+                          type='number'
+                          {...field}
+                          value={field.value || ''} // Ensures a controlled component
+                          onChange={(e) => field.onChange(e.target.valueAsNumber)} // Converts string to number
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={formAddAmyti.control}
+                  name='description'
+                  render={({ field }) => (
+                    <FormItem className='w-full flex flex-col justify-center items-start'>
+                      <FormLabel>Mô tả</FormLabel>
+                      <FormControl>
+                        <Input placeholder='Nhập mô tả (tuỳ chọn)' {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

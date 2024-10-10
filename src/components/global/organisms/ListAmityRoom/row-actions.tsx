@@ -48,7 +48,7 @@ interface Service {
     amityType: string;    
     amityStatus: string;  
     quantity: number;     
-    description: string | null; 
+    description: string | null | undefined;
   }
 export function DataTableRowActions<TData extends Amyti>({ row,handleStatusChange }: DataTableRowActionsProps<TData>) {
   const { user } = useAuth()
