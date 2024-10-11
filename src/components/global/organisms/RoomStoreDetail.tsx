@@ -31,7 +31,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from '../atoms/ui/se
 import { Dialog, DialogContent, DialogOverlay } from '../atoms/ui/dialog'
 import { toast } from 'sonner'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../atoms/ui/table'
-import { ConfigProvider, Modal, Tooltip } from 'antd'
+import { ConfigProvider, Form, Modal, Tooltip, Select as SelectAnt } from 'antd'
 import { Input } from '../atoms/ui/input'
 import { Textarea } from '../atoms/ui/textarea'
 import { Label } from '../atoms/ui/label'
@@ -74,7 +74,14 @@ interface Room {
 interface ApiResponse<T> {
   data: T
 }
-
+interface AmytiInRoom {
+  amityId: number
+  amityName: string
+  amityType: string
+  amityStatus: string
+  quantity: number
+  description: string | null | undefined
+}
 const RoomStoreDetail: React.FC = () => {
   const { user } = useAuth()
   const navigate = useNavigate()
@@ -95,12 +102,16 @@ const RoomStoreDetail: React.FC = () => {
   const [isEditModalVisible, setEditModalVisible] = useState(false)
   const [currentAmity, setCurrentAmity] = useState<Amity>()
   const [loadingDelelteAmyti, setLoadingDelelteAmyti] = useState(false)
+  const [isAddModalVisible, setAddModalVisible] = useState(false)
+  const [amitiesList, setAmitiesList] = useState<AmytiInRoom[]>([])
+  const [form] = Form.useForm()
   const showModal = () => {
     setIsModalVisible(true)
   }
 
   const handleOk = async () => {
     const formData = new FormData()
+
     formData.append('PricePerHour', pricePerHour !== undefined ? pricePerHour.toString() : '0')
     formData.append('Description', description || '')
     // formData.append("HouseRule",houseRules)
@@ -224,8 +235,65 @@ const RoomStoreDetail: React.FC = () => {
     // Call your edit API here using currentAmity data
     setEditModalVisible(false)
   }
+
+  const showAddModal = () => {
+    setAddModalVisible(true)
+  }
+
+  const handleCancelAdd = () => {
+    setAddModalVisible(false)
+    form.resetFields() // Reset form fields when closing the modal
+  }
+
+  const handleAddAmity = async () => {
+    try {
+      const values = await form.validateFields()
+      const { amityId, quantity } = values
+
+      // Construct the API endpoint, replacing with the appropriate room and amity IDs
+
+      // Define the payload based on form values
+
+      // Make the API request
+      const response = await studySpaceAPI.post(`/Amity/room/${id}/amity/${amityId}?quantity=${quantity}`)
+      console.log('Amity added successfully:', response.data)
+      console.log(',', response.data.data)
+      if (response.data.status === 1) {
+        setAddModalVisible(false)
+        form.resetFields()
+        fetchRoomData()
+        toast.success('Thêm tiện ích thành công')
+      } else {
+        toast.error('Thêm tiện ích thất bại' + response.data.message)
+      }
+    } catch (error: any) {
+      toast.error('Thêm tiện ích thất bại')
+      // Check if the error is related to form validation
+      if (error.name === 'Error') {
+        console.error('Validation failed:', error)
+      } else {
+        // Handle API or other errors
+        console.error('Error adding amity:', error.response?.data || error.message)
+      }
+    }
+    // form.validateFields().then((values) => {
+    //   // Perform the add amity action here with the form values
+    //   console.log('Adding amity:', values)
+    //   setAddModalVisible(false)
+    //   form.resetFields() // Reset form after submission
+    // })
+  }
+  const fetchAmities = async () => {
+    try {
+      const response = await studySpaceAPI.get(`/Amity/supplier/${user?.userID}`) // Replace with your API endpoint
+      setAmitiesList(response.data.data)
+    } catch (error) {
+      toast.error('Lỗi khi tải danh sách tiện ích')
+    }
+  }
   useEffect(() => {
     fetchRoomData()
+    fetchAmities()
   }, [id])
 
   if (isLoading) return <div>Đang tải...</div>
@@ -373,7 +441,7 @@ const RoomStoreDetail: React.FC = () => {
                   room.houseRule.map((rule, index) => (
                     <tr key={index} className='border-b'>
                       <td className='p-2 flex items-center'>
-                        <OctagonAlert className='h-5 w-5 mr-2 text-primary' /> {/* Adjust icon color as needed */}
+                        <OctagonAlert className='h-5 w-5 mr-2 text-primary' />
                         {rule}
                       </td>
                     </tr>
@@ -387,7 +455,7 @@ const RoomStoreDetail: React.FC = () => {
             </table>
             <div className='flex justify-between items-center mb-4 mt-10'>
               <h2 className='text-xl font-semibold mb-2'>Tiện ích trong phòng</h2>
-              <Button variant='outline' className='text-primary'>
+              <Button variant='outline' className='text-primary' onClick={showAddModal}>
                 <Plus />
                 Thêm tiện ích
               </Button>
@@ -546,8 +614,13 @@ const RoomStoreDetail: React.FC = () => {
         >
           <p>Bạn có chắc chắn muốn xóa tiện ích này không?</p>
           <div className='flex justify-end mt-4'>
-            <Button variant='outline' disabled={loadingDelelteAmyti} onClick={() => setDeleteModalVisible(false)} className='mr-2'>
-               Hủy
+            <Button
+              variant='outline'
+              disabled={loadingDelelteAmyti}
+              onClick={() => setDeleteModalVisible(false)}
+              className='mr-2'
+            >
+              Hủy
             </Button>
             <Button onClick={handleDeleteConfirm} disabled={loadingDelelteAmyti}>
               {loadingDelelteAmyti && <Loader className='animate-spin' />}Xóa
@@ -611,6 +684,46 @@ const RoomStoreDetail: React.FC = () => {
             </Button>
             <Button onClick={handleEditConfirm}>Cập nhật</Button>
           </div>
+        </Modal>
+
+        <Modal
+          title='Thêm tiện ích'
+          visible={isAddModalVisible}
+          onCancel={handleCancelAdd}
+          onOk={handleAddAmity}
+          okText='Thêm'
+          cancelText='Hủy'
+        >
+          <Form form={form} layout='vertical'>
+            <Form.Item
+              name='amityId'
+              label='Tên tiện ích'
+              rules={[{ required: true, message: 'Vui lòng chọn tiện ích' }]}
+            >
+              <SelectAnt placeholder='Chọn tiện ích'>
+                {amitiesList.map((amity) => (
+                  <SelectAnt.Option
+                    key={amity.amityId}
+                    value={amity.amityId}
+                    className={`flex justify-between items-center p-2 rounded-md mb-2 border 
+                   ${amity.amityStatus === 'Active' ? 'bg-green-50 border-green-300 text-green-700' : 'bg-red-50 border-red-300 text-red-700'}`}
+                  >
+                    <div className='flex justify-between items-center'>
+                      <span>
+                        {amity.amityName} ({amity.amityType})
+                      </span>
+                      <span className='text-sm italic'>
+                        {amity.amityStatus === 'Active' ? 'Hoạt động' : 'Không hoạt động'}
+                      </span>
+                    </div>
+                  </SelectAnt.Option>
+                ))}
+              </SelectAnt>
+            </Form.Item>
+            <Form.Item name='quantity' label='Số lượng' rules={[{ required: true, message: 'Vui lòng nhập số lượng' }]}>
+              <Input type='number' placeholder='Nhập số lượng' />
+            </Form.Item>
+          </Form>
         </Modal>
       </ConfigProvider>
     </div>
