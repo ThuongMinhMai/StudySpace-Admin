@@ -58,7 +58,7 @@ function App() {
           element={
             <AdminProtectedRoute>
               <Suspense fallback={<Loader />}>
-                <Home />
+                {/* <Home /> */}
               </Suspense>
             </AdminProtectedRoute>
           }

@@ -221,19 +221,35 @@ const RoomStoreDetail: React.FC = () => {
 
   // Edit Modal
   const handleEditConfirm = async () => {
-    try {
-      // await studySpaceAPI.put(`/Room/${id}`, formData)
-      // toast.success('Cập nhật thông tin phòng thành công')
-      // fetchRoomData()
-      // setIsModalVisible(false)
-    } catch (error) {
-      // console.error('Error updating room:', error)
-      // toast.error('Cập nhật thông tin phòng thất bại. Vui lòng thử lại.')
-    }
+    // const values = await form.validateFields()
+    // const { amityId, quantity } = values
 
-    console.log('update tien ích tỏng pong', currentAmity)
+    // Construct the API endpoint, replacing with the appropriate room and amity IDs
+
+    // Define the payload based on form values
+
+    // Make the API request
+    try {
+      const response = await studySpaceAPI.put(
+        `/Amity/room/${id}/amity/${currentAmity?.id}?quantity=${currentAmity?.quantity}`
+      )
+      if (response.data.status === 1) {
+        setEditModalVisible(false)
+
+        form.resetFields()
+        fetchRoomData()
+        toast.success('Cập nhật tiện ích thành công')
+      } else {
+        toast.error('Cập nhật tiện ích thất bại ' + response.data.message)
+      }
+
+      console.log('update tien ích tỏng pong', currentAmity)
+    } catch (error) {
+      console.error('Error update amtyi in room:', error)
+      toast.error('Cập nhật tiện ích thất bại. Vui lòng thử lại.')
+    } finally {
+    }
     // Call your edit API here using currentAmity data
-    setEditModalVisible(false)
   }
 
   const showAddModal = () => {
@@ -264,7 +280,7 @@ const RoomStoreDetail: React.FC = () => {
         fetchRoomData()
         toast.success('Thêm tiện ích thành công')
       } else {
-        toast.error('Thêm tiện ích thất bại' + response.data.message)
+        toast.error('Thêm tiện ích thất bại ' + response.data.message)
       }
     } catch (error: any) {
       toast.error('Thêm tiện ích thất bại')
@@ -491,13 +507,13 @@ const RoomStoreDetail: React.FC = () => {
                         <p className='text-gray-500'>{amity.description || 'Không có mô tả'}</p>
                       </TableCell>
                       <TableCell className='p-2 flex items-center'>
-                        {/* <Edit
+                        <Edit
                           className='h-5 w-5 text-green-500 cursor-pointer mr-2'
                           onClick={() => {
                             setCurrentAmity(amity)
                             setEditModalVisible(true)
                           }}
-                        /> */}
+                        />
                         <Trash
                           className='h-5 w-5 text-red-500 cursor-pointer'
                           onClick={() => {
@@ -639,6 +655,8 @@ const RoomStoreDetail: React.FC = () => {
           <div className='flex flex-col gap-4'>
             <Label>Tên:</Label>
             <Input
+              className='cursor-not-allowed'
+              readOnly
               value={currentAmity?.name}
               onChange={(e) => {
                 if (currentAmity) {
@@ -660,6 +678,8 @@ const RoomStoreDetail: React.FC = () => {
 
             <Label>Mô tả:</Label>
             <Textarea
+              className='cursor-not-allowed'
+              readOnly
               value={currentAmity?.description}
               onChange={(e) => {
                 if (currentAmity) {
@@ -670,6 +690,8 @@ const RoomStoreDetail: React.FC = () => {
 
             <Label>Loại:</Label>
             <Input
+              className='cursor-not-allowed'
+              readOnly
               value={currentAmity?.type}
               onChange={(e) => {
                 if (currentAmity) {
