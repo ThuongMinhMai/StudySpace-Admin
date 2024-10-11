@@ -12,6 +12,7 @@ import {
   Edit2,
   Home,
   Info,
+  LeafyGreen,
   Loader,
   MapIcon,
   MapPin,
@@ -93,6 +94,7 @@ const RoomStoreDetail: React.FC = () => {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false)
   const [isEditModalVisible, setEditModalVisible] = useState(false)
   const [currentAmity, setCurrentAmity] = useState<Amity>()
+  const [loadingDelelteAmyti, setLoadingDelelteAmyti] = useState(false)
   const showModal = () => {
     setIsModalVisible(true)
   }
@@ -182,13 +184,43 @@ const RoomStoreDetail: React.FC = () => {
   }
 
   // Confirmation Modal for Deletion
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
+    setLoadingDelelteAmyti(true)
+    try {
+      // Make API request to update the room
+      await studySpaceAPI.delete(`Amity/room/${id}/amity/${currentAmity?.id}`)
+
+      // If successful, show a success message
+      toast.success('Xóa tiện ích thành công')
+
+      // Optionally refresh the room data
+      fetchRoomData() // Fetch updated room data
+      setDeleteModalVisible(false)
+      setLoadingDelelteAmyti(false)
+    } catch (error) {
+      console.error('Error delete amtyi in room:', error)
+      toast.error('Xóa tiện ích thất bại. Vui lòng thử lại.')
+      setLoadingDelelteAmyti(false)
+    } finally {
+      setLoadingDelelteAmyti(false)
+    }
+
     // Call your delete API here using currentAmity.id
-    setDeleteModalVisible(false)
   }
 
   // Edit Modal
-  const handleEditConfirm = () => {
+  const handleEditConfirm = async () => {
+    try {
+      // await studySpaceAPI.put(`/Room/${id}`, formData)
+      // toast.success('Cập nhật thông tin phòng thành công')
+      // fetchRoomData()
+      // setIsModalVisible(false)
+    } catch (error) {
+      // console.error('Error updating room:', error)
+      // toast.error('Cập nhật thông tin phòng thất bại. Vui lòng thử lại.')
+    }
+
+    console.log('update tien ích tỏng pong', currentAmity)
     // Call your edit API here using currentAmity data
     setEditModalVisible(false)
   }
@@ -391,13 +423,13 @@ const RoomStoreDetail: React.FC = () => {
                         <p className='text-gray-500'>{amity.description || 'Không có mô tả'}</p>
                       </TableCell>
                       <TableCell className='p-2 flex items-center'>
-                        <Edit
+                        {/* <Edit
                           className='h-5 w-5 text-green-500 cursor-pointer mr-2'
                           onClick={() => {
                             setCurrentAmity(amity)
                             setEditModalVisible(true)
                           }}
-                        />
+                        /> */}
                         <Trash
                           className='h-5 w-5 text-red-500 cursor-pointer'
                           onClick={() => {
@@ -411,7 +443,7 @@ const RoomStoreDetail: React.FC = () => {
                 ) : (
                   <TableRow>
                     <TableCell className='p-2' colSpan={3}>
-                      No Data
+                      Chưa có tiện ích
                     </TableCell>
                   </TableRow>
                 )}
@@ -511,14 +543,15 @@ const RoomStoreDetail: React.FC = () => {
           onOk={handleDeleteConfirm}
           onCancel={() => setDeleteModalVisible(false)}
           footer={null}
-
         >
           <p>Bạn có chắc chắn muốn xóa tiện ích này không?</p>
           <div className='flex justify-end mt-4'>
-            <Button variant='outline' onClick={() => setDeleteModalVisible(false)} className='mr-2'>
-              Hủy
+            <Button variant='outline' disabled={loadingDelelteAmyti} onClick={() => setDeleteModalVisible(false)} className='mr-2'>
+               Hủy
             </Button>
-            <Button onClick={handleDeleteConfirm}>Xóa</Button>
+            <Button onClick={handleDeleteConfirm} disabled={loadingDelelteAmyti}>
+              {loadingDelelteAmyti && <Loader className='animate-spin' />}Xóa
+            </Button>
           </div>
         </Modal>
 
@@ -529,7 +562,6 @@ const RoomStoreDetail: React.FC = () => {
           onOk={handleEditConfirm}
           onCancel={() => setEditModalVisible(false)}
           footer={null}
-
         >
           <div className='flex flex-col gap-4'>
             <Label>Tên:</Label>
