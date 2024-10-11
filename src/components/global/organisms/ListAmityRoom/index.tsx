@@ -212,7 +212,7 @@ function ListAmityStore() {
     if (isEditing) {
       setIsLoadingUpdate(true)
       try {
-        await studySpaceAPI.put(`/Amity/${isEditing.amityId}`, {
+        await studySpaceAPI.put(`/Amity/${isEditing.amityId}?supplierId=${user?.userID}`, {
           name: values.amityName,
           type: values.type,
           quantity: values.quantity,
@@ -264,7 +264,7 @@ function ListAmityStore() {
   const confirmAddAmyti = async (values: z.infer<typeof AddAmytiSchema>) => {
     setIsLoadingUpdate(true)
     try {
-      const response = await studySpaceAPI.post('/Amity', {
+      const response = await studySpaceAPI.post(`/Amity?supplierId=${user?.userID}`, {
         name: values.name,
         type: values.type,
         quantity: values.quantity,
@@ -272,10 +272,10 @@ function ListAmityStore() {
       })
       const result = response.data.data
       const newAmyti = {
-        amityId: result.id,
-        amityName: result.name,
-        amityType: result.type,
-        amityStatus: result.status,
+        amityId: result.amityId,
+        amityName: result.amityName,
+        amityType: result.amityType,
+        amityStatus: result.amityStatus,
         quantity: result.quantity,
         description: result.description
       }
