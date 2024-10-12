@@ -85,7 +85,7 @@ const CreateRoomStore: React.FC = () => {
         console.log("ảnh room", file.originFileObj)
 
         if (file.originFileObj) {
-          formData.append('ImageRoom[]', file.originFileObj)
+          formData.append('ImageRoom', file.originFileObj)
         }
       })
     }
