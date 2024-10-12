@@ -46,63 +46,40 @@ const CreateRoomStore: React.FC = () => {
   const onFinish = async (values: any) => {
     console.log(values.Amenities)
     const imageRoomFiles = values.ImageRoom
-    // Access the file directly from the values
-    const imageMenuFile = values.ImageMenu && values.ImageMenu[0];
-    console.log('Form Values:', values)
-    console.log('ImageMenu File:', imageMenuFile)
+    const imageMenuFile = values.ImageMenu && values.ImageMenu[0]
     const houseRules = values.HouseRule ? values.HouseRule.map((ruleObj: { rule: string }) => ruleObj.rule) : []
-
-    console.log("hoysro", houseRules)
-    // Handle form submission here
-    // Example: Create a FormData object and append the image file
     const formData = new FormData()
-    console.log('amity', values.Amenities)
-    // formData.append('ImageMenu', imageMenuFile) // Assuming imageMenuFile is the file itself
- houseRules.forEach((rule: string) => {
-    formData.append('HouseRule[]', rule); // Append each rule separately
-  });
-    // You can also append other form fields to the FormData
+    houseRules.forEach((rule: string) => {
+      formData.append('HouseRule[]', rule)
+    })
     formData.append('SpaceId', values.SpaceId)
     formData.append('RoomName', values.RoomName)
     formData.append('StoreId', values.StoreId)
     formData.append('Type', values.Type)
     formData.append('Capacity', values.Capacity)
-    // formData.append('HouseRule', houseRules);
 
     formData.append('PricePerHour', values.PricePerHour)
     formData.append('Description', values.Description)
-    // formData.append('Amities', values.Amenities)
     formData.append('Amities', JSON.stringify(values.Amenities))
     formData.append('Area', values.Area)
     if (imageMenuFile && imageMenuFile.originFileObj) {
-      formData.append('ImageMenu', imageMenuFile.originFileObj);
+      formData.append('ImageMenu', imageMenuFile.originFileObj)
     } else {
-      console.error("ImageMenu file is missing or not set correctly.");
+      console.error('ImageMenu file is missing or not set correctly.')
     }
 
     if (Array.isArray(imageRoomFiles)) {
       imageRoomFiles.forEach((file: UploadFile) => {
-        console.log("ảnh room", file.originFileObj)
-
         if (file.originFileObj) {
           formData.append('ImageRoom', file.originFileObj)
         }
       })
     }
-    // Now, send formData to your API endpoint using Axios or Fetch
-    // if (Array.isArray(imageRoomFiles)) {
-    //   imageRoomFiles.forEach((file: File) => {
-    //     formData.append('ImageRoom[]', file) // Append each file with an array notation
-    //   })
+
+    // console.log('FormData prepared for submission:')
+    // for (let pair of formData.entries()) {
+    //   console.log(`${pair[0]}:`, pair[1])
     // }
-    console.log('FormData prepared for submission:');
-    for (let pair of formData.entries()) {
-      console.log(`${pair[0]}:`, pair[1]);
-    }
-    // Example API call (uncomment and replace with actual endpoint)
-    // axios.post('YOUR_API_ENDPOINT', formData)
-    //   .then(response => console.log('Success:', response))
-    //   .catch(error => console.error('Error:', error));
 
     try {
       const response = await studySpaceAPI.post(`/Room`, formData)
