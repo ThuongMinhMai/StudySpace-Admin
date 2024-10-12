@@ -44,6 +44,7 @@ const CreateRoomStore: React.FC = () => {
 
 
   const onFinish = (values: any) => {
+    const imageRoomFiles = values.ImageRoom; 
     // Access the file directly from the values
     const imageMenuFile = values.ImageMenu; // Change this line to access the correct value
     console.log('Form Values:', values);
@@ -65,8 +66,12 @@ const CreateRoomStore: React.FC = () => {
     formData.append('Area', values.Area);
 
     // Now, send formData to your API endpoint using Axios or Fetch
+    if (Array.isArray(imageRoomFiles)) {
+      imageRoomFiles.forEach((file: File) => {
+        formData.append('ImageRoom[]', file); // Append each file with an array notation
+      });
+    }
     console.log('FormData prepared for submission:', formData);
-
     // Example API call (uncomment and replace with actual endpoint)
     // axios.post('YOUR_API_ENDPOINT', formData)
     //   .then(response => console.log('Success:', response))
