@@ -9,7 +9,7 @@ const CreateRoomStore: React.FC = () => {
   const navigate = useNavigate()
   const [form] = Form.useForm() // Use Ant Design Form hook
   const [imageRoomFileList, setImageRoomFileList] = useState<UploadFile[]>([])
-
+  const [imageMenuFile, setImageMenuFile] = useState<File | null>(null)
   const handleGoBack = () => {
     navigate(-1) // Navigate to the previous page
   }
@@ -35,10 +35,44 @@ const CreateRoomStore: React.FC = () => {
     imgWindow?.document.write(image.outerHTML)
   }
 
-  const onFinish = (values: any) => {
-    console.log('Form Values:', values)
-    // Handle form submission here
+  const onImageMenuChange: UploadProps['onChange'] = ({ file }) => {
+    if (file.originFileObj) {
+      setImageMenuFile(file.originFileObj)
+      form.setFieldsValue({ ImageMenu: file.originFileObj })
+    }
   }
+
+
+  const onFinish = (values: any) => {
+    // Access the file directly from the values
+    const imageMenuFile = values.ImageMenu; // Change this line to access the correct value
+    console.log('Form Values:', values);
+    console.log('ImageMenu File:', imageMenuFile);
+
+    // Handle form submission here
+    // Example: Create a FormData object and append the image file
+    const formData = new FormData();
+    formData.append('ImageMenu', imageMenuFile); // Assuming imageMenuFile is the file itself
+
+    // You can also append other form fields to the FormData
+    formData.append('SpaceId', values.SpaceId);
+    formData.append('RoomName', values.RoomName);
+    formData.append('StoreId', values.StoreId);
+    formData.append('Type', values.Type);
+    formData.append('Capacity', values.Capacity);
+    formData.append('PricePerHour', values.PricePerHour);
+    formData.append('Description', values.Description);
+    formData.append('Area', values.Area);
+
+    // Now, send formData to your API endpoint using Axios or Fetch
+    console.log('FormData prepared for submission:', formData);
+
+    // Example API call (uncomment and replace with actual endpoint)
+    // axios.post('YOUR_API_ENDPOINT', formData)
+    //   .then(response => console.log('Success:', response))
+    //   .catch(error => console.error('Error:', error));
+  };
+
 
   return (
     <div>
@@ -199,6 +233,7 @@ const CreateRoomStore: React.FC = () => {
             accept="image/*"
             listType="picture-card"
             maxCount={1}
+            onChange={onImageMenuChange}
             beforeUpload={() => false} // Disable automatic upload
           >
             + Upload
