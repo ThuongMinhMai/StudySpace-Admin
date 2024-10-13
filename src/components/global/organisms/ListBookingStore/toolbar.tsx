@@ -10,6 +10,7 @@ import { DataTableViewOptions } from '../table/view-options'
 import { Button } from '@/components/global/atoms/ui/button'
 import { Input } from '@/components/global/atoms/ui/input'
 import { NumberRangeFilter } from '../table/number_range_filter'
+import { DateRangeFilter } from '../table/date-range-filter'
 
 export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
   const isFiltered = table.getState().columnFilters.length > 0
@@ -20,14 +21,16 @@ export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
   const uniqueSpaceType = Array.from(table.getColumn('spaceType')?.getFacetedUniqueValues()?.entries() || []).map(
     ([key]) => key
   )
-  const uniqueArea  = Array.from(table.getColumn('area')?.getFacetedUniqueValues()?.entries() || []).map(
+  const uniqueBookedDate = Array.from(table.getColumn('bookedDate')?.getFacetedUniqueValues()?.entries() || []).map(
     ([key]) => key
   )
-  const uniqueStatus  = Array.from(table.getColumn('status')?.getFacetedUniqueValues()?.entries() || []).map(
+  const uniqueCheckin = Array.from(table.getColumn('checkin')?.getFacetedUniqueValues()?.entries() || []).map(
+    ([key]) => (key ? 'Đã check in' : 'Chưa check in')
+  )
+  const uniqueStatus = Array.from(table.getColumn('status')?.getFacetedUniqueValues()?.entries() || []).map(
     ([key]) => key
   )
 
- 
   const resetTrigger = table.getState().columnFilters.length
   return (
     <div className='ml-2 mb-2 flex justify-between'>
@@ -39,21 +42,21 @@ export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
           className='h-8 w-[150px] lg:w-[250px]'
         />
 
-        {/* <DataTableFacetedFilter column={table.getColumn('roomType')} title='Loại phòng' options={uniqueRoomType} />
+        
+        <DataTableFacetedFilter column={table.getColumn('status')} title='Trạng thái' options={uniqueStatus} />
+        <DataTableFacetedFilter column={table.getColumn('checkin')} title='Checkin' options={uniqueCheckin} />
+        <DataTableFacetedFilter column={table.getColumn('roomType')} title='Loại phòng' options={uniqueRoomType} />
         <DataTableFacetedFilter
           column={table.getColumn('spaceType')}
           title='Loại không gian'
           options={uniqueSpaceType}
         />
-        <NumberRangeFilter
-          column={table.getColumn('area')} // Adjust this to your area column key
-          title='Diện tích'
+        <DateRangeFilter
+          column={table.getColumn('bookedDate')}
+          title='Ngày đặt'
+          options={uniqueBookedDate}
           resetTrigger={resetTrigger}
-          options={uniqueArea} // Pass the uniqueArea options here
         />
-*/}
-        <DataTableFacetedFilter column={table.getColumn('status')} title='Trạng thái' options={uniqueStatus} /> 
-
         {isFiltered && (
           <Button variant='ghost' onClick={() => table.resetColumnFilters()} className='h-8 px-2 lg:px-3'>
             Reset

@@ -30,7 +30,7 @@ const ImageTab = ({ roomPictureDetails }: ImageTabProps) => {
               style={{ transform: `translateX(-${currentIndex * 100}%)` }}
             >
               {roomPictureDetails.map((image: string, index: number) => (
-                <div key={index} className='flex-none w-full h-full'>
+                <div key={index} className='flex-none w-full h-full '>
                   <img src={image} alt={`Slide ${index}`} className='w-full h-full rounded-md object-cover' />
                 </div>
               ))}

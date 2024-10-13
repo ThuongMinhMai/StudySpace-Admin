@@ -363,7 +363,7 @@ const RoomStoreDetail: React.FC = () => {
           <div>
             <p className='text-primary font-medium text-lg '>Menu</p>
             <img
-              className='w-full rounded-md'
+              className='w-full object-cover rounded-md'
               src={
                 room.listImages.imageMenu ||
                 'https://kamereo.vn/blog/wp-content/uploads/2024/05/mau-menu-cafe-thumbnail.jpg'

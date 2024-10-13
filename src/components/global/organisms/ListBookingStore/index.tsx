@@ -20,6 +20,7 @@ import { AddStationSchema } from '@/components/Schema/AddStationSchema'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../atoms/ui/select'
 import { ServiceModal } from '../ServiceModals'
 import { useNavigate } from 'react-router-dom'
+import { Modal, Tag } from 'antd'
 
 // Define the interface for the Service
 // interface Service {
@@ -77,34 +78,49 @@ import { useNavigate } from 'react-router-dom'
 // }
 
 interface Booking {
-  bookingId: number;
-  userName: string;
-  email: string;
-  userAddress: string;
-  gender: string; // Consider using an enum for gender if there are specific values.
-  avatar: string;
-  bookedDate: string; // Consider using Date if you want to work with date objects.
-  bookedTime: string; // You might also consider using a Date object here.
-  checkin: boolean;
-  roomId: number;
-  roomName: string;
-  storeName: string;
-  capacity: number;
-  pricePerHour: number;
-  description: string;
+  bookingId: number
+  userName: string
+  email: string
+  userAddress: string
+  gender: string // Consider using an enum for gender if there are specific values.
+  avatar: string
+  bookedDate: string // Consider using Date if you want to work with date objects.
+  bookedTime: string // You might also consider using a Date object here.
+  checkin: boolean
+  roomId: number
+  roomName: string
+  storeName: string
+  capacity: number
+  pricePerHour: number
+  description: string
   status: string // Consider using a union type for status.
-  area: number;
-  roomType: 'BASIC' | 'PREMIUM'; // Consider using a union type for room type.
-  spaceType: string;
-  image: string;
-  address: string;
+  area: number
+  roomType: 'BASIC' | 'PREMIUM' // Consider using a union type for room type.
+  spaceType: string
+  image: string
+  address: string
 }
 interface ApiResponse<T> {
-  data: T;
+  data: T
+}
+
+interface Transaction {
+  userName: string
+  email: string
+  userAddress: string
+  gender: 'XX' | 'XY' // Assuming 'XX' for female and 'XY' for male. Adjust as needed.
+  avatar: string // URL to the avatar image
+  roomName: string
+  bookedDate: string // ISO date string, consider using Date type if you need date operations
+  start: string // Time in HH:mm:ss format
+  end: string // Time in HH:mm:ss format
+  fee: number // Amount in your currency (assumed to be in some currency unit)
+  paymentMethod: string // List your payment methods as needed
+  status: string // Define possible statuses as needed
 }
 function ListBookingStore() {
   const { user } = useAuth()
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   // const [stations, setStations] = useState<Station[]>([])
   const [bookings, setBookings] = useState<Booking[]>([])
   // const [cities, setCities] = useState<City[]>([])
@@ -120,6 +136,8 @@ function ListBookingStore() {
   // const [isServiceModalVisible, setServiceModalVisible] = useState(false)
   const [isTransactionModalVisible, setTransactionModalVisible] = useState(false)
   const [isAddTransactionModalVisible, setAddTransactionModalVisible] = useState(false)
+  const [transactionData, setTransactionData] = useState<Transaction | null>(null)
+  const [isModalVisible, setIsModalVisible] = useState(false)
   // const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   const handleUpdateTransactiob = (updatedAmenti: any) => {
     // console.log("update ơ bang", updatedAmenti)
@@ -170,8 +188,8 @@ function ListBookingStore() {
       try {
         const response = await studySpaceAPI.get<ApiResponse<Booking[]>>(`/Room/booked/supplier/${user?.userID}`)
 
-        const result=response.data.data
-        console.log("rome ne", result)
+        const result = response.data.data
+        console.log('rome ne', result)
         setBookings(result || [])
         // const initialStatuses: { [key: string]: boolean } = {}
         // result.forEach((booking:Booking) => {
@@ -242,23 +260,19 @@ function ListBookingStore() {
     //     console.log("nre sta", newStatus)
     //     // Ensure `newStatus` is correctly defined as a boolean before making the API call
     //     const statusToUpdate = newStatus !== undefined ? newStatus : selectedRoom.status; // Convert to boolean if necessary
-  
     //     // Send the API request to update the status
     //     await studySpaceAPI.put(`/Room/status/${selectedRoom.roomId}`);
-  
     //     // Update the rooms state
     //     setRooms((prevRooms) =>
     //       prevRooms.map((room) =>
     //         room.roomId === selectedRoom.roomId ? { ...room, status: statusToUpdate } : room
     //       )
     //     );
-  
     //     // Update temp status
     //     setTempStatus((prevTempStatus) => ({
     //       ...prevTempStatus,
     //       [selectedRoom.roomId]: statusToUpdate,
     //     }));
-  
     //     // Display success toast notification
     //     toast({
     //       variant: 'success',
@@ -285,7 +299,7 @@ function ListBookingStore() {
     //     setIsModalOpen(false);
     //   }
     // }
-  };
+  }
   const handleEditName = (booking: Booking, currentName: string) => {
     // setIsEditing(room)
     // formRoom.reset({ roomName: currentName })
@@ -323,13 +337,22 @@ function ListBookingStore() {
     //   }
     // }
   }
-
+  const fetchTransactionDetails = async (bookingId: number) => {
+    try {
+      const response = await studySpaceAPI.get<ApiResponse<Transaction>>(`/Transactions/booking-room/${bookingId}`) // Adjust the URL based on your API
+      setTransactionData(response.data.data) // Set the fetched transaction data
+      setIsModalVisible(true) // Show the modal
+    } catch (error) {
+      console.error('Error fetching transaction details:', error)
+      // Handle error (e.g., show notification)
+    }
+  }
   const handleAddStation = () => {
     setIsAdding(true)
   }
   const handleModalAddClose = () => {
     setIsAdding(false)
-    // formAddStation.reset() 
+    // formAddStation.reset()
   }
   // const confirmAddStation = async (values: z.infer<typeof AddStationSchema>) => {
   //   setIsLoadingUpdate(true)
@@ -362,6 +385,10 @@ function ListBookingStore() {
   //     setIsLoadingUpdate(false)
   //   }
   // }
+  const handleModalClose = () => {
+    setIsModalVisible(false)
+    setTransactionData(null) // Clear data when modal closes
+  }
   if (isLoadingBooking) {
     return <TableSkeleton />
   }
@@ -370,11 +397,10 @@ function ListBookingStore() {
     <div className='flex h-full flex-1 flex-col'>
       <div className='flex justify-between'>
         <h1 className='my-4 border-b pb-2 text-3xl font-semibold tracking-wider first:mt-0'>Danh sách đặt chỗ</h1>
-       
       </div>
       <DataTable
         data={bookings}
-        columns={columns(navigate,handleStatusChange, handleEditName, handleShowAmentiModal)}
+        columns={columns(navigate, handleStatusChange, handleEditName, handleShowAmentiModal, fetchTransactionDetails)}
         Toolbar={DataTableToolbar}
         rowString='Đơn đặt'
       />
@@ -494,7 +520,60 @@ function ListBookingStore() {
           </DialogContent>
         </Dialog>
       )} */}
-       {/* <ServiceModal
+      <Modal title='Chi tiết giao dịch' visible={isModalVisible} onCancel={handleModalClose} footer={null}>
+        <div className='p-4'>
+          <h3 className='text-xl font-semibold mb-4'>Thông tin giao dịch</h3>
+          {transactionData ? (
+            // If transactionData is available, display its details
+            <div className='space-y-2'>
+              <p className='text-gray-700'>
+                <span className='font-medium'>Tên người dùng:</span> {transactionData.userName}
+              </p>
+              <p className='text-gray-700'>
+                <span className='font-medium'>Email:</span> {transactionData.email}
+              </p>
+              <p className='text-gray-700'>
+                <span className='font-medium'>Phòng:</span> {transactionData.roomName}
+              </p>
+              <p className='text-gray-700'>
+                <span className='font-medium'>Ngày đặt:</span> {transactionData.bookedDate}
+              </p>
+              <p className='text-gray-700'>
+                <span className='font-medium'>Thời gian bắt đầu:</span> {transactionData.start}
+              </p>
+              <p className='text-gray-700'>
+                <span className='font-medium'>Thời gian kết thúc:</span> {transactionData.end}
+              </p>
+              <p className='text-gray-700'>
+                <span className='font-medium'>Phí:</span> {transactionData.fee.toLocaleString()} VND
+              </p>
+              <p className='text-gray-700'>
+                <span className='font-medium'>Phương thức thanh toán:</span> {transactionData.paymentMethod}
+              </p>
+           
+            
+              <p className='text-gray-700'>
+                <span className='font-medium'>Địa chỉ người dùng:</span> {transactionData.userAddress}
+              </p>
+
+              <p className='text-gray-700'>
+                <strong>Status:</strong>{' '}
+                <Tag
+                  color={
+                    transactionData.status === 'PAID' ? 'green' : transactionData.status === 'CANCEL' ? 'red' : 'orange'
+                  }
+                >
+                  {transactionData.status}
+                </Tag>
+              </p>
+            </div>
+          ) : (
+            // If transactionData is not available, show "No transaction"
+            <p className='text-center text-gray-500'>Không có giao dịch</p>
+          )}
+        </div>
+      </Modal>
+      {/* <ServiceModal
         visible={isAmentiModalVisible}
         onOk={handleAmentiModalOk}
         room={selectedRoom}

@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table'
 
-import { Tooltip } from 'antd'
+import { Tag, Tooltip } from 'antd'
 import { DataTableColumnHeader } from '../table/col-header'
 // import { statuses } from './data/data'
 import { Task } from './data/schema'
@@ -74,10 +74,34 @@ export const columns = (
       enableHiding: false
     },
     {
+      accessorKey: 'image',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Ảnh' />,
+      cell: ({ row }) => (
+        <div
+          className='flex space-x-2 cursor-pointer'
+          onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}
+        >
+          {/* <Tooltip title='Chỉnh sửa' className='mr-1'>
+          <Edit2 className='cursor-pointer w-4 text-primary' onClick={() => handleEditName(row.original, row.getValue('roomName'))} />
+        </Tooltip> */}
+          <img
+            className='rounded-md h-16 w-28 object-cover'
+            src={row.getValue('image')} // Access the image URL correctly
+            alt='Room'
+          />
+        </div>
+      ),
+      // filterFn: (row, id, value) => value.includes(row.getValue(id)),
+      enableHiding: false
+    },
+    {
       accessorKey: 'roomName',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Tên phòng' />,
       cell: ({ row }) => (
-        <div className='flex space-x-2 cursor-pointer' onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}>
+        <div
+          className='flex space-x-2 cursor-pointer'
+          onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}
+        >
           {/* <Tooltip title='Chỉnh sửa' className='mr-1'>
           <Edit2 className='cursor-pointer w-4 text-primary' onClick={() => handleEditName(row.original, row.getValue('roomName'))} />
         </Tooltip> */}
@@ -97,7 +121,9 @@ export const columns = (
       accessorKey: 'capacity',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Số người' />,
       cell: ({ row }) => (
-        <div className='cursor-pointer' onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}>{row.getValue('capacity')}</div>
+        <div className='cursor-pointer' onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}>
+          {row.getValue('capacity')}
+        </div>
       ),
       filterFn: (row, id, value) => value.includes(row.getValue(id))
     },
@@ -105,7 +131,9 @@ export const columns = (
       accessorKey: 'pricePerHour',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Giá/giờ' />,
       cell: ({ row }) => (
-        <div className='cursor-pointer' onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}>{row.getValue('pricePerHour')}</div>
+        <div className='cursor-pointer' onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}>
+          {row.getValue('pricePerHour')}
+        </div>
       ),
       filterFn: (row, id, value) => value.includes(row.getValue(id))
     },
@@ -113,7 +141,9 @@ export const columns = (
       accessorKey: 'area',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Diện tích' />,
       cell: ({ row }) => (
-        <div className='cursor-pointer' onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}>{row.getValue('area')}</div>
+        <div className='cursor-pointer' onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}>
+          {row.getValue('area')}
+        </div>
       ),
       // filterFn: (row, id, value) => value.includes(row.getValue(id))
       filterFn: (row, id, value) => {
@@ -135,34 +165,62 @@ export const columns = (
       accessorKey: 'roomType',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Loại phòng' />,
       cell: ({ row }) => {
-        const roomType = row.getValue<string>('roomType');
-    
+        const roomType = row.getValue<string>('roomType')
+
         // Determine the badge variant based on roomType
-        const badgeVariant = roomType === 'BASIC' ? 'info' : roomType === 'PREMIUM' ? 'warning' : 'default';
-    
+        const badgeVariant = roomType === 'BASIC' ? 'info' : roomType === 'PREMIUM' ? 'warning' : 'default'
+
         return (
           <div className='cursor-pointer' onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}>
-            <Badge variant={badgeVariant ||"default"}>
-              {roomType}
-            </Badge>
+            <Badge variant={badgeVariant || 'default'}>{roomType}</Badge>
           </div>
-        );
+        )
       },
       filterFn: (row, id, value) => value.includes(row.getValue(id))
     },
     {
       accessorKey: 'spaceType',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Loại không gian' />,
-      cell: ({ row }) => (
-        <div className='cursor-pointer' onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}>{row.getValue('spaceType')}</div>
-      ),
+      cell: ({ row }) => {
+        const spaceType = row.getValue('spaceType') as string;
+    
+        // Determine tag color and icon based on the space type
+        const getSpaceTypeTag = () => {
+          switch (spaceType) {
+            case 'Library Space':
+              return (
+                <Tag color="blue"  >
+                  Thư viện
+                </Tag>
+              );
+            case 'Meeting Room':
+              return (
+                <Tag color="green">
+                  Phòng họp
+                </Tag>
+              );
+            case 'Coffee Space':
+              return (
+                <Tag color="orange" >
+                  Quán cà phê
+                </Tag>
+              );
+            default:
+              return <Tag  className='cursor-pointer' onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}>{spaceType}</Tag>; // Default fallback if needed
+          }
+        };
+    
+        return <div>{getSpaceTypeTag()}</div>;
+      },
       filterFn: (row, id, value) => value.includes(row.getValue(id))
     },
     {
       accessorKey: 'address',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Địa chỉ' />,
       cell: ({ row }) => (
-        <div className='cursor-pointer' onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}>{row.getValue('address')}</div>
+        <div className='cursor-pointer' onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}>
+          {row.getValue('address')}
+        </div>
       ),
       filterFn: (row, id, value) => value.includes(row.getValue(id))
     },
