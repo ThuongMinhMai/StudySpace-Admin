@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button, Col, ConfigProvider, Form, Input, InputNumber, Row, Select, Space, Upload } from 'antd'
+import { Button, Col, ConfigProvider, Form, Input, InputNumber, Row, Select, Space, Spin, Upload } from 'antd'
 import { ArrowLeft, Plug, Plus, UploadIcon } from 'lucide-react'
 import ImgCrop from 'antd-img-crop'
 import type { UploadFile, UploadProps } from 'antd'
 import studySpaceAPI from '@/lib/studySpaceAPI'
 import { useAuth } from '@/auth/AuthProvider'
 import { toast } from 'sonner'
+import { LoadingOutlined } from '@ant-design/icons'
 interface Amyti {
   amityId: number
   amityName: string
@@ -28,6 +29,7 @@ const CreateRoomStore: React.FC = () => {
   const [spaces, setSpaces] = useState<Space[]>([]) // Adjust type as necessary
   const [amenities, setAmenities] = useState<Amyti[]>([]) // Adjust type as necessary
   const [loading, setLoading] = useState<boolean>(true)
+  const [loadingCreate, setLoadingCreate] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const handleGoBack = () => {
     navigate(-1) // Navigate to the previous page
@@ -80,7 +82,6 @@ const CreateRoomStore: React.FC = () => {
     fetchData()
   }, [])
   const onFinish = async (values: any) => {
-    console.log('ami', values.Amenities)
     const imageRoomFiles = values.ImageRoom
     const imageMenuFile = values.ImageMenu && values.ImageMenu[0]
     const houseRules = values.HouseRule ? values.HouseRule.map((ruleObj: { rule: string }) => ruleObj.rule) : []
@@ -149,23 +150,44 @@ const CreateRoomStore: React.FC = () => {
     }
 
     try {
+      setLoadingCreate(true)
       const response = await studySpaceAPI.post(`/Room`, formData)
       if (response.data.status === 1) {
         // Clear fields in the form
-        form.resetFields();
-        toast.success("Tạo phòng thành công!")
+        form.resetFields()
+        setLoadingCreate(false)
+        toast.success('Tạo phòng thành công!')
         // Navigate to the roomStore
-        navigate('/roomStore'); // adjust the path based on your routing setup
-      }else{
-        toast.error("Tạo phòng thất bại" + response.data.message)
+        navigate('/roomStore') // adjust the path based on your routing setup
+      } else {
+        setLoadingCreate(false)
+
+        toast.error('Tạo phòng thất bại' + response.data.message)
       }
-    } catch (error) {
+    } catch (error: any) {
+      setLoadingCreate(false)
+
+      toast.error(error)
       console.log('errror', error)
+    } finally {
+      setLoadingCreate(false)
     }
   }
 
   return (
     <div>
+      {loadingCreate && (
+        <div className='absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 z-50'>
+          <div className='flex flex-col items-center'>
+            <div className='flex space-x-1'>
+              <div className='w-2 h-2 bg-green-700 rounded-full animate-bounce delay-100'></div>
+              <div className='w-2 h-2 bg-green-700 rounded-full animate-bounce delay-200'></div>
+              <div className='w-2 h-2 bg-green-700 rounded-full animate-bounce delay-300'></div>
+            </div>
+            <p className='text-2xl text-primary'>Đang tạo phòng... Vui lòng chờ!</p>
+          </div>
+        </div>
+      )}
       <Button type='link' onClick={handleGoBack}>
         <ArrowLeft className='w-8 h-8 text-primary' />
       </Button>
@@ -267,7 +289,7 @@ const CreateRoomStore: React.FC = () => {
                         <Form.Item
                           {...restField}
                           name={[name, 'rule']}
-                          fieldKey={[fieldKey, 'rule']}
+                          fieldKey={[fieldKey || name, 'rule']}
                           rules={[{ required: true, message: 'Vui lòng nhập quy định phòng' }]}
                         >
                           <Input placeholder='Quy định phòng' />
@@ -296,7 +318,7 @@ const CreateRoomStore: React.FC = () => {
                         <Form.Item
                           {...restField}
                           name={[name, 'amityId']}
-                          fieldKey={[fieldKey, 'amityId']}
+                          fieldKey={[fieldKey || name, 'amityId']}
                           rules={[{ required: true, message: 'Chọn tiện ích' }]}
                         >
                           <Select placeholder='Chọn tiện ích'>
@@ -312,7 +334,7 @@ const CreateRoomStore: React.FC = () => {
                         <Form.Item
                           {...restField}
                           name={[name, 'quantity']}
-                          fieldKey={[fieldKey, 'quantity']}
+                          fieldKey={[fieldKey || name, 'quantity']}
                           rules={[{ required: true, message: 'Nhập số lượng' }]}
                         >
                           <InputNumber min={1} placeholder='Số lượng' />
@@ -384,7 +406,7 @@ const CreateRoomStore: React.FC = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type='primary' htmlType='submit'>
+            <Button type='primary' htmlType='submit' size='large' className='w-full'>
               Tạo phòng
             </Button>
           </Form.Item>

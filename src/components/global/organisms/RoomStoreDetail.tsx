@@ -353,7 +353,7 @@ const RoomStoreDetail: React.FC = () => {
           // ))
           <ImageTab roomPictureDetails={room.listImages.imageList} />
         ) : (
-          <p>Không có ảnh cho phòng này</p>
+          <p className='text-primary font-medium text-lg '>Không có ảnh cho phòng này</p>
         )}
       </div>
 
