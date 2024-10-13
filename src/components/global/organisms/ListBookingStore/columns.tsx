@@ -7,7 +7,7 @@ import { Task } from './data/schema'
 import { DataTableRowActions } from './row-actions'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/global/atoms/ui/avatar'
 import { Badge } from '../../atoms/ui/badge'
-import { Book, Coffee, Edit2, Eye, Plus, User, UserCheck, Users } from 'lucide-react'
+import { Book, CheckCircle, Coffee, Edit2, Eye, Plus, User, UserCheck, Users, XCircle } from 'lucide-react'
 import { Button } from '../../atoms/ui/button'
 import { Button as ButtonAnt } from 'antd/lib'
 import { Link, useNavigate } from 'react-router-dom'
@@ -249,7 +249,19 @@ export const columns = (
     {
       accessorKey: 'checkin',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Checkin' />,
-      cell: ({ row }) => <div>{row.getValue('checkin') ? 'Đã check in' : 'Chưa check in'}</div>,
+      cell: ({ row }) => {
+        const checkinStatus = row.getValue('checkin');
+    
+        return checkinStatus ? (
+          <div className="flex items-center text-green-500">
+            <CheckCircle size={20} className="mr-1" />
+          </div>
+        ) : (
+          <div className="flex items-center text-red-500">
+            <XCircle size={20} className="mr-1" />
+          </div>
+        );
+      },
       // filterFn: (row, id, value) => value.includes(row.getValue(id))
       filterFn: (row, id, filterValue) => {
         const checkinStatus = row.getValue(id) ? 'Đã check in' : 'Chưa check in'

@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/global/atoms/ui/dropdown-menu'
 import SideNavbar from '@/components/global/organisms/SideNavbar'
-import { BookUser, Loader, LogOut } from 'lucide-react'
+import { BookUser, Loader, LogOut, Wallet2 } from 'lucide-react'
 import { Link, Outlet } from 'react-router-dom'
 import LogoFull2 from '../../../assets/LOGO SS ()-01.png'
 import { useEffect, useState } from 'react'
@@ -94,6 +94,14 @@ function RouteLayout() {
                   Hồ sơ người dùng
                 </DropdownMenuItem>
               </Link>
+             {user?.roleName==="Store" && (
+               <Link to='/transactionStore'>
+               <DropdownMenuItem className='flex justify-start items-center gap-1 cursor-pointer'>
+                 <Wallet2 className='w-4' />
+                 Lịch sử giao dịch
+               </DropdownMenuItem>
+             </Link>
+             )}
               <DropdownMenuItem
                 className='flex justify-start items-center gap-1 cursor-pointer'
                 onClick={() => logout()}

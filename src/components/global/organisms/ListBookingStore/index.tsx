@@ -108,15 +108,17 @@ interface Transaction {
   userName: string
   email: string
   userAddress: string
-  gender: 'XX' | 'XY' // Assuming 'XX' for female and 'XY' for male. Adjust as needed.
-  avatar: string // URL to the avatar image
+  gender: 'XX' | 'XY' 
+  avatar: string
   roomName: string
-  bookedDate: string // ISO date string, consider using Date type if you need date operations
-  start: string // Time in HH:mm:ss format
-  end: string // Time in HH:mm:ss format
-  fee: number // Amount in your currency (assumed to be in some currency unit)
-  paymentMethod: string // List your payment methods as needed
-  status: string // Define possible statuses as needed
+  bookedDate: string 
+  start: string 
+  end: string 
+  fee: number 
+  paymentMethod: string 
+  status: string 
+  checkInDate:string
+  checkOutDate:string
 }
 function ListBookingStore() {
   const { user } = useAuth()
@@ -536,13 +538,13 @@ function ListBookingStore() {
                 <span className='font-medium'>Phòng:</span> {transactionData.roomName}
               </p>
               <p className='text-gray-700'>
-                <span className='font-medium'>Ngày đặt:</span> {transactionData.bookedDate}
+                <span className='font-medium'>Ngày đặt:</span> {new Date(transactionData.bookedDate).toLocaleDateString('vi-VN')}
               </p>
               <p className='text-gray-700'>
-                <span className='font-medium'>Thời gian bắt đầu:</span> {transactionData.start}
+                <span className='font-medium'>Thời gian bắt đầu:</span> {transactionData.start}  ( {new Date(transactionData.checkInDate).toLocaleDateString('vi-VN')})
               </p>
               <p className='text-gray-700'>
-                <span className='font-medium'>Thời gian kết thúc:</span> {transactionData.end}
+                <span className='font-medium'>Thời gian kết thúc:</span> {transactionData.end} ( {new Date(transactionData.checkOutDate).toLocaleDateString('vi-VN')})
               </p>
               <p className='text-gray-700'>
                 <span className='font-medium'>Phí:</span> {transactionData.fee.toLocaleString()} VND
@@ -557,7 +559,7 @@ function ListBookingStore() {
               </p>
 
               <p className='text-gray-700'>
-                <strong>Status:</strong>{' '}
+                <span className='font-medium'>Status:</span>{' '}
                 <Tag
                   color={
                     transactionData.status === 'PAID' ? 'green' : transactionData.status === 'CANCEL' ? 'red' : 'orange'
