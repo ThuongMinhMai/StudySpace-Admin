@@ -6,6 +6,7 @@ import ImgCrop from 'antd-img-crop'
 import type { UploadFile, UploadProps } from 'antd'
 import studySpaceAPI from '@/lib/studySpaceAPI'
 import { useAuth } from '@/auth/AuthProvider'
+import { toast } from 'sonner'
 interface Amyti {
   amityId: number
   amityName: string
@@ -123,10 +124,10 @@ const CreateRoomStore: React.FC = () => {
       }
     ]
     // formData.append('Amities', JSON.stringify(amities))
-    values.Amenities.forEach((amity:any, index:any) => {
-      formData.append(`Amities[${index}][AmityId]`, amity.amityId);
-      formData.append(`Amities[${index}][Quantity]`, amity.quantity);
-    });
+    values.Amenities.forEach((amity: any, index: any) => {
+      formData.append(`Amities[${index}][AmityId]`, amity.amityId)
+      formData.append(`Amities[${index}][Quantity]`, amity.quantity)
+    })
     formData.append('Area', values.Area)
     if (imageMenuFile && imageMenuFile.originFileObj) {
       formData.append('ImageMenu', imageMenuFile.originFileObj)
@@ -149,6 +150,15 @@ const CreateRoomStore: React.FC = () => {
 
     try {
       const response = await studySpaceAPI.post(`/Room`, formData)
+      if (response.data.status === 1) {
+        // Clear fields in the form
+        form.resetFields();
+        toast.success("Tạo phòng thành công!")
+        // Navigate to the roomStore
+        navigate('/roomStore'); // adjust the path based on your routing setup
+      }else{
+        toast.error("Tạo phòng thất bại" + response.data.message)
+      }
     } catch (error) {
       console.log('errror', error)
     }
@@ -161,165 +171,168 @@ const CreateRoomStore: React.FC = () => {
       </Button>
       <div className='text-center text-2xl font-medium text-primary'>Tạo mới phòng</div>
       <ConfigProvider
-      theme={{
-        token: {
-          colorPrimary: '#647c6c'
-        },
-        components: {
-          Button: {
-            colorTextLightSolid: '#fff'
+        theme={{
+          token: {
+            colorPrimary: '#647c6c'
+          },
+          components: {
+            Button: {
+              colorTextLightSolid: '#fff'
+            }
           }
-        }
-      }}
-    >
-
-      <Form
-        layout='vertical'
-        onFinish={onFinish}
-        style={{ marginTop: '20px' }}
-        form={form} // Bind the form instance
+        }}
       >
-        <Form.Item name='RoomName' label='Tên phòng' rules={[{ required: true, message: 'Vui lòng nhập tên phòng' }]}>
-          <Input />
-        </Form.Item>
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item
-              name='SpaceId'
-              label='Loại không gian'
-              rules={[{ required: true, message: 'Vui lòng chọn loại không gian' }]}
-            >
-              <Select loading={loading} disabled={loading} placeholder='Chọn không gian'>
-                {spaces.map((space) => (
-                  <Select.Option key={space.id} value={space.id}>
-                    {space.spaceName}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-
-          <Col span={12}>
-            <Form.Item name='Type' label='Loại phòng' rules={[{ required: true, message: 'Vui lòng chọn loại phòng' }]}>
-              <Select placeholder='Chọn loại phòng'>
-                <Select.Option value='BASIC'>Basic</Select.Option>
-                <Select.Option value='PREMIUM'>Premium</Select.Option>
-              </Select>
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={16}>
-          <Col span={8}>
-            <Form.Item
-              name='Capacity'
-              label='Sức chứa'
-              rules={[{ required: true, message: 'Vui lòng nhập sức chứa của phòng' }]}
-            >
-              <InputNumber min={1} />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item
-              name='PricePerHour'
-              label='Giá/Giờ'
-              rules={[{ required: true, message: 'Vui lòng nhập giá/giờ' }]}
-            >
-              <InputNumber min={0} step={0.01} />
-            </Form.Item>
-          </Col>
-
-          <Col span={8}>
-            <Form.Item
-              name='Area'
-              label='Diện tích(M2)'
-              rules={[{ required: true, message: 'Vui lòng nhập diện tích' }]}
-            >
-              <InputNumber min={0} step={0.1} />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Form.Item name='Description' label='Mô tả' rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}>
-          <Input.TextArea rows={3} />
-        </Form.Item>
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.List name='HouseRule'>
-              {(fields, { add, remove }) => (
-                <>
-                  {fields.map(({ key, name, fieldKey, ...restField }) => (
-                    <Space key={key} align='baseline'>
-                      <Form.Item
-                        {...restField}
-                        name={[name, 'rule']}
-                        fieldKey={[fieldKey, 'rule']}
-                        rules={[{ required: true, message: 'Vui lòng nhập quy định phòng' }]}
-                      >
-                        <Input placeholder='Quy định phòng' />
-                      </Form.Item>
-                      <Button type='link' onClick={() => remove(name)} style={{ padding: 0, color: 'red' }}>
-                        Xóa
-                      </Button>
-                    </Space>
+        <Form
+          layout='vertical'
+          onFinish={onFinish}
+          style={{ marginTop: '20px' }}
+          form={form} // Bind the form instance
+        >
+          <Form.Item name='RoomName' label='Tên phòng' rules={[{ required: true, message: 'Vui lòng nhập tên phòng' }]}>
+            <Input />
+          </Form.Item>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name='SpaceId'
+                label='Loại không gian'
+                rules={[{ required: true, message: 'Vui lòng chọn loại không gian' }]}
+              >
+                <Select loading={loading} disabled={loading} placeholder='Chọn không gian'>
+                  {spaces.map((space) => (
+                    <Select.Option key={space.id} value={space.id}>
+                      {space.spaceName}
+                    </Select.Option>
                   ))}
-                  <Form.Item>
-                    <Button type='dashed' onClick={() => add()} block>
-                      Thêm quy định
-                    </Button>
-                  </Form.Item>
-                </>
-              )}
-            </Form.List>
-          </Col>
+                </Select>
+              </Form.Item>
+            </Col>
 
-          <Col span={12}>
-            <Form.List name='Amenities'>
-              {(fields, { add, remove }) => (
-                <>
-                  {fields.map(({ key, name, fieldKey, ...restField }) => (
-                    <Space key={key} align='baseline' style={{ display: 'flex', marginBottom: 8 }}>
-                      <Form.Item
-                        {...restField}
-                        name={[name, 'amityId']}
-                        fieldKey={[fieldKey, 'amityId']}
-                        rules={[{ required: true, message: 'Chọn tiện ích' }]}
-                      >
-                        <Select placeholder='Chọn tiện ích'>
-                          {amenities
-                            .filter((amenity) => amenity.amityStatus === 'Active')
-                            .map((amenity) => (
-                              <Select.Option key={amenity.amityId} value={amenity.amityId}>
-                                {amenity.amityName}
-                              </Select.Option>
-                            ))}
-                        </Select>
-                      </Form.Item>
-                      <Form.Item
-                        {...restField}
-                        name={[name, 'quantity']}
-                        fieldKey={[fieldKey, 'quantity']}
-                        rules={[{ required: true, message: 'Nhập số lượng' }]}
-                      >
-                        <InputNumber min={1} placeholder='Số lượng' />
-                      </Form.Item>
-                      <Button type='link' onClick={() => remove(name)} style={{ padding: 0, color: 'red' }}>
-                        Xóa
+            <Col span={12}>
+              <Form.Item
+                name='Type'
+                label='Loại phòng'
+                rules={[{ required: true, message: 'Vui lòng chọn loại phòng' }]}
+              >
+                <Select placeholder='Chọn loại phòng'>
+                  <Select.Option value='BASIC'>Basic</Select.Option>
+                  <Select.Option value='PREMIUM'>Premium</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={8}>
+              <Form.Item
+                name='Capacity'
+                label='Sức chứa'
+                rules={[{ required: true, message: 'Vui lòng nhập sức chứa của phòng' }]}
+              >
+                <InputNumber min={1} />
+              </Form.Item>
+            </Col>
+
+            <Col span={8}>
+              <Form.Item
+                name='PricePerHour'
+                label='Giá/Giờ'
+                rules={[{ required: true, message: 'Vui lòng nhập giá/giờ' }]}
+              >
+                <InputNumber min={0} step={0.01} />
+              </Form.Item>
+            </Col>
+
+            <Col span={8}>
+              <Form.Item
+                name='Area'
+                label='Diện tích(M2)'
+                rules={[{ required: true, message: 'Vui lòng nhập diện tích' }]}
+              >
+                <InputNumber min={0} step={0.1} />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Form.Item name='Description' label='Mô tả' rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}>
+            <Input.TextArea rows={3} />
+          </Form.Item>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.List name='HouseRule'>
+                {(fields, { add, remove }) => (
+                  <>
+                    {fields.map(({ key, name, fieldKey, ...restField }) => (
+                      <Space key={key} align='baseline'>
+                        <Form.Item
+                          {...restField}
+                          name={[name, 'rule']}
+                          fieldKey={[fieldKey, 'rule']}
+                          rules={[{ required: true, message: 'Vui lòng nhập quy định phòng' }]}
+                        >
+                          <Input placeholder='Quy định phòng' />
+                        </Form.Item>
+                        <Button type='link' onClick={() => remove(name)} style={{ padding: 0, color: 'red' }}>
+                          Xóa
+                        </Button>
+                      </Space>
+                    ))}
+                    <Form.Item>
+                      <Button type='dashed' onClick={() => add()} block>
+                        Thêm quy định
                       </Button>
-                    </Space>
-                  ))}
-                  <Form.Item>
-                    <Button type='dashed' onClick={() => add()} block>
-                      Thêm tiện ích
-                    </Button>
-                  </Form.Item>
-                </>
-              )}
-            </Form.List>
-          </Col>
-        </Row>
-        {/* 
+                    </Form.Item>
+                  </>
+                )}
+              </Form.List>
+            </Col>
+
+            <Col span={12}>
+              <Form.List name='Amenities'>
+                {(fields, { add, remove }) => (
+                  <>
+                    {fields.map(({ key, name, fieldKey, ...restField }) => (
+                      <Space key={key} align='baseline' style={{ display: 'flex', marginBottom: 8 }}>
+                        <Form.Item
+                          {...restField}
+                          name={[name, 'amityId']}
+                          fieldKey={[fieldKey, 'amityId']}
+                          rules={[{ required: true, message: 'Chọn tiện ích' }]}
+                        >
+                          <Select placeholder='Chọn tiện ích'>
+                            {amenities
+                              .filter((amenity) => amenity.amityStatus === 'Active')
+                              .map((amenity) => (
+                                <Select.Option key={amenity.amityId} value={amenity.amityId}>
+                                  {amenity.amityName}
+                                </Select.Option>
+                              ))}
+                          </Select>
+                        </Form.Item>
+                        <Form.Item
+                          {...restField}
+                          name={[name, 'quantity']}
+                          fieldKey={[fieldKey, 'quantity']}
+                          rules={[{ required: true, message: 'Nhập số lượng' }]}
+                        >
+                          <InputNumber min={1} placeholder='Số lượng' />
+                        </Form.Item>
+                        <Button type='link' onClick={() => remove(name)} style={{ padding: 0, color: 'red' }}>
+                          Xóa
+                        </Button>
+                      </Space>
+                    ))}
+                    <Form.Item>
+                      <Button type='dashed' onClick={() => add()} block>
+                        Thêm tiện ích
+                      </Button>
+                    </Form.Item>
+                  </>
+                )}
+              </Form.List>
+            </Col>
+          </Row>
+          {/* 
         <Form.Item
           name='ImageMenu'
           label='Image Menu'
@@ -335,49 +348,48 @@ const CreateRoomStore: React.FC = () => {
             + Upload
           </Upload>
         </Form.Item> */}
-        <Form.Item
-          name='ImageMenu'
-          label='Ảnh Menu'
-          valuePropName='fileList'
-          getValueFromEvent={(e) => (Array.isArray(e) ? e : e && e.fileList)}
-        >
-          <Upload
+          <Form.Item
             name='ImageMenu'
-            listType='picture'
-            maxCount={1} // Only one file allowed
-            beforeUpload={() => false} // Prevents auto-upload
+            label='Ảnh Menu'
+            valuePropName='fileList'
+            getValueFromEvent={(e) => (Array.isArray(e) ? e : e && e.fileList)}
           >
-            <Button icon={<UploadIcon className='w-4 h-4' />}>Tải lên ảnh Menu</Button>
-          </Upload>
-        </Form.Item>
-
-        <Form.Item
-          name='ImageRoom'
-          label='Ảnh phòng'
-          rules={[{ required: false, message: 'Vui lòng chọn ít nhất 1 ảnh phòng' }]}
-        >
-          <ImgCrop rotationSlider>
             <Upload
-              accept='image/*'
-              listType='picture-card'
-              fileList={imageRoomFileList}
-              onChange={onImageRoomChange}
-              onPreview={onImageRoomPreview}
-              beforeUpload={() => false} // Disable automatic upload
+              name='ImageMenu'
+              listType='picture'
+              maxCount={1} // Only one file allowed
+              beforeUpload={() => false} // Prevents auto-upload
             >
-              {imageRoomFileList.length < 5 && '+ Tải lên'}
+              <Button icon={<UploadIcon className='w-4 h-4' />}>Tải lên ảnh Menu</Button>
             </Upload>
-          </ImgCrop>
-        </Form.Item>
+          </Form.Item>
 
-        <Form.Item>
-          <Button type='primary' htmlType='submit'>
-            Tạo phòng
-          </Button>
-        </Form.Item>
-      </Form>
-    </ConfigProvider>
+          <Form.Item
+            name='ImageRoom'
+            label='Ảnh phòng'
+            rules={[{ required: false, message: 'Vui lòng chọn ít nhất 1 ảnh phòng' }]}
+          >
+            <ImgCrop rotationSlider>
+              <Upload
+                accept='image/*'
+                listType='picture-card'
+                fileList={imageRoomFileList}
+                onChange={onImageRoomChange}
+                onPreview={onImageRoomPreview}
+                beforeUpload={() => false} // Disable automatic upload
+              >
+                {imageRoomFileList.length < 5 && '+ Tải lên'}
+              </Upload>
+            </ImgCrop>
+          </Form.Item>
 
+          <Form.Item>
+            <Button type='primary' htmlType='submit'>
+              Tạo phòng
+            </Button>
+          </Form.Item>
+        </Form>
+      </ConfigProvider>
     </div>
   )
 }
