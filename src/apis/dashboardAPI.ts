@@ -23,6 +23,27 @@ interface StoreDashboard {
   interface ApiResponse<T> {
     data: T;
   }
+
+  interface AccountSummary {
+    totalAdmins: number;
+    totalUsers: number;
+    totalStores: number;
+    totalAccounts: number;
+  }
+  
+  interface MonthlyIncome {
+    month: string; // e.g., "1/2024"
+    totalTransactions: number;
+    totalAmount: number;
+  }
+  
+  interface DashboardData {
+    accounts: AccountSummary;
+    monthlyIncome: MonthlyIncome[];
+    totalIncome: number;
+    totalTransactions: number;
+    totalBookings: number;
+  }
 export const fetchDashboardStore = (storeId: number) => {
     return useQuery<StoreDashboard>({
         queryKey: ['dashboardManager', storeId],
@@ -34,11 +55,11 @@ export const fetchDashboardStore = (storeId: number) => {
 }
 
 export const fetchDashboardAdmin = () => {
-    return useQuery<DashboardAdminProps>({
+    return useQuery<DashboardData>({
         queryKey: ['dashboardAdmin'],
         queryFn: async () => {
-            const { data } = await studySpace.get<DashboardAdminProps>('/dashboard-management/managed-dashboards/admins');
-            return data;
+            const { data } = await studySpace.get<ApiResponse<DashboardData>>('/Dashboards');
+            return data.data;
         }
     })
 }

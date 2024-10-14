@@ -112,7 +112,7 @@ function TransactionStore() {
                           <strong>Ngày:</strong> {new Date(transaction.date).toLocaleDateString()}
                         </p>
                         <p className='text-sm'>
-                          <strong>Phí:</strong> ${transaction.fee.toFixed(2)}
+                          <strong>Phí:</strong> {transaction.fee.toFixed(2)}VNĐ
                         </p>
                         <p className='text-sm'>
                           <strong>Phương thức thanh toán:</strong> {transaction.paymentMethod}
@@ -160,7 +160,7 @@ function TransactionStore() {
                           <strong>Ngày:</strong> {new Date(transaction.date).toLocaleDateString()}
                         </p>
                         <p className='text-sm'>
-                          <strong>Phí:</strong> ${transaction.fee.toFixed(2)}
+                          <strong>Phí:</strong> {transaction.fee.toFixed(2)}VNĐ
                         </p>
                         <p className='text-sm'>
                           <strong>Phương thức thanh toán:</strong> {transaction.paymentMethod}
@@ -208,7 +208,7 @@ function TransactionStore() {
                           <strong>Ngày:</strong> {new Date(transaction.date).toLocaleDateString()}
                         </p>
                         <p className='text-sm'>
-                          <strong>Phí:</strong> ${transaction.fee.toFixed(2)}
+                          <strong>Phí:</strong> {transaction.fee.toFixed(2)}VNĐ
                         </p>
                         <p className='text-sm'>
                           <strong>Phương thức thanh toán:</strong> {transaction.paymentMethod}

@@ -1,26 +1,30 @@
 /** @format */
 "use client";
 import { formatPrice } from "@/lib/utils";
-import { RevenueAllMonthInYears } from "@/types";
+// import { MonthRevenue } from "@/types";
 import {
-    Bar,
-    BarChart as BarGraph,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis
+  Bar,
+  BarChart as BarGraph,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
-
+interface MonthlyIncome {
+  month: string; // e.g., "1/2024"
+  totalTransactions: number;
+  totalAmount: number;
+}
 interface BarChartProps {
-  data: RevenueAllMonthInYears[] | undefined
+  data: MonthlyIncome[] | undefined;
 }
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
       <div className="custom-tooltip bg-white border p-3">
-        <p className="label">{`Tháng: ${label}`}</p>
-        <p className="intro">{`Doanh thu: ${formatPrice(payload[0].value)}`}</p>
+        <p className="label">{`Month: ${label}`}</p>
+        <p className="intro">{`Revenue: ${formatPrice(payload[0].value)}`}</p>
       </div>
     );
   }
@@ -29,11 +33,15 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export default function BarChart({ data }: BarChartProps) {
+  // Ensure the component renders correctly when data is undefined or empty
+  if (!data || data.length === 0) {
+    return <p>No data available</p>;
+  }
   return (
     <ResponsiveContainer width={"100%"} height={350}>
       <BarGraph data={data}>
         <XAxis
-          dataKey={"Month"}
+          dataKey={"month"} // Correct key name based on the interface
           tickLine={false}
           axisLine={false}
           stroke="#888888"
@@ -42,12 +50,16 @@ export default function BarChart({ data }: BarChartProps) {
         <YAxis
           tickLine={false}
           axisLine={false}
-          stroke="#888888"
+          stroke="#88888"
           fontSize={12}
           tickFormatter={(value) => formatPrice(value)}
         />
-        <Tooltip content={<CustomTooltip />}/>
-        <Bar dataKey={"TotalRevenueMonthInYear"} radius={[4, 4, 0, 0]} />
+        <Tooltip content={<CustomTooltip />} />
+        <Bar
+          dataKey={"totalAmount"} // Correct key name based on the interface
+          radius={[4, 4, 0, 0]}
+          fill="#8884d8" // Add a fill color for the bars
+        />
       </BarGraph>
     </ResponsiveContainer>
   );
