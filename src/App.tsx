@@ -23,8 +23,12 @@ const CompaniesPage = React.lazy(() => import('./components/global/templates/Com
 const SettingsPage = React.lazy(() => import('./components/global/templates/Settings'))
 const Home = React.lazy(() => import('./components/global/templates/Dashboard'))
 const StaffPage = React.lazy(() => import('./components/global/templates/Staffs'))
-const TripPage = React.lazy(() => import('./components/global/templates/Trips'))
+const AllBooking = React.lazy(() => import('./components/global/templates/AllBooking'))
+const AllStore = React.lazy(() => import('./components/global/templates/AllStore'))
+const AllTransaction = React.lazy(() => import('./components/global/templates/AllTransaction'))
+const AllAccount= React.lazy(() => import('./components/global/templates/AllAccount'))
 const RoomStore = React.lazy(() => import('./components/global/templates/RoomStore'))
+const AllRoom = React.lazy(() => import('./components/global/templates/AllRoom'))
 const AmityStore = React.lazy(() => import('./components/global/templates/AmityStore'))
 const BookingStore = React.lazy(() => import('./components/global/templates/BookingStore'))
 const DashboardStore = React.lazy(() => import('./components/global/templates/DashboardStore'))
@@ -77,7 +81,7 @@ function App() {
           path='/stores'
           element={
             <AdminProtectedRoute>
-              <Suspense fallback={<Loader />}>{/* <UsersPage /> */}</Suspense>
+              <Suspense fallback={<Loader />}> <AllStore /> </Suspense>
             </AdminProtectedRoute>
           }
         />
@@ -85,7 +89,10 @@ function App() {
           path='/allRooms'
           element={
             <AdminProtectedRoute>
-              <Suspense fallback={<Loader />}>{/* <CompaniesPage /> */}</Suspense>
+              <Suspense fallback={<Loader />}>
+                {' '}
+                <AllRoom />{' '}
+              </Suspense>
             </AdminProtectedRoute>
           }
         />
@@ -93,7 +100,15 @@ function App() {
           path='/bookingAll'
           element={
             <AdminProtectedRoute>
-              <Suspense fallback={<Loader />}>{/* <SettingsPage /> */}</Suspense>
+              <Suspense fallback={<Loader />}> <AllBooking /></Suspense>
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path='/transactionsAll'
+          element={
+            <AdminProtectedRoute>
+              <Suspense fallback={<Loader />}> <AllTransaction /> </Suspense>
             </AdminProtectedRoute>
           }
         />
@@ -101,7 +116,7 @@ function App() {
           path='/accounts'
           element={
             <AdminProtectedRoute>
-              <Suspense fallback={<Loader />}>{/* <SettingsPage /> */}</Suspense>
+              <Suspense fallback={<Loader />}> <AllAccount /></Suspense>
             </AdminProtectedRoute>
           }
         />
@@ -109,7 +124,7 @@ function App() {
           path='/roomStore'
           element={
             <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}>{ <RoomStore /> }</Suspense>
+              <Suspense fallback={<Loader />}>{<RoomStore />}</Suspense>
             </ManagerProtectedRoute>
           }
         />
@@ -117,23 +132,21 @@ function App() {
           path='/transactionStore'
           element={
             <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}>{ <TransactionStore /> }</Suspense>
+              <Suspense fallback={<Loader />}>{<TransactionStore />}</Suspense>
             </ManagerProtectedRoute>
           }
         />
         <Route
           path='/roomStore/room-detail/:id'
           element={
-            <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}>{ <RoomStoreDetail /> }</Suspense>
-            </ManagerProtectedRoute>
+              <Suspense fallback={<Loader />}>{<RoomStoreDetail />}</Suspense>
           }
         />
         <Route
           path='/roomStore/CreateNew'
           element={
             <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}>{ <CreateRoomStore /> }</Suspense>
+              <Suspense fallback={<Loader />}>{<CreateRoomStore />}</Suspense>
             </ManagerProtectedRoute>
           }
         />
@@ -141,7 +154,10 @@ function App() {
           path='/bookingStore'
           element={
             <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}> <BookingStore /> </Suspense>
+              <Suspense fallback={<Loader />}>
+                {' '}
+                <BookingStore />{' '}
+              </Suspense>
             </ManagerProtectedRoute>
           }
         />
@@ -150,7 +166,10 @@ function App() {
           path='/amities'
           element={
             <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}> <AmityStore /> </Suspense>
+              <Suspense fallback={<Loader />}>
+                {' '}
+                <AmityStore />{' '}
+              </Suspense>
             </ManagerProtectedRoute>
           }
         />

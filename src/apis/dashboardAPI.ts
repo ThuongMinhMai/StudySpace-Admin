@@ -6,8 +6,14 @@ interface StoreDashboard {
     totalIncome: number;
     totalBooking: number;
     totalRoom: number;
+    totalInThisMonth:TotalInThisMonth;
     monthRevenue: MonthRevenue[];
     popularRooms: PopularRooms[]
+  }
+  interface TotalInThisMonth{
+    totalBookingsInMonth:number;
+    totalTransactionsInMonth:number;
+    totalRevenueInMonth:number
   }
   interface MonthRevenue {
     month: string; // Format: "MM/YYYY"
@@ -36,13 +42,20 @@ interface StoreDashboard {
     totalTransactions: number;
     totalAmount: number;
   }
-  
+  interface HotBookingStore{
+    storeName:string;
+    address:string;
+    imageURL:string;
+    totalBookings:number;
+  }
   interface DashboardData {
     accounts: AccountSummary;
     monthlyIncome: MonthlyIncome[];
     totalIncome: number;
     totalTransactions: number;
+    totalInThisMonth:TotalInThisMonth;
     totalBookings: number;
+    hotBookingStore:HotBookingStore[];
   }
 export const fetchDashboardStore = (storeId: number) => {
     return useQuery<StoreDashboard>({

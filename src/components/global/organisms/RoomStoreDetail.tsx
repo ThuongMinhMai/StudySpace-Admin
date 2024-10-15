@@ -323,21 +323,27 @@ const RoomStoreDetail: React.FC = () => {
           <ArrowLeft className='w-8 h-8 text-primary' />
         </Button>
         <h1 className='text-3xl text-center text-primary font-medium'>{room?.roomName || 'No Data'}</h1>
-        <Select onValueChange={handleStatusChange} value={room.status ? 'active' : 'inactive'}>
-          <SelectTrigger className='w-48'>
-            <Badge variant={room?.status !== undefined ? (room.status ? 'success' : 'destructive') : 'default'}>
-              {room?.status !== undefined ? (room.status ? 'Hoạt động' : 'Không hoạt động') : 'No Data'}
-            </Badge>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value='active'>
-              <Badge variant='success'>Hoạt động</Badge>
-            </SelectItem>
-            <SelectItem value='inactive'>
-              <Badge variant='destructive'>Không hoạt động</Badge>
-            </SelectItem>
-          </SelectContent>
-        </Select>
+        {user?.roleName === 'Store' ? (
+          <Select onValueChange={handleStatusChange} value={room.status ? 'active' : 'inactive'}>
+            <SelectTrigger className='w-48'>
+              <Badge variant={room?.status !== undefined ? (room.status ? 'success' : 'destructive') : 'default'}>
+                {room?.status !== undefined ? (room.status ? 'Hoạt động' : 'Không hoạt động') : 'No Data'}
+              </Badge>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='active'>
+                <Badge variant='success'>Hoạt động</Badge>
+              </SelectItem>
+              <SelectItem value='inactive'>
+                <Badge variant='destructive'>Không hoạt động</Badge>
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        ):(
+          <Badge variant={room?.status ? 'success' : 'destructive'}>
+          {room?.status ? 'Hoạt động' : 'Không hoạt động'}
+        </Badge>
+        )}
       </div>
 
       {/* Display imageList first */}
@@ -382,9 +388,11 @@ const RoomStoreDetail: React.FC = () => {
           <div className='md:w-1/2 p-4'>
             <div className='flex justify-center items-center gap-3'>
               <h2 className='text-xl font-medium mb-2'>Thông tin phòng</h2>
-              <Tooltip title='Chỉnh sửa' className='mr-1'>
-                <Edit2 strokeWidth={3} className='cursor-pointer w-4 text-primary' onClick={showModal} />
-              </Tooltip>
+             {user?.roleName==="Store" && (
+               <Tooltip title='Chỉnh sửa' className='mr-1'>
+               <Edit2 strokeWidth={3} className='cursor-pointer w-4 text-primary' onClick={showModal} />
+             </Tooltip>
+             )}
             </div>
             <table className='w-full table-auto border-collapse border border-gray-300'>
               <tbody>
@@ -471,10 +479,12 @@ const RoomStoreDetail: React.FC = () => {
             </table>
             <div className='flex justify-between items-center mb-4 mt-10'>
               <h2 className='text-xl font-semibold mb-2'>Tiện ích trong phòng</h2>
-              <Button variant='outline' className='text-primary' onClick={showAddModal}>
-                <Plus />
-                Thêm tiện ích
-              </Button>
+             {user?.roleName ==="Store" &&(
+               <Button variant='outline' className='text-primary' onClick={showAddModal}>
+               <Plus />
+               Thêm tiện ích
+             </Button>
+             )}
             </div>
             <Table className='w-full border border-gray-300'>
               <TableHeader>
@@ -506,7 +516,8 @@ const RoomStoreDetail: React.FC = () => {
                       <TableCell>
                         <p className='text-gray-500'>{amity.description || 'Không có mô tả'}</p>
                       </TableCell>
-                      <TableCell className='p-2 flex items-center'>
+                    {user?.roleName==="Store" && (
+                        <TableCell className='p-2 flex items-center'>
                         <Edit
                           className='h-5 w-5 text-green-500 cursor-pointer mr-2'
                           onClick={() => {
@@ -522,6 +533,7 @@ const RoomStoreDetail: React.FC = () => {
                           }}
                         />
                       </TableCell>
+                    )}
                     </TableRow>
                   ))
                 ) : (

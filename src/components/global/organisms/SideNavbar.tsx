@@ -24,7 +24,8 @@ import {
   Store ,
   DoorOpen ,
   FileBox,
-  Presentation
+  Presentation,
+  BadgeDollarSign
 } from 'lucide-react'
 import { Button } from '../atoms/ui/button'
 import { Handshake } from 'lucide-react'
@@ -63,6 +64,12 @@ export default function SideNavbar({ isAdmin }: SideNavbarProps) {
       title: 'Quản lý đặt chỗ',
       href: '/bookingAll',
       icon: FileBox,
+      variant: 'default' as 'default' | 'ghost'
+    },
+    {
+      title: 'Quản lý giao dịch',
+      href: '/transactionsAll',
+      icon: BadgeDollarSign,
       variant: 'default' as 'default' | 'ghost'
     },
     {

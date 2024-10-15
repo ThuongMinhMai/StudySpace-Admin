@@ -4,6 +4,7 @@ import 'antd/dist/reset.css'
 import { useEffect, useState } from 'react'
 import studySpaceAPI from '@/lib/studySpaceAPI'
 import { useAuth } from '@/auth/AuthProvider'
+import { formatPrice } from '@/lib/utils'
 
 interface Transaction {
   id: number
@@ -60,12 +61,7 @@ function TransactionStore() {
   //       setFilteredTransactions(filtered)
   //     }
   //   }
-  const formatNumber = (num:any) => {
-    return num.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  };
+
   const filteredTransactions =
     activeTab === 'ALL' ? transactions : transactions.filter((trans) => trans.type === activeTab)
   console.log('hdhfj', filteredTransactions)
@@ -73,9 +69,9 @@ function TransactionStore() {
     <div className='transaction-page-container p-4 flex flex-col justify-center items-center m-auto'>
       <h1 className='text-2xl font-bold mb-6 text-center'>Lịch sử giao dịch</h1>
       <span className='flex items-center'>
-        <span className='text-green-600 font-bold text-xl'>{formatNumber(totalRevenue)} VNĐ</span>
+        <span className='text-green-600 font-bold text-xl'>+{formatPrice(totalRevenue)} </span>
         <span className='mx-2 text-gray-500'>-</span>
-        <span className='text-red-600 font-medium text-lg'>{formatNumber(totalCost)} VNĐ</span>
+        <span className='text-red-600 font-medium text-lg'>-{formatPrice(totalCost)} </span>
       </span>
       <ConfigProvider
         theme={{
@@ -89,7 +85,7 @@ function TransactionStore() {
       >
         <Tabs
           activeKey={activeTab}
-          onChange={(key) => setActiveTab(key)} // Update active tab on change
+          onChange={(key) => setActiveTab(key)} 
           centered
           className='w-full'
           tabBarGutter={0}

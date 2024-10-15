@@ -10,6 +10,7 @@ import { fetchDashboardAdmin } from '@/apis/dashboardAPI'
 import Loading from '../molecules/Loading'
 import { formatPrice } from '@/lib/utils'
 import Loader from '../molecules/Loader'
+import PopularStore from '../organisms/PopularStore'
 
 export default function Home() {
   const { data, isLoading } = fetchDashboardAdmin();
@@ -24,8 +25,12 @@ export default function Home() {
         <Card key={1} amount={formatPrice(data?.totalIncome || 0)} description="" icon={HandCoins} label="Tổng doanh thu" color='red'/>
         <Card key={2} amount={data ? data.totalTransactions.toString() : '0'} description="" icon={BadgeDollarSign} label="Tổng số giao dịch" color='orange' />
         <Card key={3} amount={data ? data.totalBookings.toString() : '0'} description="" icon={Ticket} label="Tổng số đơn đặt" color='blue' />
-        <Card key={5} amount={data ? data.accounts.totalStores.toString() : '0'} description="" icon={Store} label="Tổng số cửa hàng" color='teal' />
-        <Card key={4} amount={data ? data.accounts.totalUsers.toString() : '0'} description="" icon={UserRound} label="Tổng số khách hàng"  color='green'/>
+        <Card key={4} amount={data ? data.accounts.totalStores.toString() : '0'} description="" icon={Store} label="Tổng số cửa hàng" color='teal' />
+        <Card key={5} amount={data ? data.accounts.totalUsers.toString() : '0'} description="" icon={UserRound} label="Tổng số khách hàng"  color='green'/>
+        <Card key={6} amount={data ? formatPrice(data.totalInThisMonth.totalRevenueInMonth) : '0'} description='' icon={HandCoins} label='Doanh thu trong tháng' color='purple'/>
+        <Card key={7} amount={data ? data.totalInThisMonth.totalBookingsInMonth.toString() : '0'} description='' icon={Ticket} label='Tổng số lượt đặt phòng trong tháng' color='red'/>
+        <Card key={8} amount={data ? data.totalInThisMonth.totalTransactionsInMonth.toString() : '0'} description='' icon={BadgeDollarSign } label='Tổng giao dịch trong tháng' color='orange'/>
+
       </section>
       <section className='grid grid-cols-1  gap-4 transition-all lg:grid-cols-2'>
         <CardContent>
@@ -33,7 +38,7 @@ export default function Home() {
 
           <BarChart data={data?.monthlyIncome}/>
         </CardContent>
-        <CardContent className='flex justify-between gap-4'>
+        <CardContent className='flex justify-start gap-4'>
           <section>
             <p className='text-lg font-semibold text-primary'>Những cửa hàng có doanh thu cao nhất</p>
             {/* <p className='text-sm text-gray-400'>You made 265 sales this month.</p> */}
@@ -41,6 +46,7 @@ export default function Home() {
           {/* {data?.RevenueOfCompanyInMonths.sort((a,b) => b.TotalRevenueOfCompanyInMonth - a.TotalRevenueOfCompanyInMonth).map((d, i) => (
             <SalesCard key={i} data={d} index={i}/>
           ))} */}
+         <PopularStore stores={data?.hotBookingStore || []} />
         </CardContent>
 
         {/*  */}
