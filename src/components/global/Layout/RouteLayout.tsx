@@ -16,13 +16,8 @@ import { fetchUserDetail } from '../../../apis/userAPI'
 
 function RouteLayout() {
   const { user, loading, logout } = useAuth()
-  console.log('user', user)
   const { data: userDetail, isLoading, error } = fetchUserDetail(user?.userID || 0, user?.roleName || '')
-  console.log('detail ne', userDetail)
-  // console.log('user ở layout', user)
   const [isAdmin, setIsAdmin] = useState<boolean>(false)
-  // const {userDetail} = useAuth();
-  // console.log("user ở layout", userDetail);
 
   useEffect(() => {
     if (user) {

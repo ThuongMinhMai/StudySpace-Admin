@@ -7,8 +7,8 @@ type ManagerProtectedRouteProps = RouteProps & {
 }
 
 const ManagerProtectedRoute: React.FC<ManagerProtectedRouteProps> = ({ children }) => {
-  const { user } = useAuth()
-  console.log('aut', user)
+  const { user,userDetail } = useAuth()
+  console.log("userdetail in manaprotetx", userDetail)
   if (!user) {
     // Redirect to login if user is not authenticated
     return <Navigate to='/' />
@@ -18,7 +18,7 @@ const ManagerProtectedRoute: React.FC<ManagerProtectedRouteProps> = ({ children 
     // Redirect to not authorized page if user is not a manager or admin
     return <Navigate to='/not-authorized' />
   }
-  if (user.roleName==="Store" && user.isPackaged === "False") {
+  if (user.roleName==="Store" && userDetail?.isPackaged === false) {
     // Redirect to register package page if user does not have a package
     return <Navigate to='/register-package' />
   }

@@ -14,7 +14,6 @@ import PopularStore from '../organisms/PopularStore'
 
 export default function Home() {
   const { data, isLoading } = fetchDashboardAdmin();
-  console.log("dât admin", data)
   const today = new Date();
   const title = `Dashboard tháng ${today.getMonth() + 1}`;
   if (isLoading) return <Loader />;

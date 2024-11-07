@@ -88,7 +88,6 @@ export const fetchUserDetail = (userId: number, role: string) => {
       ? await studySpace.get<ApiResponse<IAdminDetail>>(endpoint)
       : await studySpace.get<ApiResponse<IStoreDetail>>(endpoint);
       
-      console.log("User data fetchedd:", response.data.data);
       return  response.data.data;
     },
   });

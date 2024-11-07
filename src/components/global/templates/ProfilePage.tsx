@@ -14,9 +14,7 @@ import Loading from '@/components/global/molecules/Loading'
 import moment from 'moment'
 function ProfilePage() {
   const { user } = useAuth()
-  console.log('us', user?.userID, user?.roleName)
   const { data, isLoading, isError, refetch } = fetchUserDetail(user?.userID || 0, user?.roleName || '')
-  console.log('profile', data)
   const [loading, setLoading] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
   const [form] = Form.useForm()

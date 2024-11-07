@@ -8,7 +8,6 @@ type AdminProtectedRouteProps = RouteProps & {
 
 const AdminProtectedRoute: React.FC<AdminProtectedRouteProps> = ({ children }) => {
   const { user } = useAuth()
-  console.log('admin ơ proetct', user)
   if (!user) {
     // Redirect to login if user is not authenticated
     return <Navigate to='/' />

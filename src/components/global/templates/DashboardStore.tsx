@@ -15,7 +15,6 @@ import PopularRoom from '../organisms/PopularRoom'
 export default function DashboardStore() {
   const { user } = useAuth()
   const { data, isLoading } = fetchDashboardStore(user?.userID || 0)
-  console.log('dashboard sotre', data)
 
   // if (isLoading) return <Loading />
   return (

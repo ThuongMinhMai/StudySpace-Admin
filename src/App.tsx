@@ -7,22 +7,18 @@ import ProtectedRoute from './auth/ProtectedRoute'
 import NotAuthorized from './components/global/templates/NotAuthorized'
 import AdminProtectedRoute from './auth/AdminProtectedRoute'
 import ManagerProtectedRoute from './auth/ManagerProtectedRoute'
-import { useAuth } from './auth/AuthProvider'
 import NotFoundPage from './components/global/templates/NotFoundPage'
 import ProfilePage from './components/global/templates/ProfilePage'
-import Template from './components/global/templates/Template'
 import RegisterPackage from './components/global/organisms/RegisterPackage'
 import ProtectPackageRegister from './auth/ProtectPackageRegister'
 import ProtectProfile from './auth/ProtectProfile'
 import RoomStoreDetail from './components/global/organisms/RoomStoreDetail'
 import CreateRoomStore from './components/global/organisms/CreateRoomStore'
 import TransactionStore from './components/global/templates/TransactionStore'
+import PaymentSuccess from './components/global/templates/PaymentSuccess'
+import PaymentFailure from './components/global/templates/PaymentFailure'
 const RouteLayout = React.lazy(() => import('./components/global/Layout/RouteLayout'))
-const UsersPage = React.lazy(() => import('./components/global/templates/Users'))
-const CompaniesPage = React.lazy(() => import('./components/global/templates/Companies'))
-const SettingsPage = React.lazy(() => import('./components/global/templates/Settings'))
 const Home = React.lazy(() => import('./components/global/templates/Dashboard'))
-const StaffPage = React.lazy(() => import('./components/global/templates/Staffs'))
 const AllBooking = React.lazy(() => import('./components/global/templates/AllBooking'))
 const AllStore = React.lazy(() => import('./components/global/templates/AllStore'))
 const AllTransaction = React.lazy(() => import('./components/global/templates/AllTransaction'))
@@ -34,21 +30,11 @@ const BookingStore = React.lazy(() => import('./components/global/templates/Book
 const DashboardStore = React.lazy(() => import('./components/global/templates/DashboardStore'))
 function App() {
   const [loading, setLoading] = useState<boolean>(true)
-  const { user } = useAuth()
-  const navigate = useNavigate()
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000)
   }, [])
-  // useEffect(() => {
-  //   if (!loading && user) {
-  //     if (user.RoleName === 'Admin') {
-  //       navigate('/home/admin')
-  //     } else if (user.RoleName === 'Manager') {
-  //       navigate('/home/manager')
-  //     }
-  //   }
-  // }, [loading, user, navigate])
+ 
   return loading ? (
     <div className='h-screen w-screen flex justify-center items-center'>
       <Loader />
@@ -173,26 +159,7 @@ function App() {
             </ManagerProtectedRoute>
           }
         />
-        {/* <Route
-          path='/stations'
-          element={
-            <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}>
-                <StationPage />
-              </Suspense>
-            </ManagerProtectedRoute>
-          }
-        /> */}
-        {/* <Route
-          path='/templates'
-          element={
-            <ManagerProtectedRoute>
-              <Suspense fallback={<Loader />}>
-                <Template />
-              </Suspense>
-            </ManagerProtectedRoute>
-          }
-        /> */}
+      
         <Route
           path='/profile'
           element={
@@ -218,7 +185,8 @@ function App() {
           </ProtectedRoute>
         }
       />
-
+  <Route path='/payment-success' element={<PaymentSuccess />} />
+  <Route path='/payment-cancel' element={<PaymentFailure />} />
       <Route path='/not-authorized' element={<NotAuthorized />} />
       <Route path='*' element={<NotFoundPage />} />
     </Routes>

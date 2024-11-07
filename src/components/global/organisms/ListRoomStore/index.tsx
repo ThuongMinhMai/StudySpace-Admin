@@ -98,7 +98,6 @@ function ListRoomStore() {
   const [isAddAmentiModalVisible, setAddAmentiModalVisible] = useState(false)
   // const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   const handleUpdateAmenti = (updatedAmenti: any) => {
-    console.log("update ơ bang", updatedAmenti)
     setRooms((prevRooms) =>
       prevRooms.map((room) =>
         room.roomId === updatedAmenti.StationID // Ensure you're matching with Service_StationID
@@ -147,7 +146,6 @@ function ListRoomStore() {
         const response = await studySpaceAPI.get<ApiResponse<Room[]>>(`/Room/supplier/${user?.userID}`)
 
         const result=response.data.data
-        console.log("rome ne", result)
         setRooms(result || [])
         const initialStatuses: { [key: string]: boolean } = {}
         result.forEach((room:Room) => {

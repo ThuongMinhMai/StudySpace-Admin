@@ -52,8 +52,6 @@ interface Service {
   }
 export function DataTableRowActions<TData extends Amyti>({ row,handleStatusChange }: DataTableRowActionsProps<TData>) {
   const { user } = useAuth()
-  // console.log('user o route', user)
-  // const [routes, setRoutes] = useState<Station[]>([])
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedStation, setSelectedStation] = useState<Station | null>(null)
@@ -62,56 +60,6 @@ export function DataTableRowActions<TData extends Amyti>({ row,handleStatusChang
     [row.original.amityId]: row.original.amityStatus
   })
 
-  // const handleStatusChange = (station: Station, status: string) => {
-  //   setSelectedStation(station)
-  //   setNewStatus(status)
-  //   setIsModalOpen(true)
-  // }
-
-  // const confirmStatusChange = async () => {
-  //   setIsLoadingUpdate(true)
-  //   if (selectedStation) {
-  //     try {
-  //       const response = await busAPI.put(
-  //         `status-management?entity=STATION&id=${selectedStation.StationID}`,
-  //         { status: newStatus }
-  //       )
-  //       // setRoutes(
-  //       //   routes.map((route) =>
-  //       //     route.Route_CompanyID === selectedRoute.Route_CompanyID
-  //       //       ? { ...route, Status: newStatus }
-  //       //       : route
-  //       //   )
-  //       // )
-  //       setTempStatus((prevState) => ({
-  //         ...prevState,
-  //         [selectedStation.StationID]: newStatus
-  //       }))
-  //       toast({
-  //         variant: 'success',
-  //         title: 'Cập nhật thành công',
-  //         description: 'Đã đổi trạng thái trạm này thành ' + newStatus
-  //       })
-  //       setIsLoadingUpdate(false)
-  //     } catch (error) {
-  //       if (axios.isAxiosError(error) && error.response) {
-	// 		toast({
-	// 		  variant: 'destructive',
-	// 		  title: 'Không thể cập nhật trạng thái trạm',
-	// 		  description: 'Vui lòng thử lại sau'
-	// 		})
-  //         const message = error.response.data.Result.message || null
-  //         setTempStatus((prevState) => ({
-  //           ...prevState,
-  //           [selectedStation.StationID]: selectedStation.Status
-  //         }))
-  //       }
-  //     } finally {
-  //       setIsLoadingUpdate(false)
-  //       setIsModalOpen(false)
-  //     }
-  //   }
-  // }
 
   return (
     <div>

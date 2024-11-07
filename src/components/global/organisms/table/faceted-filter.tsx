@@ -45,8 +45,6 @@ export function DataTableFacetedFilter<TData, TValue>({
 }: DataTableFacetedFilterProps<TData, TValue>) {
 	const facets = column?.getFacetedUniqueValues()
 	const selectedValues = new Set(column?.getFilterValue() as any[])
-	console.log('Facets:', facets)
-	console.log('Selected Values:', selectedValues.size)
 
 	// Get the labels of the selected values
 	const selectedLabels = Array.from(selectedValues).map((value) => {

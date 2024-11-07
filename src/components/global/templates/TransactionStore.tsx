@@ -31,7 +31,6 @@ function TransactionStore() {
       .get(`/Transactions/sup/${user?.userID}`)
       .then((response) => {
         const { data } = response
-        console.log('tran', data.data.transaction)
         setTransactions(data.data.transaction)
         setTotalRevenue(data.data.totalRevenue)
         setTotalCost(data.data.totalCost)
@@ -64,7 +63,6 @@ function TransactionStore() {
 
   const filteredTransactions =
     activeTab === 'ALL' ? transactions : transactions.filter((trans) => trans.type === activeTab)
-  console.log('hdhfj', filteredTransactions)
   return (
     <div className='transaction-page-container p-4 flex flex-col justify-center items-center m-auto'>
       <h1 className='text-2xl font-bold mb-6 text-center'>Lịch sử giao dịch</h1>

@@ -356,37 +356,7 @@ function ListBookingStore() {
     setIsAdding(false)
     // formAddStation.reset()
   }
-  // const confirmAddStation = async (values: z.infer<typeof AddStationSchema>) => {
-  //   setIsLoadingUpdate(true)
-  //   try {
-  //     const { data } = await studySpaceAPI.post('station-management/managed-stations', {
-  //       stationName: values.StationName,
-  //       cityID: values.CityID,
-  //       // companyID: user?.CompanyID
-  //     })
-  //     const newStation = { ...data, ServiceTypeInStation: [] }
-  //     console.log('fjhhfjhkjg', newStation)
-  //     setStations([...stations, newStation])
-  //     toast({
-  //       variant: 'success',
-  //       title: 'Thêm trạm dừng thành công',
-  //       description: 'Trạm dừng mới đã được thêm thành công'
-  //     })
-  //     setIsAdding(false)
-  //     // formAddStation.reset()
-  //   } catch (error) {
-  //     if (axios.isAxiosError(error) && error.response) {
-  //       const message = error.response.data.Result.message
-  //       toast({
-  //         variant: 'destructive',
-  //         title: 'Không thể thêm trạm dừng',
-  //         description: message || 'Vui lòng thử lại sau'
-  //       })
-  //     }
-  //   } finally {
-  //     setIsLoadingUpdate(false)
-  //   }
-  // }
+  
   const handleModalClose = () => {
     setIsModalVisible(false)
     setTransactionData(null) // Clear data when modal closes
