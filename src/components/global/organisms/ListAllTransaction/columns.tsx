@@ -126,9 +126,9 @@ export const columns = (
           displayText = 'Tiền mặt'
           icon = <DollarOutlined />
           break
-        case 'PayPal':
+        case 'PayOS':
           tagColor = 'processing'
-          displayText = 'PayPal'
+          displayText = 'PayOS'
           icon = <PayCircleOutlined /> // Using an alternative icon for PayPal
           break
         case 'Debit Card':
