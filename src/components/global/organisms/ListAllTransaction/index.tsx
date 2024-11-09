@@ -294,7 +294,7 @@ function ListAllTransaction() {
                   name='type'
                   render={({ field }) => (
                     <FormItem className='w-full flex flex-col justify-center items-start'>
-                      <FormLabel>Tên tiện ích</FormLabel>
+                      <FormLabel>Loại tiện ích</FormLabel>
                       <FormControl>
                         <Input placeholder='Nhập loại tiện ích' {...field} />
                       </FormControl>

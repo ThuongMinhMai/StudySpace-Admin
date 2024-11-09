@@ -52,12 +52,12 @@ export const columns = (
     cell: ({ row }) => <div>{row.getValue('email')}</div>,
     filterFn: (row, id, value) => value.includes(row.getValue(id))
   },
-  {
-    accessorKey: 'description',
-    header: ({ column }) => <DataTableColumnHeader column={column} title='Mô tả' />,
-    cell: ({ row }) => <div> {row.getValue('description') || 'Không có mô tả'}</div>,
-    filterFn: (row, id, value) => value.includes(row.getValue(id))
-  },
+  // {
+  //   accessorKey: 'description',
+  //   header: ({ column }) => <DataTableColumnHeader column={column} title='Mô tả' />,
+  //   cell: ({ row }) => <div> {row.getValue('description') || 'Không có mô tả'}</div>,
+  //   filterFn: (row, id, value) => value.includes(row.getValue(id))
+  // },
   {
     accessorKey: 'phone',
     header: ({ column }) => <DataTableColumnHeader column={column} title='Số điện thoại' />,
