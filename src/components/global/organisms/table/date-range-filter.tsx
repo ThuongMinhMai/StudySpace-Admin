@@ -56,10 +56,10 @@ export function DateRangeFilter<TData, TValue>({
 					{date?.from ? (
 						date.to ? (
 							<>
-								{format(date.from, 'yyyy/MM/dd')} - {format(date.to, 'yyyy/MM/dd')}
+								{format(date.from, 'dd/MM/yyyy')} - {format(date.to, 'dd/MM/yyyy')}
 							</>
 						) : (
-							format(date.from, 'yyyy/MM/dd')
+							format(date.from, 'dd/MM/yyyy')
 						)
 					) : (
 						title

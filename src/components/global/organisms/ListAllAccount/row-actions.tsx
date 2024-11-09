@@ -18,6 +18,8 @@ interface Account {
   isActive: boolean
   wallet: number
   avatarUrl: string
+  date:string
+
 }
 
 export function DataTableRowActions<TData extends Account>({

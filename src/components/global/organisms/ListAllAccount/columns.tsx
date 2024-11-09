@@ -20,6 +20,8 @@ interface Account {
   isActive: boolean
   wallet: number
   avatarUrl: string
+  date:string
+
 }
 export const columns = (
   navigate: ReturnType<typeof useNavigate>,
@@ -137,6 +139,24 @@ export const columns = (
       accessorKey: 'wallet',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Ví' />,
       cell: ({ row }) => <div>{row.getValue('wallet')}</div>,
+      filterFn: (row, id, value) => value.includes(row.getValue(id))
+    },
+    {
+      accessorKey: 'date',
+      header: ({ column }) => <DataTableColumnHeader column={column} title='Ngày tạo' />,
+      cell: ({ row }) => {
+        const dateString = row.getValue('date') as string // Get the date string
+        const date = new Date(dateString) // Convert the string to a Date object
+  
+        // Format the date to a readable format (e.g., 'dd/mm/yyyy' or 'mm/dd/yyyy')
+        const formattedDate = date.toLocaleDateString('vi-VN', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        })
+  
+        return <div>{formattedDate}</div> // Return the formatted date
+      },
       filterFn: (row, id, value) => value.includes(row.getValue(id))
     },
     {

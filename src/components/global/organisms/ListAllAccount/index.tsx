@@ -28,6 +28,7 @@ interface Account {
   isActive: boolean
   wallet: number
   avatarUrl: string
+  date:string
 }
 function ListAllAccount() {
   const { user } = useAuth()
