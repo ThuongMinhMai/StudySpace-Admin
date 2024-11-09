@@ -7,6 +7,7 @@ import { Eye } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Badge } from '../../atoms/ui/badge'
 import { DataTableRowActions } from './row-actions'
+import { formatPrice } from '@/lib/utils'
 
 interface Amenity {
   id: number
@@ -83,7 +84,7 @@ export const columns = (
       // filterFn: (row, id, value) => value.includes(row.getValue(id)),
       enableHiding: false
     },
-   
+
     {
       accessorKey: 'capacity',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Số người' />,
@@ -99,7 +100,7 @@ export const columns = (
       header: ({ column }) => <DataTableColumnHeader column={column} title='Giá/giờ' />,
       cell: ({ row }) => (
         <div className='cursor-pointer' onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}>
-          {row.getValue('pricePerHour')}
+          {formatPrice((row.getValue('pricePerHour') as number) * 1000)}
         </div>
       ),
       filterFn: (row, id, value) => value.includes(row.getValue(id))
@@ -186,7 +187,7 @@ export const columns = (
       ),
       filterFn: (row, id, value) => value.includes(row.getValue(id))
     },
-   
+
     {
       accessorKey: 'amitiesInRoom',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Tiện ích hiện có' />,

@@ -55,7 +55,6 @@ const CreateRoomStore: React.FC = () => {
     imgWindow?.document.write(image.outerHTML)
   }
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -75,6 +74,7 @@ const CreateRoomStore: React.FC = () => {
 
     fetchData()
   }, [])
+
   const onFinish = async (values: any) => {
     const imageRoomFiles = values.ImageRoom
     const imageMenuFile = values.ImageMenu && values.ImageMenu[0]
@@ -83,6 +83,9 @@ const CreateRoomStore: React.FC = () => {
     houseRules.forEach((rule: string) => {
       formData.append('HouseRule[]', rule)
     })
+    if (houseRules.length === 0) {
+      formData.append('HouseRule[]', '[]');
+    }
     formData.append('SpaceId', values.SpaceId)
     formData.append('RoomName', values.RoomName)
     // formData.append('StoreId', user?.userID)
@@ -94,7 +97,8 @@ const CreateRoomStore: React.FC = () => {
     formData.append('Type', values.Type)
     formData.append('Capacity', values.Capacity)
 
-    formData.append('PricePerHour', values.PricePerHour)
+    // formData.append('PricePerHour', values.PricePerHour)
+    formData.append('PricePerHour', (values.PricePerHour / 1000).toString())
     formData.append('Description', values.Description)
     // formData.append('Amities', JSON.stringify(values.Amenities))
     // values.Amenities.forEach((amenity:any) => {
@@ -108,12 +112,17 @@ const CreateRoomStore: React.FC = () => {
     //     Quantity: amenity.quantity
     //   }));
     // });
-   
+
     // formData.append('Amities', JSON.stringify(amities))
-    values.Amenities.forEach((amity: any, index: any) => {
-      formData.append(`Amities[${index}][AmityId]`, amity.amityId)
-      formData.append(`Amities[${index}][Quantity]`, amity.quantity)
-    })
+    if (values.Amenities && values.Amenities.length > 0) {
+      values.Amenities.forEach((amity: any, index: any) => {
+        formData.append(`Amities[${index}][AmityId]`, amity.amityId)
+        formData.append(`Amities[${index}][Quantity]`, amity.quantity)
+      })
+    } else {
+      // If there are no amenities, append an empty array
+      formData.append('Amities', '[]')
+    }
     formData.append('Area', values.Area)
     if (imageMenuFile && imageMenuFile.originFileObj) {
       formData.append('ImageMenu', imageMenuFile.originFileObj)
@@ -243,10 +252,25 @@ const CreateRoomStore: React.FC = () => {
             <Col span={8}>
               <Form.Item
                 name='PricePerHour'
-                label='Giá/Giờ'
+                label='Giá/Giờ(VNĐ)'
                 rules={[{ required: true, message: 'Vui lòng nhập giá/giờ' }]}
               >
-                <InputNumber min={0} step={0.01} />
+                {/* <InputNumber min={0} step={0.01} /> */}
+                <InputNumber
+                  style={{ width: '50%' }}
+                  min={1}
+                  step={0.001}
+                  formatter={(value) => {
+                    if (value === undefined || value === null) return '' // Handle empty or undefined values
+                    // Ensure value is a string before using replace
+                    const valueStr = String(value)
+                    return valueStr.replace(/\B(?=(\d{3})+(?!\d))/g, '.') // Format with thousands separator
+                  }}
+                  parser={(value: string | undefined) => {
+                    // Ensure value is parsed as a number
+                    return parseFloat((value || '').replace(/\./g, '') || '0') // Return parsed number
+                  }}
+                />
               </Form.Item>
             </Col>
 
