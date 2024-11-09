@@ -5,12 +5,11 @@ import { Table } from '@tanstack/react-table'
 
 // import { RoleGate } from '@/auth/role-gate'
 // import { AddUser } from '@/components/common/modal/add-user'
-import { DataTableFacetedFilter } from '../table/faceted-filter'
-import { DataTableViewOptions } from '../table/view-options'
 import { Button } from '@/components/global/atoms/ui/button'
 import { Input } from '@/components/global/atoms/ui/input'
-import { NumberRangeFilter } from '../table/number_range_filter'
 import { DateRangeFilter } from '../table/date-range-filter'
+import { DataTableFacetedFilter } from '../table/faceted-filter'
+import { DataTableViewOptions } from '../table/view-options'
 
 export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
   const isFiltered = table.getState().columnFilters.length > 0
@@ -42,7 +41,6 @@ export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
           className='h-8 w-[150px] lg:w-[250px]'
         />
 
-        
         <DataTableFacetedFilter column={table.getColumn('status')} title='Trạng thái' options={uniqueStatus} />
         <DataTableFacetedFilter column={table.getColumn('checkin')} title='Checkin' options={uniqueCheckin} />
         <DataTableFacetedFilter column={table.getColumn('roomType')} title='Loại phòng' options={uniqueRoomType} />

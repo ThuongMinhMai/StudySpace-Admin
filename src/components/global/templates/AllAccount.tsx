@@ -1,10 +1,9 @@
-import React from 'react'
 import ListAllAccount from '../organisms/ListAllAccount'
 
 function AllAccount() {
   return (
     <div>
-        <ListAllAccount/>
+      <ListAllAccount />
     </div>
   )
 }

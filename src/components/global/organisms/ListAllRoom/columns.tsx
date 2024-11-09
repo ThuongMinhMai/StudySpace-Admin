@@ -1,41 +1,10 @@
 import { ColumnDef } from '@tanstack/react-table'
 
-import { Tag, Tooltip } from 'antd'
+import { Tag } from 'antd'
 import { DataTableColumnHeader } from '../table/col-header'
-// import { statuses } from './data/data'
-import { Task } from './data/schema'
-import { DataTableRowActions } from './row-actions'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/global/atoms/ui/avatar'
+import { Eye } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { Badge } from '../../atoms/ui/badge'
-import { Badge as BageAnt } from 'antd'
-import { Edit2, Eye, Plus } from 'lucide-react'
-import { Button } from '../../atoms/ui/button'
-import { Link, useNavigate } from 'react-router-dom'
-// Define the interface for the Service
-// interface Service {
-//   Service_StationID:string
-//   ServiceID: string
-//   Price: number
-//   Name: string
-//   ImageUrl: string
-// }
-
-// // Define the interface for the ServiceType
-// interface ServiceType {
-//   ServiceTypeID: string
-//   ServiceTypeName: string
-//   ServiceInStation: Service[]
-// }
-
-// // Define the interface for the Station
-// interface Station {
-//   StationID: string
-//   CityID: string
-//   CityName: string
-//   StationName: string
-//   Status: string
-//   ServiceTypeInStation: ServiceType[]
-// }
 
 interface Amenity {
   id: number
@@ -82,9 +51,6 @@ export const columns = (
           className='flex space-x-2 cursor-pointer'
           onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}
         >
-          {/* <Tooltip title='Chỉnh sửa' className='mr-1'>
-          <Edit2 className='cursor-pointer w-4 text-primary' onClick={() => handleEditName(row.original, row.getValue('roomName'))} />
-        </Tooltip> */}
           <img
             className='rounded-md h-16 w-28 object-cover'
             src={row.getValue('image')} // Access the image URL correctly
@@ -92,7 +58,6 @@ export const columns = (
           />
         </div>
       ),
-      // filterFn: (row, id, value) => value.includes(row.getValue(id)),
       enableHiding: false
     },
     {
@@ -103,9 +68,6 @@ export const columns = (
           className='flex space-x-2 cursor-pointer'
           onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}
         >
-          {/* <Tooltip title='Chỉnh sửa' className='mr-1'>
-          <Edit2 className='cursor-pointer w-4 text-primary' onClick={() => handleEditName(row.original, row.getValue('roomName'))} />
-        </Tooltip> */}
           <span className='max-w-[500px] truncate font-medium '>{row.getValue('roomName')}</span>
         </div>
       ),
@@ -120,21 +82,13 @@ export const columns = (
           className='flex space-x-2 cursor-pointer'
           onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}
         >
-          {/* <Tooltip title='Chỉnh sửa' className='mr-1'>
-          <Edit2 className='cursor-pointer w-4 text-primary' onClick={() => handleEditName(row.original, row.getValue('roomName'))} />
-        </Tooltip> */}
           <span className='max-w-[500px] truncate font-medium '>{row.getValue('storeName')}</span>
         </div>
       ),
       filterFn: (row, id, value) => value.includes(row.getValue(id)),
       enableHiding: false
     },
-    // {
-    //   accessorKey: 'storeName',
-    //   header: ({ column }) => <DataTableColumnHeader column={column} title='Tên cửa hàng' />,
-    //   cell: ({ row }) => <div>{row.getValue('storeName')}</div>,
-    //   filterFn: (row, id, value) => value.includes(row.getValue(id))
-    // },
+
     {
       accessorKey: 'capacity',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Số người' />,
@@ -237,12 +191,7 @@ export const columns = (
       ),
       filterFn: (row, id, value) => value.includes(row.getValue(id))
     },
-    // {
-    //   accessorKey: 'ServiceTypeInStation',
-    //   header: ({ column }) => <DataTableColumnHeader column={column} title='Dịch vụ' />,
-    //   cell: ({ row }) => <div>{row.getValue('ServiceTypeInStation')}</div>,
-    //   filterFn: (row, id, value) => value.includes(row.getValue(id))
-    // },
+
     {
       accessorKey: 'amitiesInRoom',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Tiện ích hiện có' />,
@@ -255,7 +204,7 @@ export const columns = (
             >
               {amenti.length === 0 ? (
                 <>
-                  {/* <Plus className="w-4 h-4 mr-2" /> */}
+                
                   Chưa có tiện ích
                 </>
               ) : (
@@ -271,7 +220,6 @@ export const columns = (
           </div>
         )
       }
-      // filterFn: (row, id, value) => value.includes(row.getValue(id))
     },
     {
       accessorKey: 'status',

@@ -2,21 +2,18 @@
 
 import PageTitle from '@/components/global/organisms/PageTitle'
 // import Image from "next/image";
-import Card, { CardContent } from '@/components/global/organisms/Card'
-import { Bus, Ticket, Route, HandCoins, DoorOpen, BadgeDollarSign } from 'lucide-react'
 import { fetchDashboardStore } from '@/apis/dashboardAPI'
 import { useAuth } from '@/auth/AuthProvider'
-import Loading from '../molecules/Loading'
+import Card, { CardContent } from '@/components/global/organisms/Card'
 import { formatPrice } from '@/lib/utils'
+import { BadgeDollarSign, DoorOpen, HandCoins, Ticket } from 'lucide-react'
 import BarChartManager from '../organisms/BarChartManager'
-import PopularTripCard from '../organisms/PopularTripCard'
 import PopularRoom from '../organisms/PopularRoom'
 
 export default function DashboardStore() {
   const { user } = useAuth()
   const { data, isLoading } = fetchDashboardStore(user?.userID || 0)
 
-  // if (isLoading) return <Loading />
   return (
     <div className='flex flex-col gap-5  w-full'>
       <PageTitle title={`Dashboard ${data?.storeName}`} />
@@ -82,11 +79,7 @@ export default function DashboardStore() {
         <CardContent className='flex justify-start gap-4'>
           <section>
             <p className='text-lg font-semibold text-primary'>Phòng có lượt đặt cao nhất</p>
-            {/* <p className='text-sm text-gray-400'>Những tuyến đường được sử dụng nhiều nhất trong tháng.</p> */}
           </section>
-          {/* {data?.popularRooms.map((d, i) => (
-            <PopularTripCard data={d} key={i}/>
-          ))} */}
           <PopularRoom rooms={data?.popularRooms || []} />
         </CardContent>
       </section>

@@ -1,10 +1,9 @@
-import React from 'react'
 import ListAllStore from '../organisms/ListAllStore'
 
 function AllStore() {
   return (
     <div>
-        <ListAllStore/>
+      <ListAllStore />
     </div>
   )
 }

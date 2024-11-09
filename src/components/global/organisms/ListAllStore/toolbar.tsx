@@ -2,23 +2,17 @@
 
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { Table } from '@tanstack/react-table'
-
-// import { RoleGate } from '@/auth/role-gate'
-// import { AddUser } from '@/components/common/modal/add-user'
-import { DataTableFacetedFilter } from '../table/faceted-filter'
-import { DataTableViewOptions } from '../table/view-options'
 import { Button } from '@/components/global/atoms/ui/button'
 import { Input } from '@/components/global/atoms/ui/input'
+import { DataTableFacetedFilter } from '../table/faceted-filter'
+import { DataTableViewOptions } from '../table/view-options'
 
 export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
   const isFiltered = table.getState().columnFilters.length > 0
 
-
- 
   const uniqueStatus = Array.from(table.getColumn('status')?.getFacetedUniqueValues()?.entries() || []).map(
     ([key]) => key
   )
-  console.log("status nè", uniqueStatus)
 
   return (
     <div className='ml-2 mb-2 flex justify-between'>
@@ -30,13 +24,6 @@ export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
           className='h-8 w-[150px] lg:w-[250px]'
         />
 
-{/*        
-        <DataTableFacetedFilter
-          column={table.getColumn('amityType')}
-          title='Loại tiện ích'
-          options={uniqueAmytiType}
-        /> */}
-    
         <DataTableFacetedFilter column={table.getColumn('status')} title='Trạng thái' options={uniqueStatus} />
 
         {isFiltered && (

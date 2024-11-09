@@ -1,9 +1,6 @@
-import React from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../atoms/ui/table'
 
 const TableSkeleton = () => {
-  const rows = Array.from({ length: 10 }, (_, index) => index + 1)
-
   return (
     <div className='p-4'>
       <div>

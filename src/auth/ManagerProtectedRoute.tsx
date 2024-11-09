@@ -8,7 +8,6 @@ type ManagerProtectedRouteProps = RouteProps & {
 
 const ManagerProtectedRoute: React.FC<ManagerProtectedRouteProps> = ({ children }) => {
   const { user,userDetail } = useAuth()
-  console.log("userdetail in manaprotetx", userDetail)
   if (!user) {
     // Redirect to login if user is not authenticated
     return <Navigate to='/' />

@@ -1,15 +1,11 @@
 'use client'
 
-import { Cross2Icon } from '@radix-ui/react-icons'
-import { Table } from '@tanstack/react-table'
-
-// import { RoleGate } from '@/auth/role-gate'
-// import { AddUser } from '@/components/common/modal/add-user'
-import { DataTableFacetedFilter } from '../table/faceted-filter'
-import { DataTableViewOptions } from '../table/view-options'
 import { Button } from '@/components/global/atoms/ui/button'
 import { Input } from '@/components/global/atoms/ui/input'
-import { NumberRangeFilter } from '../table/number_range_filter'
+import { Cross2Icon } from '@radix-ui/react-icons'
+import { Table } from '@tanstack/react-table'
+import { DataTableFacetedFilter } from '../table/faceted-filter'
+import { DataTableViewOptions } from '../table/view-options'
 
 export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
   const isFiltered = table.getState().columnFilters.length > 0
@@ -17,18 +13,15 @@ export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
   const uniqueRole = Array.from(table.getColumn('roleName')?.getFacetedUniqueValues()?.entries() || []).map(
     ([key]) => key
   )
- 
 
-  // const uniqueStatus = Array.from(table.getColumn('status')?.getFacetedUniqueValues()?.entries() || []).map(
-  //   ([key]) => key
-  // )
-  const uniqueStatus = Array.from(table.getColumn('isActive')?.getFacetedUniqueValues()?.entries() || []).map(([key]) => {
-    return {
-      value: key,
-      label: key ? 'Hoạt động' : 'Không hoạt động'
+  const uniqueStatus = Array.from(table.getColumn('isActive')?.getFacetedUniqueValues()?.entries() || []).map(
+    ([key]) => {
+      return {
+        value: key,
+        label: key ? 'Hoạt động' : 'Không hoạt động'
+      }
     }
-  })
-  const resetTrigger = table.getState().columnFilters.length
+  )
   return (
     <div className='ml-2 mb-2 flex justify-between'>
       <div className='flex space-x-2 '>
@@ -40,7 +33,6 @@ export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
         />
 
         <DataTableFacetedFilter column={table.getColumn('roleName')} title='Vai trò' options={uniqueRole} />
-     
 
         <DataTableFacetedFilter column={table.getColumn('isActive')} title='Trạng thái' options={uniqueStatus} />
 

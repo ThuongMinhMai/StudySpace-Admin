@@ -1,40 +1,12 @@
 import { ColumnDef } from '@tanstack/react-table'
 
-import { Tag, Tooltip } from 'antd'
+import { Tag } from 'antd'
 import { DataTableColumnHeader } from '../table/col-header'
 // import { statuses } from './data/data'
-import { Task } from './data/schema'
-import { DataTableRowActions } from './row-actions'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/global/atoms/ui/avatar'
+import { Eye } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { Badge } from '../../atoms/ui/badge'
-import { Edit2, Eye, Plus } from 'lucide-react'
-import { Button } from '../../atoms/ui/button'
-import { Link, useNavigate } from 'react-router-dom'
-// Define the interface for the Service
-// interface Service {
-//   Service_StationID:string
-//   ServiceID: string
-//   Price: number
-//   Name: string
-//   ImageUrl: string
-// }
-
-// // Define the interface for the ServiceType
-// interface ServiceType {
-//   ServiceTypeID: string
-//   ServiceTypeName: string
-//   ServiceInStation: Service[]
-// }
-
-// // Define the interface for the Station
-// interface Station {
-//   StationID: string
-//   CityID: string
-//   CityName: string
-//   StationName: string
-//   Status: string
-//   ServiceTypeInStation: ServiceType[]
-// }
+import { DataTableRowActions } from './row-actions'
 
 interface Amenity {
   id: number
@@ -111,12 +83,7 @@ export const columns = (
       // filterFn: (row, id, value) => value.includes(row.getValue(id)),
       enableHiding: false
     },
-    // {
-    //   accessorKey: 'storeName',
-    //   header: ({ column }) => <DataTableColumnHeader column={column} title='Tên cửa hàng' />,
-    //   cell: ({ row }) => <div>{row.getValue('storeName')}</div>,
-    //   filterFn: (row, id, value) => value.includes(row.getValue(id))
-    // },
+   
     {
       accessorKey: 'capacity',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Số người' />,
@@ -182,35 +149,30 @@ export const columns = (
       accessorKey: 'spaceType',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Loại không gian' />,
       cell: ({ row }) => {
-        const spaceType = row.getValue('spaceType') as string;
-    
+        const spaceType = row.getValue('spaceType') as string
+
         // Determine tag color and icon based on the space type
         const getSpaceTypeTag = () => {
           switch (spaceType) {
             case 'Library Space':
-              return (
-                <Tag color="blue"  >
-                  Thư viện
-                </Tag>
-              );
+              return <Tag color='blue'>Thư viện</Tag>
             case 'Meeting Room':
-              return (
-                <Tag color="green">
-                  Phòng họp
-                </Tag>
-              );
+              return <Tag color='green'>Phòng họp</Tag>
             case 'Coffee Space':
-              return (
-                <Tag color="orange" >
-                  Quán cà phê
-                </Tag>
-              );
+              return <Tag color='orange'>Quán cà phê</Tag>
             default:
-              return <Tag  className='cursor-pointer' onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}>{spaceType}</Tag>; // Default fallback if needed
+              return (
+                <Tag
+                  className='cursor-pointer'
+                  onClick={() => navigate(`/roomStore/room-detail/${row.original.roomId}`)}
+                >
+                  {spaceType}
+                </Tag>
+              ) // Default fallback if needed
           }
-        };
-    
-        return <div>{getSpaceTypeTag()}</div>;
+        }
+
+        return <div>{getSpaceTypeTag()}</div>
       },
       filterFn: (row, id, value) => value.includes(row.getValue(id))
     },
@@ -224,12 +186,7 @@ export const columns = (
       ),
       filterFn: (row, id, value) => value.includes(row.getValue(id))
     },
-    // {
-    //   accessorKey: 'ServiceTypeInStation',
-    //   header: ({ column }) => <DataTableColumnHeader column={column} title='Dịch vụ' />,
-    //   cell: ({ row }) => <div>{row.getValue('ServiceTypeInStation')}</div>,
-    //   filterFn: (row, id, value) => value.includes(row.getValue(id))
-    // },
+   
     {
       accessorKey: 'amitiesInRoom',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Tiện ích hiện có' />,

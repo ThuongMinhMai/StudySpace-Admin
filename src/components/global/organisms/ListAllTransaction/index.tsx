@@ -1,24 +1,20 @@
-import { useEffect, useState } from 'react'
-import { columns } from './columns'
-import { DataTable } from '../table/main'
-import { DataTableToolbar } from './toolbar'
 import { useAuth } from '@/auth/AuthProvider'
+import { AddAmytiSchema, amitySchema } from '@/components/Schema/AmitySchema'
 import studySpaceAPI from '@/lib/studySpaceAPI'
-import { toast } from '../../atoms/ui/use-toast'
-import axios from 'axios'
-import TableSkeleton from '../TableSkeleton'
-import { Dialog, DialogContent, DialogOverlay } from '../../atoms/ui/dialog'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { DialogTitle } from '@radix-ui/react-dialog'
+import { Loader } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 import { Button } from '../../atoms/ui/button'
-import { Loader, Plus } from 'lucide-react'
+import { Dialog, DialogContent, DialogOverlay } from '../../atoms/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../atoms/ui/form'
 import { Input } from '../../atoms/ui/input'
-import { useForm } from 'react-hook-form'
-import { amitySchema, AddAmytiSchema } from '@/components/Schema/AmitySchema'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../atoms/ui/select'
-import { ServiceModal } from '../ServiceModals'
-import { DialogTitle } from '@radix-ui/react-dialog'
+import { DataTable } from '../table/main'
+import TableSkeleton from '../TableSkeleton'
+import { columns } from './columns'
+import { DataTableToolbar } from './toolbar'
 
 // Define the interface for the Service
 interface Service {
@@ -59,16 +55,16 @@ interface Amyti {
   description: string | null | undefined
 }
 
-interface Transaction{
-  id: number,
-  date: string,
-  paymentMethod: string,
-  status: string,
-  type: string,
-  packageName: string,
-  fee: number,
-  roomName: string | null,
-  userName: string,
+interface Transaction {
+  id: number
+  date: string
+  paymentMethod: string
+  status: string
+  type: string
+  packageName: string
+  fee: number
+  roomName: string | null
+  userName: string
   avatar: string
 }
 interface ApiResponse<T> {
@@ -77,47 +73,18 @@ interface ApiResponse<T> {
 function ListAllTransaction() {
   const { user } = useAuth()
   const [transactions, setTransactions] = useState<Transaction[]>([])
-  const [cities, setCities] = useState<City[]>([])
   const [isLoadingTransactions, setIsLoadingTransactions] = useState(true)
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedAmyti, setSelectedAmyti] = useState<Amyti | null>(null)
-  const [newStatus, setNewStatus] = useState<string>('')
   const [tempStatus, setTempStatus] = useState<{ [key: string]: string }>({})
   const [isEditing, setIsEditing] = useState<Amyti | null>(null)
   const [isAdding, setIsAdding] = useState(false)
-  const [isServiceModalVisible, setServiceModalVisible] = useState(false)
-  const [isAddServiceModalVisible, setAddServiceModalVisible] = useState(false)
-  // const [selectedStation, setSelectedStation] = useState<Station | null>(null);
-  // const handleUpdateService = (updatedService: any) => {
-  //   console.log("update ơ bang", updatedService)
-  //   setStations((prevStations) =>
-  //     prevStations.map((station) =>
-  //       station.StationID === updatedService.StationID // Ensure you're matching with Service_StationID
-  //         ? {
-  //             ...updatedService
-  //           }
-  //         : station
-  //     )
-  //   )
-  // }
+
   const handleShowServiceModal = (transaction: Transaction) => {
     // setSelectedStation(station)
     // setServiceModalVisible(true)
   }
 
-  const handleShowAddServiceModal = () => {
-    setAddServiceModalVisible(true)
-  }
-
-  const handleServiceModalOk = () => {
-    setServiceModalVisible(false)
-  }
-
-  const handleAddServiceModalOk = () => {
-    // Handle the logic for adding a service
-    setAddServiceModalVisible(false)
-  }
   const formAmtiy = useForm<z.infer<typeof amitySchema>>({
     resolver: zodResolver(amitySchema),
     defaultValues: {
@@ -154,16 +121,8 @@ function ListAllTransaction() {
         setIsLoadingTransactions(false)
       }
     }
-    // const fetchCities = async () => {
-    //   try {
-    //     const { data } = await studySpaceAPI.get<City[]>('city-management/managed-cities')
-    //     setCities(data || [])
-    //   } catch (error) {
-    //     console.log(error)
-    //   }
-    // }
+
     fetchAllTransaction()
-    // fetchCities()
   }, [user?.userID])
 
   const handleStatusChange = (transaction: Transaction, status: string) => {
@@ -172,42 +131,7 @@ function ListAllTransaction() {
     // setIsModalOpen(true)
   }
 
-  const confirmStatusChange = async () => {
-    // setIsLoadingUpdate(true)
-    // if (selectedAmyti) {
-    //   try {
-    //     await studySpaceAPI.put(`Amity/status/${selectedAmyti.amityId}`)
-    //     setAmyties(
-    //       amyties.map((amyti) =>
-    //         amyti.amityId === selectedAmyti.amityId ? { ...amyti, amityStatus: newStatus } : amyti
-    //       )
-    //     )
-    //     setTempStatus({ ...tempStatus, [selectedAmyti.amityId]: newStatus })
-    //     toast({
-    //       variant: 'success',
-    //       title: 'Cập nhật thành công',
-    //       // description: 'Đã đổi trạng thái tiện ích này thành ' + newStatus
-    //       description:
-    //         newStatus === 'Active'
-    //           ? 'Đã thay đổi trạng thái tiện ích này thành hoạt động'
-    //           : 'Đã thay đổi trạng thái tiện ích này thành không hoạt động'
-    //     })
-    //   } catch (error) {
-    //     if (axios.isAxiosError(error) && error.response) {
-    //       const message = error.response.data.Result.message
-    //       setTempStatus({ ...tempStatus, [selectedAmyti.amityId]: selectedAmyti.amityStatus })
-    //       toast({
-    //         variant: 'destructive',
-    //         title: 'Không thể cập nhật trạng thái tiện ích',
-    //         description: message || 'Vui lòng thử lại sau'
-    //       })
-    //     }
-    //   } finally {
-    //     setIsLoadingUpdate(false)
-    //     setIsModalOpen(false)
-    //   }
-    // }
-  }
+  const confirmStatusChange = async () => {}
 
   const handleEditAmity = (transation: Transaction) => {
     // console.log('edit tien tích', amyti)
@@ -221,98 +145,13 @@ function ListAllTransaction() {
     // })
   }
 
-  const confirmEditAmity = async (values: z.infer<typeof amitySchema>) => {
-    // if (isEditing) {
-    //   setIsLoadingUpdate(true)
-    //   try {
-    //     await studySpaceAPI.put(`/Amity/${isEditing.amityId}?supplierId=${user?.userID}`, {
-    //       name: values.amityName,
-    //       type: values.type,
-    //       quantity: values.quantity,
-    //       description: values.description
-    //     })
+  const confirmEditAmity = async (values: z.infer<typeof amitySchema>) => {}
 
-    //     const updatedData = {
-    //       amityName: values.amityName,
-    //       quantity: values.quantity,
-    //       description: values.description,
-    //       amityType: isEditing.amityType,
-    //       amityStatus: isEditing.amityStatus
-    //     }
-    //     setAmyties(
-    //       amyties.map((amyti) =>
-    //         amyti.amityId === isEditing.amityId
-    //           ? { ...amyti, ...updatedData } // Update the amity with new values
-    //           : amyti
-    //       )
-    //     )
-    //     toast({
-    //       variant: 'success',
-    //       title: 'Cập nhật thành công',
-    //       description: 'Đã cập nhật tiện ích'
-    //     })
-    //     setIsEditing(null)
-    //   } catch (error) {
-    //     if (axios.isAxiosError(error) && error.response) {
-    //       const message = error.response.data.Result.message
-    //       toast({
-    //         variant: 'destructive',
-    //         title: 'Không thể cập nhật tiện ích',
-    //         description: message || 'Vui lòng thử lại sau'
-    //       })
-    //     }
-    //   } finally {
-    //     setIsLoadingUpdate(false)
-    //   }
-    // }
-  }
-
-  const handleAddAmyti = () => {
-    setIsAdding(true)
-  }
   const handleModalAddClose = () => {
     setIsAdding(false)
     formAddAmyti.reset() // Reset form when closing
   }
-  const confirmAddAmyti = async (values: z.infer<typeof AddAmytiSchema>) => {
-    // setIsLoadingUpdate(true)
-    // try {
-    //   const response = await studySpaceAPI.post(`/Amity?supplierId=${user?.userID}`, {
-    //     name: values.name,
-    //     type: values.type,
-    //     quantity: values.quantity,
-    //     description: values.description
-    //   })
-    //   const result = response.data.data
-    //   const newAmyti = {
-    //     amityId: result.amityId,
-    //     amityName: result.amityName,
-    //     amityType: result.amityType,
-    //     amityStatus: result.amityStatus,
-    //     quantity: result.quantity,
-    //     description: result.description
-    //   }
-    //   setAmyties([...amyties, newAmyti])
-    //   toast({
-    //     variant: 'success',
-    //     title: 'Thêm tiện ích thành công',
-    //     description: 'Tiện ích mới đã được thêm thành công'
-    //   })
-    //   setIsAdding(false)
-    //   formAddAmyti.reset()
-    // } catch (error) {
-    //   if (axios.isAxiosError(error) && error.response) {
-    //     const message = error.response.data.Result.message
-    //     toast({
-    //       variant: 'destructive',
-    //       title: 'Không thể thêm tiện ích',
-    //       description: message || 'Vui lòng thử lại sau'
-    //     })
-    //   }
-    // } finally {
-    //   setIsLoadingUpdate(false)
-    // }
-  }
+  const confirmAddAmyti = async (values: z.infer<typeof AddAmytiSchema>) => {}
   if (isLoadingTransactions) {
     return <TableSkeleton />
   }
@@ -321,7 +160,6 @@ function ListAllTransaction() {
     <div className='flex h-full flex-1 flex-col'>
       <div className='flex justify-between'>
         <h1 className='my-4 border-b pb-2 text-3xl font-semibold tracking-wider first:mt-0'>Danh sách giao dịch</h1>
-       
       </div>
       <DataTable
         data={transactions}
@@ -438,31 +276,6 @@ function ListAllTransaction() {
                 onSubmit={formAddAmyti.handleSubmit(confirmAddAmyti)}
                 className='w-full flex gap-5 flex-col h-full text-center mr-20'
               >
-                {/* <FormField
-                  control={formAddAmyti.control}
-                  name='name'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Chọn thành phố</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder='Chọn thành phố có trạm dừng chân' />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {cities.map((city) => (
-                            <SelectItem key={city.CityID} value={city.CityID}>
-                              {city.Name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
                 <FormField
                   control={formAddAmyti.control}
                   name='name'
@@ -534,14 +347,6 @@ function ListAllTransaction() {
           </DialogContent>
         </Dialog>
       )}
-      {/* <ServiceModal
-        visible={isServiceModalVisible}
-        onOk={handleServiceModalOk}
-        station={selectedStation}
-        onAddService={handleShowAddServiceModal}
-        onUpdateService={handleUpdateService} // Pass the update handler
-      /> */}
-      {/* <AddServiceModal visible={isAddServiceModalVisible} onOk={handleAddServiceModalOk} /> */}
     </div>
   )
 }

@@ -3,33 +3,23 @@
 
 import { useState } from 'react'
 import { Nav } from '../atoms/ui/nav'
-import addressIcon from '@/assets/address.svg'
 
 interface SideNavbarProps {
   isAdmin: boolean
 }
 
+import { useWindowWidth } from '@react-hook/window-size'
 import {
+  BadgeDollarSign,
   ChevronRight,
-  LayoutDashboard,
-  Settings,
-  ShoppingCart,
-  Bus,
-  Route,
-  LandPlot,
-  HandPlatter,
-  Users,
-  UsersRound,
-  SwatchBook,
-  Store ,
-  DoorOpen ,
+  DoorOpen,
   FileBox,
+  LayoutDashboard,
   Presentation,
-  BadgeDollarSign
+  Store,
+  UsersRound
 } from 'lucide-react'
 import { Button } from '../atoms/ui/button'
-import { Handshake } from 'lucide-react'
-import { useWindowWidth } from '@react-hook/window-size'
 
 export default function SideNavbar({ isAdmin }: SideNavbarProps) {
   // console.log('admin ơ nav', isAdmin)
@@ -51,13 +41,13 @@ export default function SideNavbar({ isAdmin }: SideNavbarProps) {
     {
       title: 'Cửa hàng',
       href: '/stores',
-      icon: Store ,
+      icon: Store,
       variant: 'ghost' as 'default' | 'ghost'
     },
     {
       title: 'Quản lí phòng',
       href: '/allRooms',
-      icon: DoorOpen ,
+      icon: DoorOpen,
       variant: 'ghost' as 'default' | 'ghost'
     },
     {
@@ -75,7 +65,7 @@ export default function SideNavbar({ isAdmin }: SideNavbarProps) {
     {
       title: 'Tài khoản người dùng',
       href: '/accounts',
-      icon: UsersRound ,
+      icon: UsersRound,
       variant: 'ghost' as 'default' | 'ghost'
     }
     // {
@@ -110,7 +100,7 @@ export default function SideNavbar({ isAdmin }: SideNavbarProps) {
       href: '/amities',
       icon: Presentation,
       variant: 'default' as 'default' | 'ghost'
-    },
+    }
     // {
     //   title: 'Trạm dừng',
     //   href: '/stations',

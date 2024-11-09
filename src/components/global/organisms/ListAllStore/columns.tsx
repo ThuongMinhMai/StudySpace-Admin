@@ -1,50 +1,10 @@
 import { ColumnDef } from '@tanstack/react-table'
 
-import { Tooltip } from 'antd'
 import { DataTableColumnHeader } from '../table/col-header'
 // import { statuses } from './data/data'
-import { Task } from './data/schema'
-import { DataTableRowActions } from './row-actions'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/global/atoms/ui/avatar'
-import { Badge } from '../../atoms/ui/badge'
-import { Badge as Bag } from 'antd'
-import { CookingPot, Edit2, Eye, Plus } from 'lucide-react'
-import { Button } from '../../atoms/ui/button'
-import { Link } from 'react-router-dom'
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons'
-// Define the interface for the Service
-interface Service {
-  Service_StationID: string
-  ServiceID: string
-  Price: number
-  Name: string
-  ImageUrl: string
-}
+import { DataTableRowActions } from './row-actions'
 
-// Define the interface for the ServiceType
-interface ServiceType {
-  ServiceTypeID: string
-  ServiceTypeName: string
-  ServiceInStation: Service[]
-}
-
-// Define the interface for the Station
-interface Station {
-  StationID: string
-  CityID: string
-  CityName: string
-  StationName: string
-  Status: string
-  ServiceTypeInStation: ServiceType[]
-}
-interface Amyti {
-  amityId: number
-  amityName: string
-  amityType: string
-  amityStatus: string
-  quantity: number
-  description: string | null | undefined
-}
 interface Store {
   id: number
   name: string
@@ -84,7 +44,6 @@ export const columns = (
         <span className='max-w-[500px] truncate font-medium'>{row.getValue('name')}</span>
       </div>
     ),
-    // filterFn: (row, id, value) => value.includes(row.getValue(id)),
     enableHiding: false
   },
   {

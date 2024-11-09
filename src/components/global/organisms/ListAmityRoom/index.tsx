@@ -1,50 +1,23 @@
-import { useEffect, useState } from 'react'
-import { columns } from './columns'
-import { DataTable } from '../table/main'
-import { DataTableToolbar } from './toolbar'
 import { useAuth } from '@/auth/AuthProvider'
+import { AddAmytiSchema, amitySchema } from '@/components/Schema/AmitySchema'
 import studySpaceAPI from '@/lib/studySpaceAPI'
-import { toast } from '../../atoms/ui/use-toast'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { DialogTitle } from '@radix-ui/react-dialog'
 import axios from 'axios'
-import TableSkeleton from '../TableSkeleton'
-import { Dialog, DialogContent, DialogOverlay } from '../../atoms/ui/dialog'
-import { Button } from '../../atoms/ui/button'
 import { Loader, Plus } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { Button } from '../../atoms/ui/button'
+import { Dialog, DialogContent, DialogOverlay } from '../../atoms/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../atoms/ui/form'
 import { Input } from '../../atoms/ui/input'
-import { useForm } from 'react-hook-form'
-import { amitySchema, AddAmytiSchema } from '@/components/Schema/AmitySchema'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../atoms/ui/select'
-import { ServiceModal } from '../ServiceModals'
-import { DialogTitle } from '@radix-ui/react-dialog'
+import { toast } from '../../atoms/ui/use-toast'
+import { DataTable } from '../table/main'
+import TableSkeleton from '../TableSkeleton'
+import { columns } from './columns'
+import { DataTableToolbar } from './toolbar'
 
-// Define the interface for the Service
-interface Service {
-  Service_StationID: string
-  ServiceID: string
-  Price: number
-  Name: string
-  ImageUrl: string
-}
-
-// Define the interface for the ServiceType
-interface ServiceType {
-  ServiceTypeID: string
-  ServiceTypeName: string
-  ServiceInStation: Service[]
-}
-
-// Define the interface for the Station
-interface Station {
-  StationID: string
-  CityID: string
-  CityName: string
-  StationName: string
-  Status: string
-  ServiceTypeInStation: ServiceType[]
-}
 interface City {
   CityID: string
   Name: string
@@ -64,7 +37,6 @@ interface ApiResponse<T> {
 function ListAmityStore() {
   const { user } = useAuth()
   const [amyties, setAmyties] = useState<Amyti[]>([])
-  const [cities, setCities] = useState<City[]>([])
   const [isLoadingAmyties, setIsLoadingAmyties] = useState(true)
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -73,38 +45,12 @@ function ListAmityStore() {
   const [tempStatus, setTempStatus] = useState<{ [key: string]: string }>({})
   const [isEditing, setIsEditing] = useState<Amyti | null>(null)
   const [isAdding, setIsAdding] = useState(false)
-  const [isServiceModalVisible, setServiceModalVisible] = useState(false)
-  const [isAddServiceModalVisible, setAddServiceModalVisible] = useState(false)
-  // const [selectedStation, setSelectedStation] = useState<Station | null>(null);
-  // const handleUpdateService = (updatedService: any) => {
-  //   console.log("update ơ bang", updatedService)
-  //   setStations((prevStations) =>
-  //     prevStations.map((station) =>
-  //       station.StationID === updatedService.StationID // Ensure you're matching with Service_StationID
-  //         ? {
-  //             ...updatedService
-  //           }
-  //         : station
-  //     )
-  //   )
-  // }
+
   const handleShowServiceModal = (amyti: Amyti) => {
     // setSelectedStation(station)
     // setServiceModalVisible(true)
   }
 
-  const handleShowAddServiceModal = () => {
-    setAddServiceModalVisible(true)
-  }
-
-  const handleServiceModalOk = () => {
-    setServiceModalVisible(false)
-  }
-
-  const handleAddServiceModalOk = () => {
-    // Handle the logic for adding a service
-    setAddServiceModalVisible(false)
-  }
   const formAmtiy = useForm<z.infer<typeof amitySchema>>({
     resolver: zodResolver(amitySchema),
     defaultValues: {
@@ -141,16 +87,8 @@ function ListAmityStore() {
         setIsLoadingAmyties(false)
       }
     }
-    // const fetchCities = async () => {
-    //   try {
-    //     const { data } = await studySpaceAPI.get<City[]>('city-management/managed-cities')
-    //     setCities(data || [])
-    //   } catch (error) {
-    //     console.log(error)
-    //   }
-    // }
+
     fetchAmyties()
-    // fetchCities()
   }, [user?.userID])
 
   const handleStatusChange = (amyti: Amyti, status: string) => {
@@ -197,9 +135,7 @@ function ListAmityStore() {
   }
 
   const handleEditAmity = (amyti: Amyti) => {
-    console.log('edit tien tích', amyti)
     setIsEditing(amyti)
-    // formAmtiy.reset()
     formAmtiy.reset({
       amityName: amyti.amityName,
       type: amyti.amityType,
@@ -431,31 +367,6 @@ function ListAmityStore() {
                 onSubmit={formAddAmyti.handleSubmit(confirmAddAmyti)}
                 className='w-full flex gap-5 flex-col h-full text-center mr-20'
               >
-                {/* <FormField
-                  control={formAddAmyti.control}
-                  name='name'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Chọn thành phố</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder='Chọn thành phố có trạm dừng chân' />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {cities.map((city) => (
-                            <SelectItem key={city.CityID} value={city.CityID}>
-                              {city.Name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
                 <FormField
                   control={formAddAmyti.control}
                   name='name'
@@ -527,14 +438,7 @@ function ListAmityStore() {
           </DialogContent>
         </Dialog>
       )}
-      {/* <ServiceModal
-        visible={isServiceModalVisible}
-        onOk={handleServiceModalOk}
-        station={selectedStation}
-        onAddService={handleShowAddServiceModal}
-        onUpdateService={handleUpdateService} // Pass the update handler
-      /> */}
-      {/* <AddServiceModal visible={isAddServiceModalVisible} onOk={handleAddServiceModalOk} /> */}
+    
     </div>
   )
 }

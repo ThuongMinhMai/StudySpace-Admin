@@ -1,6 +1,4 @@
-import * as React from 'react'
-// import Image from "next/image"
-// import Link from "next/link"
+
 import {
   ChevronLeft,
   ChevronRight,
@@ -55,7 +53,7 @@ import { Separator } from '@/components/global/atoms/ui/separator'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/global/atoms/ui/sheet'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/global/atoms/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/global/atoms/ui/tabs'
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/global/atoms/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/global/atoms/ui/tooltip'
 
 export default function AdminLayout() {
   return (
@@ -341,7 +339,7 @@ export default function AdminLayout() {
                           <TableCell className='hidden sm:table-cell'>Sale</TableCell>
                           <TableCell className='hidden sm:table-cell'>
                             <Badge className='text-xs'>
-                            {/* <Badge className='text-xs' variant='secondary'> */}
+                              {/* <Badge className='text-xs' variant='secondary'> */}
                               Fulfilled
                             </Badge>
                           </TableCell>
@@ -389,8 +387,8 @@ export default function AdminLayout() {
                           </TableCell>
                           <TableCell className='hidden sm:table-cell'>Subscription</TableCell>
                           <TableCell className='hidden sm:table-cell'>
-                            <Badge className='text-xs' >
-                            {/* <Badge className='text-xs' variant='secondary'> */}
+                            <Badge className='text-xs'>
+                              {/* <Badge className='text-xs' variant='secondary'> */}
                               Fulfilled
                             </Badge>
                           </TableCell>
@@ -405,7 +403,7 @@ export default function AdminLayout() {
                           <TableCell className='hidden sm:table-cell'>Sale</TableCell>
                           <TableCell className='hidden sm:table-cell'>
                             <Badge className='text-xs'>
-                            {/* <Badge className='text-xs' variant='secondary'> */}
+                              {/* <Badge className='text-xs' variant='secondary'> */}
                               Fulfilled
                             </Badge>
                           </TableCell>
@@ -419,8 +417,8 @@ export default function AdminLayout() {
                           </TableCell>
                           <TableCell className='hidden sm:table-cell'>Sale</TableCell>
                           <TableCell className='hidden sm:table-cell'>
-                            <Badge className='text-xs' >
-                            {/* <Badge className='text-xs' variant='secondary'> */}
+                            <Badge className='text-xs'>
+                              {/* <Badge className='text-xs' variant='secondary'> */}
                               Fulfilled
                             </Badge>
                           </TableCell>
@@ -449,7 +447,7 @@ export default function AdminLayout() {
                           <TableCell className='hidden sm:table-cell'>Sale</TableCell>
                           <TableCell className='hidden sm:table-cell'>
                             <Badge className='text-xs'>
-                            {/* <Badge className='text-xs' variant='secondary'> */}
+                              {/* <Badge className='text-xs' variant='secondary'> */}
                               Fulfilled
                             </Badge>
                           </TableCell>

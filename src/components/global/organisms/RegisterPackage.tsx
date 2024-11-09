@@ -1,7 +1,6 @@
-import React from 'react'
-import OfferCard from './OfferCard'
-import { LogOut } from 'lucide-react'
 import { useAuth } from '@/auth/AuthProvider'
+import { LogOut } from 'lucide-react'
+import OfferCard from './OfferCard'
 
 function RegisterPackage() {
   const { logout } = useAuth()

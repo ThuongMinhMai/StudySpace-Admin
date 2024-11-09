@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import studySpaceAPI from '../../../lib/studySpaceAPI'
-import { CircleCheck } from 'lucide-react'
-import { useAuth } from '../../../auth/AuthProvider'
-import { Modal, Input, Button, Form, message, ConfigProvider } from 'antd'
 import { formatPrice } from '@/lib/utils'
+import { ConfigProvider, Form, Input, message, Modal } from 'antd'
+import { CircleCheck } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import { useAuth } from '../../../auth/AuthProvider'
+import studySpaceAPI from '../../../lib/studySpaceAPI'
 
 interface OfferData {
   id: number
@@ -14,14 +14,8 @@ interface OfferData {
   duration: number
 }
 
-interface ApiResponse {
-  status: number
-  message: string
-  data: OfferData[]
-}
-
 function OfferCard() {
-  const { user,fetchUser } = useAuth()
+  const { user, fetchUser } = useAuth()
 
   const [offers, setOffers] = useState<OfferData[]>([])
   const [loading, setLoading] = useState<boolean>(true)
@@ -76,11 +70,6 @@ function OfferCard() {
           description: user?.userID + ' ' + selectedOffer.name
         })
         .then((response) => {
-          // if (response.data.status === 1) {
-          //   message.success('Package purchased successfully!')
-          // } else {
-          //   message.error('Failed to purchase package.')
-          // }
           message.success(
             <>
               Payment information sent successfully! <strong>Invoice will be canceled after 30 minutes</strong>
@@ -90,7 +79,7 @@ function OfferCard() {
           setTimeout(() => {
             if (response.data.status === 1) {
               // Redirect to the checkout URL if successful
-              fetchUser();
+              fetchUser()
               window.location.href = response.data.data.checkoutUrl
             } else {
               console.log('Error create payment' + response.data.message)

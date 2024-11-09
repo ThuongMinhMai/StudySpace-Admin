@@ -1,5 +1,5 @@
+import { Card, Descriptions, Image, List, Tag } from 'antd'
 import React from 'react'
-import { Card, List, Descriptions, Image, Tag } from 'antd'
 
 const { Meta } = Card
 
@@ -43,15 +43,18 @@ const TemplateDisplay: React.FC<TemplateDisplayProps> = ({ templates }) => {
       renderItem={(template) => (
         <List.Item>
           <Card hoverable cover={<Image className='w-96' src={template.ImageUrls[0]} alt='Trip Image' />}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
               {template.ImageUrls.map((url, index) => (
                 <Image key={index} width={100} src={url} alt={`Trip Image ${index + 1}`} />
               ))}
             </div>
             <Meta
               title={
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom:"10px", marginTop:"20px" }}>
-                  <span className='text-lg' style={{ marginRight: 8 }}>{`${template.FromCity} → ${template.ToCity}`}</span>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', marginTop: '20px' }}>
+                  <span
+                    className='text-lg'
+                    style={{ marginRight: 8 }}
+                  >{`${template.FromCity} → ${template.ToCity}`}</span>
                   {template.Status === 'KHÔNG HOẠT ĐỘNG' ? (
                     <Tag color='red'>Không Hoạt Động</Tag>
                   ) : (
@@ -97,7 +100,6 @@ const TemplateDisplay: React.FC<TemplateDisplayProps> = ({ templates }) => {
                 </List.Item>
               )}
             />
-           
           </Card>
         </List.Item>
       )}

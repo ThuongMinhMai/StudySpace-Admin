@@ -1,13 +1,12 @@
+import { useAuth } from '@/auth/AuthProvider'
+import studySpaceAPI from '@/lib/studySpaceAPI'
+import type { UploadFile, UploadProps } from 'antd'
+import { Button, Col, ConfigProvider, Form, Input, InputNumber, Row, Select, Space, Upload } from 'antd'
+import ImgCrop from 'antd-img-crop'
+import { ArrowLeft, UploadIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button, Col, ConfigProvider, Form, Input, InputNumber, Row, Select, Space, Spin, Upload } from 'antd'
-import { ArrowLeft, Plug, Plus, UploadIcon } from 'lucide-react'
-import ImgCrop from 'antd-img-crop'
-import type { UploadFile, UploadProps } from 'antd'
-import studySpaceAPI from '@/lib/studySpaceAPI'
-import { useAuth } from '@/auth/AuthProvider'
 import { toast } from 'sonner'
-import { LoadingOutlined } from '@ant-design/icons'
 interface Amyti {
   amityId: number
   amityName: string
@@ -56,12 +55,7 @@ const CreateRoomStore: React.FC = () => {
     imgWindow?.document.write(image.outerHTML)
   }
 
-  const onImageMenuChange: UploadProps['onChange'] = ({ file }) => {
-    if (file.originFileObj) {
-      setImageMenuFile(file.originFileObj)
-      form.setFieldsValue({ ImageMenu: file.originFileObj })
-    }
-  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -114,16 +108,7 @@ const CreateRoomStore: React.FC = () => {
     //     Quantity: amenity.quantity
     //   }));
     // });
-    const amities = [
-      {
-        AmityId: 1,
-        Quantity: 2
-      },
-      {
-        AmityId: 3,
-        Quantity: 2
-      }
-    ]
+   
     // formData.append('Amities', JSON.stringify(amities))
     values.Amenities.forEach((amity: any, index: any) => {
       formData.append(`Amities[${index}][AmityId]`, amity.amityId)
@@ -144,10 +129,10 @@ const CreateRoomStore: React.FC = () => {
       })
     }
 
-    console.log('FormData prepared for submission:')
-    for (let pair of formData.entries()) {
-      console.log(`${pair[0]}:`, pair[1])
-    }
+    // console.log('FormData prepared for submission:')
+    // for (let pair of formData.entries()) {
+    //   console.log(`${pair[0]}:`, pair[1])
+    // }
 
     try {
       setLoadingCreate(true)

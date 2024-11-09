@@ -1,28 +1,27 @@
 import React, { Suspense, useEffect, useState } from 'react'
-import { Route, Routes, useNavigate } from 'react-router-dom'
-import Loader from './components/global/molecules/Loader'
-import Loading from './components/global/molecules/Loading'
-import SignInForm from './components/global/organisms/SignInForm'
-import ProtectedRoute from './auth/ProtectedRoute'
-import NotAuthorized from './components/global/templates/NotAuthorized'
+import { Route, Routes } from 'react-router-dom'
 import AdminProtectedRoute from './auth/AdminProtectedRoute'
 import ManagerProtectedRoute from './auth/ManagerProtectedRoute'
-import NotFoundPage from './components/global/templates/NotFoundPage'
-import ProfilePage from './components/global/templates/ProfilePage'
-import RegisterPackage from './components/global/organisms/RegisterPackage'
+import ProtectedRoute from './auth/ProtectedRoute'
 import ProtectPackageRegister from './auth/ProtectPackageRegister'
 import ProtectProfile from './auth/ProtectProfile'
-import RoomStoreDetail from './components/global/organisms/RoomStoreDetail'
+import Loader from './components/global/molecules/Loader'
 import CreateRoomStore from './components/global/organisms/CreateRoomStore'
-import TransactionStore from './components/global/templates/TransactionStore'
-import PaymentSuccess from './components/global/templates/PaymentSuccess'
+import RegisterPackage from './components/global/organisms/RegisterPackage'
+import RoomStoreDetail from './components/global/organisms/RoomStoreDetail'
+import SignInForm from './components/global/organisms/SignInForm'
+import NotAuthorized from './components/global/templates/NotAuthorized'
+import NotFoundPage from './components/global/templates/NotFoundPage'
 import PaymentFailure from './components/global/templates/PaymentFailure'
+import PaymentSuccess from './components/global/templates/PaymentSuccess'
+import ProfilePage from './components/global/templates/ProfilePage'
+import TransactionStore from './components/global/templates/TransactionStore'
 const RouteLayout = React.lazy(() => import('./components/global/Layout/RouteLayout'))
 const Home = React.lazy(() => import('./components/global/templates/Dashboard'))
 const AllBooking = React.lazy(() => import('./components/global/templates/AllBooking'))
 const AllStore = React.lazy(() => import('./components/global/templates/AllStore'))
 const AllTransaction = React.lazy(() => import('./components/global/templates/AllTransaction'))
-const AllAccount= React.lazy(() => import('./components/global/templates/AllAccount'))
+const AllAccount = React.lazy(() => import('./components/global/templates/AllAccount'))
 const RoomStore = React.lazy(() => import('./components/global/templates/RoomStore'))
 const AllRoom = React.lazy(() => import('./components/global/templates/AllRoom'))
 const AmityStore = React.lazy(() => import('./components/global/templates/AmityStore'))
@@ -34,7 +33,7 @@ function App() {
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000)
   }, [])
- 
+
   return loading ? (
     <div className='h-screen w-screen flex justify-center items-center'>
       <Loader />
@@ -67,7 +66,10 @@ function App() {
           path='/stores'
           element={
             <AdminProtectedRoute>
-              <Suspense fallback={<Loader />}> <AllStore /> </Suspense>
+              <Suspense fallback={<Loader />}>
+                {' '}
+                <AllStore />{' '}
+              </Suspense>
             </AdminProtectedRoute>
           }
         />
@@ -86,7 +88,10 @@ function App() {
           path='/bookingAll'
           element={
             <AdminProtectedRoute>
-              <Suspense fallback={<Loader />}> <AllBooking /></Suspense>
+              <Suspense fallback={<Loader />}>
+                {' '}
+                <AllBooking />
+              </Suspense>
             </AdminProtectedRoute>
           }
         />
@@ -94,7 +99,10 @@ function App() {
           path='/transactionsAll'
           element={
             <AdminProtectedRoute>
-              <Suspense fallback={<Loader />}> <AllTransaction /> </Suspense>
+              <Suspense fallback={<Loader />}>
+                {' '}
+                <AllTransaction />{' '}
+              </Suspense>
             </AdminProtectedRoute>
           }
         />
@@ -102,7 +110,10 @@ function App() {
           path='/accounts'
           element={
             <AdminProtectedRoute>
-              <Suspense fallback={<Loader />}> <AllAccount /></Suspense>
+              <Suspense fallback={<Loader />}>
+                {' '}
+                <AllAccount />
+              </Suspense>
             </AdminProtectedRoute>
           }
         />
@@ -124,9 +135,7 @@ function App() {
         />
         <Route
           path='/roomStore/room-detail/:id'
-          element={
-              <Suspense fallback={<Loader />}>{<RoomStoreDetail />}</Suspense>
-          }
+          element={<Suspense fallback={<Loader />}>{<RoomStoreDetail />}</Suspense>}
         />
         <Route
           path='/roomStore/CreateNew'
@@ -159,7 +168,7 @@ function App() {
             </ManagerProtectedRoute>
           }
         />
-      
+
         <Route
           path='/profile'
           element={
@@ -185,8 +194,8 @@ function App() {
           </ProtectedRoute>
         }
       />
-  <Route path='/payment-success' element={<PaymentSuccess />} />
-  <Route path='/payment-cancel' element={<PaymentFailure />} />
+      <Route path='/payment-success' element={<PaymentSuccess />} />
+      <Route path='/payment-cancel' element={<PaymentFailure />} />
       <Route path='/not-authorized' element={<NotAuthorized />} />
       <Route path='*' element={<NotFoundPage />} />
     </Routes>

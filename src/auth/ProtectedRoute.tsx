@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from './AuthProvider'
 
 interface ProtectedRouteProps {
@@ -7,14 +7,12 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const {user} = useAuth()
-  const token = localStorage.getItem('token')
+  const { user } = useAuth()
   const location = useLocation()
-  const navigate = useNavigate()
-  if (user?.roleName==="Admin" || user?.roleName==="Store") {
+  if (user?.roleName === 'Admin' || user?.roleName === 'Store') {
     // If token exists, navigate back to the previous page or to the home page as a fallback
-    return <Navigate to={location.state?.from || `/home/${user?.roleName==="Admin"?"admin":"store"}`} replace />
-  } 
+    return <Navigate to={location.state?.from || `/home/${user?.roleName === 'Admin' ? 'admin' : 'store'}`} replace />
+  }
   return <>{children}</>
 }
 

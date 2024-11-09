@@ -1,5 +1,5 @@
-import paymentFailure from '../../../assets/paymentFailure.jpg'
 import { Link } from 'react-router-dom'
+import paymentFailure from '../../../assets/paymentFailure.jpg'
 function PaymentFailure() {
   return (
     <div className='w-screen'>

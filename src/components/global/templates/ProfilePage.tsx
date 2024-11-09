@@ -1,17 +1,15 @@
-import { fetchUserDetail, updateUserProfile } from '@/apis/userAPI'
+import { fetchUserDetail } from '@/apis/userAPI'
 import { useAuth } from '@/auth/AuthProvider'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/global/atoms/ui/avatar'
 import Loader from '@/components/global/molecules/Loader'
-import { formatPrice } from '@/lib/utils'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button, Col, ConfigProvider, Form, Input, Radio, Row, TimePicker } from 'antd'
 import { RuleObject } from 'antd/lib/form'
-import { Key, PiggyBank } from 'lucide-react'
+import { Key } from 'lucide-react'
+import moment from 'moment'
 import { useCallback, useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { toast } from 'sonner'
-import Loading from '@/components/global/molecules/Loading'
-import moment from 'moment'
 function ProfilePage() {
   const { user } = useAuth()
   const { data, isLoading, isError, refetch } = fetchUserDetail(user?.userID || 0, user?.roleName || '')
@@ -121,8 +119,8 @@ function ProfilePage() {
     }
     return Promise.resolve()
   }
-  const handleOverNightChange = (e:any) => {
-    const isOverNightChecked = e.target.value;
+  const handleOverNightChange = (e: any) => {
+    const isOverNightChecked = e.target.value
 
     // setIsOvernight(isOverNightChecked);
 
@@ -131,15 +129,15 @@ function ProfilePage() {
       form.setFieldsValue({
         openTime: moment('00:00', 'HH:mm'),
         closeTime: moment('00:00', 'HH:mm')
-      });
+      })
     } else {
       // Enable the fields when overnight is false
       form.setFieldsValue({
         openTime: null,
         closeTime: null
-      });
+      })
     }
-  };
+  }
   if (isLoading) {
     return (
       <div className='flex justify-center items-center min-h-screen w-full'>
@@ -234,7 +232,7 @@ function ProfilePage() {
                   >
                     <Input placeholder='Nhập tên người dùng' />
                   </Form.Item>
-                 
+
                   <Form.Item
                     name='Address'
                     label={<span className='font-medium'>Địa chỉ</span>}

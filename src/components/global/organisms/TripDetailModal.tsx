@@ -1,8 +1,6 @@
-import React, { useState } from 'react'
-import { Card, List, Typography, Image, Collapse } from 'antd'
-import { Armchair, ChevronLeft, ChevronRight, Pen, Rocket } from 'lucide-react'
-import IconGrid from './IconGrid'
-import SeatIcon from '@/assets/seat.svg'
+import { Collapse, List, Typography } from 'antd'
+import { Armchair, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useState } from 'react'
 
 const { Title, Text } = Typography
 const { Panel } = Collapse
@@ -50,7 +48,7 @@ const TripDetailModal = ({ trip }: any) => {
   //     return icons;
   //   };
   const renderSeatIcons = (): JSX.Element[] => {
-    const icons:JSX.Element[] = []
+    const icons: JSX.Element[] = []
     let totalIcons = 0
 
     TripPriceSeats.forEach((seat: any, index: any) => {
@@ -123,62 +121,61 @@ const TripDetailModal = ({ trip }: any) => {
       <br />
       <hr className='my-2' />
       <Collapse>
-        <Panel header='Giá ghế' key='1' >
-         <div className='flex flex-col gap-4 justify-center items-center' >
-
-          <div className='flex flex-col gap-4'>
-            {TripPriceSeats.map((item: any, index: number) => (
-              <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
-                <Text>
-                  {item.SeatName}: <strong>{item.Price}</strong> VND ({item.Quantity} ghế)
-                </Text>
-               
-              </div>
-            ))}
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>{renderSeatIcons()}</div>
-         </div>
-
-        </Panel>
-
-        <Panel header='Ảnh' key='2'>
-        <div className='p-4 flex flex-col justify-center items-center'>
-          <div className='relative overflow-hidden mb-4 w-full h-fit '>
-            <div
-              className='flex transition-transform duration-500'
-              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-            >
-              {ImageUrls.map((image: string, index: number) => (
-                <div key={index} className='flex-none w-full h-80'>
-                  <img src={image} alt={`Slide ${index}`} className='w-full h-full rounded-md object-cover' />
+        <Panel header='Giá ghế' key='1'>
+          <div className='flex flex-col gap-4 justify-center items-center'>
+            <div className='flex flex-col gap-4'>
+              {TripPriceSeats.map((item: any, index: number) => (
+                <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+                  <Text>
+                    {item.SeatName}: <strong>{item.Price}</strong> VND ({item.Quantity} ghế)
+                  </Text>
                 </div>
               ))}
             </div>
-            <button
-              onClick={handlePrev}
-              className='absolute left-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-75 p-1 flex justify-center items-center rounded-full shadow hover:bg-opacity-100 transition'
-            >
-              <ChevronLeft className='text-primary' />
-            </button>
-            <button
-              onClick={handleNext}
-              className='absolute right-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-75 p-1 rounded-full shadow hover:bg-opacity-100 transition'
-            >
-              <ChevronRight className='text-primary' />
-            </button>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
+              {renderSeatIcons()}
+            </div>
           </div>
-          <div className='flex space-x-4 overflow-x-auto'>
-            {ImageUrls.map((image: string, index: number) => (
-              <img
-                key={index}
-                src={image}
-                alt={`Thumbnail ${index}`}
-                className={`w-24 h-24 object-cover rounded-md cursor-pointer ${currentIndex === index ? 'border-2 border-primary' : ''}`}
-                onClick={() => setCurrentIndex(index)}
-              />
-            ))}
+        </Panel>
+
+        <Panel header='Ảnh' key='2'>
+          <div className='p-4 flex flex-col justify-center items-center'>
+            <div className='relative overflow-hidden mb-4 w-full h-fit '>
+              <div
+                className='flex transition-transform duration-500'
+                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+              >
+                {ImageUrls.map((image: string, index: number) => (
+                  <div key={index} className='flex-none w-full h-80'>
+                    <img src={image} alt={`Slide ${index}`} className='w-full h-full rounded-md object-cover' />
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={handlePrev}
+                className='absolute left-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-75 p-1 flex justify-center items-center rounded-full shadow hover:bg-opacity-100 transition'
+              >
+                <ChevronLeft className='text-primary' />
+              </button>
+              <button
+                onClick={handleNext}
+                className='absolute right-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-75 p-1 rounded-full shadow hover:bg-opacity-100 transition'
+              >
+                <ChevronRight className='text-primary' />
+              </button>
+            </div>
+            <div className='flex space-x-4 overflow-x-auto'>
+              {ImageUrls.map((image: string, index: number) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`Thumbnail ${index}`}
+                  className={`w-24 h-24 object-cover rounded-md cursor-pointer ${currentIndex === index ? 'border-2 border-primary' : ''}`}
+                  onClick={() => setCurrentIndex(index)}
+                />
+              ))}
+            </div>
           </div>
-        </div>
           {/* <Image.PreviewGroup>
             {ImageUrls.map((url: any, index: any) => (
               <Image key={index} width={200} src={url} />
@@ -192,7 +189,7 @@ const TripDetailModal = ({ trip }: any) => {
             renderItem={(item: any) => (
               <List.Item>
                 <Text className=''>
-                <strong>{item.UtilityName}</strong>: {item.Description}
+                  <strong>{item.UtilityName}</strong>: {item.Description}
                 </Text>
               </List.Item>
             )}
@@ -205,7 +202,7 @@ const TripDetailModal = ({ trip }: any) => {
             renderItem={(item: any) => (
               <List.Item>
                 <Text>
-               <strong>{item.StationName}</strong> (Thành phố: {item.AtCity})
+                  <strong>{item.StationName}</strong> (Thành phố: {item.AtCity})
                 </Text>
               </List.Item>
             )}

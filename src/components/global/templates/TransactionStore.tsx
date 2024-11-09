@@ -1,10 +1,10 @@
+import { useAuth } from '@/auth/AuthProvider'
+import studySpaceAPI from '@/lib/studySpaceAPI'
+import { formatPrice } from '@/lib/utils'
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons'
-import { Button, Card, Modal, Tag, Tabs, ConfigProvider } from 'antd'
+import { Button, Card, ConfigProvider, Modal, Tabs, Tag } from 'antd'
 import 'antd/dist/reset.css'
 import { useEffect, useState } from 'react'
-import studySpaceAPI from '@/lib/studySpaceAPI'
-import { useAuth } from '@/auth/AuthProvider'
-import { formatPrice } from '@/lib/utils'
 
 interface Transaction {
   id: number
@@ -18,7 +18,6 @@ interface Transaction {
 function TransactionStore() {
   const { user } = useAuth()
   const [transactions, setTransactions] = useState<Transaction[]>([])
-  //   const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([])
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null)
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [totalRevenue, setTotalRevenue] = useState<number>(0)
@@ -34,32 +33,16 @@ function TransactionStore() {
         setTransactions(data.data.transaction)
         setTotalRevenue(data.data.totalRevenue)
         setTotalCost(data.data.totalCost)
-        // setFilteredTransactions(data.data.transaction) // Set filtered transactions initially to all
       })
       .catch((error) => {
         console.error('Error fetching transactions:', error)
       })
   }, [user?.userID])
 
-  const showModal = (transaction: Transaction) => {
-    setSelectedTransaction(transaction)
-    setIsModalVisible(true)
-  }
-
   const handleCancel = () => {
     setIsModalVisible(false)
     setSelectedTransaction(null)
   }
-
-  //   const handleTabChange = (key: string) => {
-  //     setActiveTab(key)
-  //     if (key === 'ALL') {
-  //       setFilteredTransactions(transactions)
-  //     } else {
-  //       const filtered = transactions.filter((transaction) => transaction.type === key)
-  //       setFilteredTransactions(filtered)
-  //     }
-  //   }
 
   const filteredTransactions =
     activeTab === 'ALL' ? transactions : transactions.filter((trans) => trans.type === activeTab)
@@ -81,13 +64,7 @@ function TransactionStore() {
           }
         }}
       >
-        <Tabs
-          activeKey={activeTab}
-          onChange={(key) => setActiveTab(key)} 
-          centered
-          className='w-full'
-          tabBarGutter={0}
-        >
+        <Tabs activeKey={activeTab} onChange={(key) => setActiveTab(key)} centered className='w-full' tabBarGutter={0}>
           <Tabs.TabPane tab={<span className='font-medium'>Tất cả</span>} key='ALL'>
             <div className=''>
               {filteredTransactions.length === 0 ? (

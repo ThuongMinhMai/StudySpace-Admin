@@ -1,9 +1,8 @@
-import axios from 'axios'
+import studySpaceAPI from '@/lib/studySpaceAPI'
+import { jwtDecode } from 'jwt-decode'
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import studySpaceAPI from '@/lib/studySpaceAPI'
 import { toast } from 'sonner'
-import { jwtDecode } from 'jwt-decode'
 interface AuthContextType {
   token: string | null
   user: User | null
@@ -84,8 +83,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const navigate = useNavigate()
 
   useEffect(() => {
-   
-
     fetchUser()
   }, [token])
   const fetchUser = async () => {
@@ -105,7 +102,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           roleName: decodedToken.RoleName || decodedToken.role,
           avaURL: decodedToken.Avatar || ''
         }
-        console.log('decode', result)
         // Fetch user detail based on role if needed
         let userDetailResponse
         let userDetail
@@ -113,12 +109,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           case 'Store':
             userDetailResponse = await studySpaceAPI.post('/Stores/token-decode', token)
             userDetail = await studySpaceAPI.get<ApiResponse<IUserDetail>>(`/Stores/detail/${result.userID}`)
-            console.log('refresh store', userDetail.data.data)
             break
           case 'Admin':
             userDetailResponse = await studySpaceAPI.post('/Accounts/token-decode', token)
             userDetail = await studySpaceAPI.get<ApiResponse<IUserDetail>>(`/Accounts/detail/${result.userID}`)
-            console.log('refresh admin', userDetail.data.data)
             break
           // Add additional cases for other roles here
           default:
@@ -139,7 +133,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const response = await studySpaceAPI.post<User>('/Stores/token-decode', newToken)
       setUser(response.data)
       const responseDetail = await studySpaceAPI.get<ApiResponse<IUserDetail>>(`/Stores/detail/${response.data.userID}`)
-      console.log('detail sup', responseDetail.data.data)
       setUserDetail(responseDetail.data.data)
       if (response.data.roleName === 'Store' || response.data.roleName === 'Admin') {
         toast.success('Đăng nhập thành công')
@@ -162,7 +155,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const responseDetail = await studySpaceAPI.get<ApiResponse<IUserDetail>>(
         `/Accounts/detail/${response.data.userID}`
       )
-      console.log('detail admin', responseDetail.data.data)
       setUserDetail(responseDetail.data.data)
       if (response.data.roleName === 'Store' || response.data.roleName === 'Admin') {
         toast.success('Đăng nhập thành công')
@@ -227,7 +219,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }
 
   return (
-    <AuthContext.Provider value={{ token, user, userDetail, loginSupplier, loginAdmin, logout, fetchUser, errorMessage, loading }}>
+    <AuthContext.Provider
+      value={{ token, user, userDetail, loginSupplier, loginAdmin, logout, fetchUser, errorMessage, loading }}
+    >
       {children}
     </AuthContext.Provider>
   )

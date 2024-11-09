@@ -2,14 +2,11 @@
 
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { Table } from '@tanstack/react-table'
-
-// import { RoleGate } from '@/auth/role-gate'
-// import { AddUser } from '@/components/common/modal/add-user'
-import { DataTableFacetedFilter } from '../table/faceted-filter'
-import { DataTableViewOptions } from '../table/view-options'
 import { Button } from '@/components/global/atoms/ui/button'
 import { Input } from '@/components/global/atoms/ui/input'
+import { DataTableFacetedFilter } from '../table/faceted-filter'
 import { NumberRangeFilter } from '../table/number_range_filter'
+import { DataTableViewOptions } from '../table/view-options'
 
 export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
   const isFiltered = table.getState().columnFilters.length > 0
@@ -20,16 +17,12 @@ export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
   const uniqueSpaceType = Array.from(table.getColumn('spaceType')?.getFacetedUniqueValues()?.entries() || []).map(
     ([key]) => key
   )
-  const uniqueArea  = Array.from(table.getColumn('area')?.getFacetedUniqueValues()?.entries() || []).map(
-    ([key]) => key
-  )
-  const uniqueStore  = Array.from(table.getColumn('storeName')?.getFacetedUniqueValues()?.entries() || []).map(
+  const uniqueArea = Array.from(table.getColumn('area')?.getFacetedUniqueValues()?.entries() || []).map(([key]) => key)
+  const uniqueStore = Array.from(table.getColumn('storeName')?.getFacetedUniqueValues()?.entries() || []).map(
     ([key]) => key
   )
 
-  // const uniqueStatus = Array.from(table.getColumn('status')?.getFacetedUniqueValues()?.entries() || []).map(
-  //   ([key]) => key
-  // )
+
   const uniqueStatus = Array.from(table.getColumn('status')?.getFacetedUniqueValues()?.entries() || []).map(([key]) => {
     return {
       value: key,
@@ -46,11 +39,7 @@ export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
           onChange={(event) => table.getColumn('roomName')?.setFilterValue(event.target.value)}
           className='h-8 w-[150px] lg:w-[250px]'
         />
-         <DataTableFacetedFilter
-          column={table.getColumn('storeName')}
-          title='Cửa hàng'
-          options={uniqueStore}
-        />
+        <DataTableFacetedFilter column={table.getColumn('storeName')} title='Cửa hàng' options={uniqueStore} />
 
         <DataTableFacetedFilter column={table.getColumn('roomType')} title='Loại phòng' options={uniqueRoomType} />
         <DataTableFacetedFilter
@@ -58,7 +47,7 @@ export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
           title='Loại không gian'
           options={uniqueSpaceType}
         />
-       
+
         <NumberRangeFilter
           column={table.getColumn('area')} // Adjust this to your area column key
           title='Diện tích'

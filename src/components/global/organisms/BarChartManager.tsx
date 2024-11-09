@@ -1,7 +1,6 @@
 /** @format */
 "use client";
 import { formatPrice } from "@/lib/utils";
-// import { MonthRevenue } from "@/types";
 import {
   Bar,
   BarChart as BarGraph,

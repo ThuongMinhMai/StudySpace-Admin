@@ -1,40 +1,35 @@
-import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import studySpaceAPI from '@/lib/studySpaceAPI'
 import { useAuth } from '@/auth/AuthProvider'
-import ImageTab from './ImageTab'
+import studySpaceAPI from '@/lib/studySpaceAPI'
+import { ConfigProvider, Form, Modal, Select as SelectAnt, Tooltip } from 'antd'
 import {
   ArrowLeft,
-  CheckCircle,
   DollarSign,
   DoorClosed,
   Edit,
   Edit2,
   Home,
   Info,
-  LeafyGreen,
   Loader,
-  MapIcon,
   MapPin,
   OctagonAlert,
-  Pen,
   Pill,
   Plus,
   Rocket,
   Trash,
-  Users,
-  XCircle
+  Users
 } from 'lucide-react'
-import { Button } from '../atoms/ui/button'
-import { Badge } from '../atoms/ui/badge'
-import { Select, SelectContent, SelectItem, SelectTrigger } from '../atoms/ui/select'
-import { Dialog, DialogContent, DialogOverlay } from '../atoms/ui/dialog'
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../atoms/ui/table'
-import { ConfigProvider, Form, Modal, Tooltip, Select as SelectAnt } from 'antd'
+import { Badge } from '../atoms/ui/badge'
+import { Button } from '../atoms/ui/button'
+import { Dialog, DialogContent, DialogOverlay } from '../atoms/ui/dialog'
 import { Input } from '../atoms/ui/input'
-import { Textarea } from '../atoms/ui/textarea'
 import { Label } from '../atoms/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger } from '../atoms/ui/select'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../atoms/ui/table'
+import { Textarea } from '../atoms/ui/textarea'
+import ImageTab from './ImageTab'
 
 interface Amity {
   id: number
@@ -89,7 +84,6 @@ const RoomStoreDetail: React.FC = () => {
   const [room, setRoom] = useState<Room | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  // const [showModal, setShowModal] = useState(false)
   const [newStatus, setNewStatus] = useState<string>('')
   const [dialogOpen, setDialogOpen] = useState(false)
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false)
@@ -151,7 +145,6 @@ const RoomStoreDetail: React.FC = () => {
       const response = await studySpaceAPI.get<ApiResponse<Room>>(
         `Room/detail-by-store?roomId=${id}&storeId=${user?.userID}`
       )
-      console.log('Room data:', response.data.data)
       setRoom(response.data.data)
       setHouseRules(response.data.data.houseRule)
       setDescription(response.data.data.description)
@@ -242,8 +235,6 @@ const RoomStoreDetail: React.FC = () => {
       } else {
         toast.error('Cập nhật tiện ích thất bại ' + response.data.message)
       }
-
-      console.log('update tien ích tỏng pong', currentAmity)
     } catch (error) {
       console.error('Error update amtyi in room:', error)
       toast.error('Cập nhật tiện ích thất bại. Vui lòng thử lại.')
@@ -272,8 +263,6 @@ const RoomStoreDetail: React.FC = () => {
 
       // Make the API request
       const response = await studySpaceAPI.post(`/Amity/room/${id}/amity/${amityId}?quantity=${quantity}`)
-      console.log('Amity added successfully:', response.data)
-      console.log(',', response.data.data)
       if (response.data.status === 1) {
         setAddModalVisible(false)
         form.resetFields()
@@ -339,24 +328,17 @@ const RoomStoreDetail: React.FC = () => {
               </SelectItem>
             </SelectContent>
           </Select>
-        ):(
+        ) : (
           <Badge variant={room?.status ? 'success' : 'destructive'}>
-          {room?.status ? 'Hoạt động' : 'Không hoạt động'}
-        </Badge>
+            {room?.status ? 'Hoạt động' : 'Không hoạt động'}
+          </Badge>
         )}
       </div>
 
       {/* Display imageList first */}
       <div>
         {room?.listImages.imageList.length > 0 ? (
-          // room.listImages.imageList.map((image, index) => (
-          //   <img
-          //     key={index}
-          //     src={image}
-          //     alt={`Room ${room.roomName} image ${index + 1}`}
-          //     style={{ width: '100%', maxWidth: '300px', margin: '10px' }}
-          //   />
-          // ))
+         
           <ImageTab roomPictureDetails={room.listImages.imageList} />
         ) : (
           <p className='text-primary font-medium text-lg '>Không có ảnh cho phòng này</p>
@@ -388,11 +370,11 @@ const RoomStoreDetail: React.FC = () => {
           <div className='md:w-1/2 p-4'>
             <div className='flex justify-center items-center gap-3'>
               <h2 className='text-xl font-medium mb-2'>Thông tin phòng</h2>
-             {user?.roleName==="Store" && (
-               <Tooltip title='Chỉnh sửa' className='mr-1'>
-               <Edit2 strokeWidth={3} className='cursor-pointer w-4 text-primary' onClick={showModal} />
-             </Tooltip>
-             )}
+              {user?.roleName === 'Store' && (
+                <Tooltip title='Chỉnh sửa' className='mr-1'>
+                  <Edit2 strokeWidth={3} className='cursor-pointer w-4 text-primary' onClick={showModal} />
+                </Tooltip>
+              )}
             </div>
             <table className='w-full table-auto border-collapse border border-gray-300'>
               <tbody>
@@ -479,12 +461,12 @@ const RoomStoreDetail: React.FC = () => {
             </table>
             <div className='flex justify-between items-center mb-4 mt-10'>
               <h2 className='text-xl font-semibold mb-2'>Tiện ích trong phòng</h2>
-             {user?.roleName ==="Store" &&(
-               <Button variant='outline' className='text-primary' onClick={showAddModal}>
-               <Plus />
-               Thêm tiện ích
-             </Button>
-             )}
+              {user?.roleName === 'Store' && (
+                <Button variant='outline' className='text-primary' onClick={showAddModal}>
+                  <Plus />
+                  Thêm tiện ích
+                </Button>
+              )}
             </div>
             <Table className='w-full border border-gray-300'>
               <TableHeader>
@@ -516,24 +498,24 @@ const RoomStoreDetail: React.FC = () => {
                       <TableCell>
                         <p className='text-gray-500'>{amity.description || 'Không có mô tả'}</p>
                       </TableCell>
-                    {user?.roleName==="Store" && (
+                      {user?.roleName === 'Store' && (
                         <TableCell className='p-2 flex items-center'>
-                        <Edit
-                          className='h-5 w-5 text-green-500 cursor-pointer mr-2'
-                          onClick={() => {
-                            setCurrentAmity(amity)
-                            setEditModalVisible(true)
-                          }}
-                        />
-                        <Trash
-                          className='h-5 w-5 text-red-500 cursor-pointer'
-                          onClick={() => {
-                            setCurrentAmity(amity)
-                            setDeleteModalVisible(true)
-                          }}
-                        />
-                      </TableCell>
-                    )}
+                          <Edit
+                            className='h-5 w-5 text-green-500 cursor-pointer mr-2'
+                            onClick={() => {
+                              setCurrentAmity(amity)
+                              setEditModalVisible(true)
+                            }}
+                          />
+                          <Trash
+                            className='h-5 w-5 text-red-500 cursor-pointer'
+                            onClick={() => {
+                              setCurrentAmity(amity)
+                              setDeleteModalVisible(true)
+                            }}
+                          />
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))
                 ) : (

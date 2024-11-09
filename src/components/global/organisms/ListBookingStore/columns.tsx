@@ -1,65 +1,12 @@
 import { ColumnDef } from '@tanstack/react-table'
 
-import { Tag, Tooltip } from 'antd'
-import { DataTableColumnHeader } from '../table/col-header'
-// import { statuses } from './data/data'
-import { Task } from './data/schema'
-import { DataTableRowActions } from './row-actions'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/global/atoms/ui/avatar'
-import { Badge } from '../../atoms/ui/badge'
-import { Book, CheckCircle, Coffee, Edit2, Eye, Plus, User, UserCheck, Users, XCircle } from 'lucide-react'
-import { Button } from '../../atoms/ui/button'
+import { Tag } from 'antd'
 import { Button as ButtonAnt } from 'antd/lib'
-import { Link, useNavigate } from 'react-router-dom'
-// Define the interface for the Service
-// interface Service {
-//   Service_StationID:string
-//   ServiceID: string
-//   Price: number
-//   Name: string
-//   ImageUrl: string
-// }
+import { CheckCircle, Eye, User, UserCheck, XCircle } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Badge } from '../../atoms/ui/badge'
+import { DataTableColumnHeader } from '../table/col-header'
 
-// // Define the interface for the ServiceType
-// interface ServiceType {
-//   ServiceTypeID: string
-//   ServiceTypeName: string
-//   ServiceInStation: Service[]
-// }
-
-// // Define the interface for the Station
-// interface Station {
-//   StationID: string
-//   CityID: string
-//   CityName: string
-//   StationName: string
-//   Status: string
-//   ServiceTypeInStation: ServiceType[]
-// }
-
-// interface Amenity {
-//   id: number
-//   name: string
-//   type: string
-//   status: boolean
-//   quantity: number
-//   description: string
-// }
-
-// interface Room {
-//   roomId: number
-//   roomName: string
-//   storeName: string
-//   capacity: number
-//   pricePerHour: number
-//   description: string
-//   status: boolean
-//   area: number
-//   type: string
-//   image: string
-//   address: string
-//   amitiesInRoom: Amenity[]
-// }
 interface Booking {
   bookingId: number
   userName: string
@@ -134,16 +81,16 @@ export const columns = (
       accessorKey: 'gender',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Giới tính' />,
       cell: ({ row }) => {
-        const genderValue = row.getValue('gender');
+        const genderValue = row.getValue('gender')
         return (
-          <div className="flex justify-center items-center">
+          <div className='flex justify-center items-center'>
             {genderValue === 'XX' ? (
-              <User  className="text-pink-500 w-5 h-5" /> // Female icon with styling
+              <User className='text-pink-500 w-5 h-5' /> // Female icon with styling
             ) : (
-              <UserCheck  className="text-blue-500 w-5 h-5" /> // Male icon with styling
+              <UserCheck className='text-blue-500 w-5 h-5' /> // Male icon with styling
             )}
           </div>
-        );
+        )
       },
       filterFn: (row, id, value) => value.includes(row.getValue(id))
     },
@@ -151,9 +98,9 @@ export const columns = (
       accessorKey: 'bookedDate',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Ngày đặt' />,
       cell: ({ row }) => {
-        const rawDate = row.getValue('bookedDate') as string 
+        const rawDate = row.getValue('bookedDate') as string
         const dateObject = new Date(rawDate)
-        const formattedDate = !isNaN(dateObject.getTime()) 
+        const formattedDate = !isNaN(dateObject.getTime())
           ? dateObject.toLocaleDateString('vi-VN', {
               day: '2-digit',
               month: '2-digit',
@@ -170,7 +117,7 @@ export const columns = (
       cell: ({ row }) => <div>{row.getValue('bookedTime')}</div>,
       filterFn: (row, id, value) => value.includes(row.getValue(id))
     },
-    
+
     {
       accessorKey: 'roomName',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Tên phòng' />,
@@ -181,15 +128,10 @@ export const columns = (
       accessorKey: 'status',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Trạng thái' />,
       cell: ({ row }) => {
-        const statusValue = row.getValue('status') as string;
-        const tagColor =
-          statusValue === 'PAID'
-            ? 'green'
-            : statusValue === 'CANCEL'
-            ? 'red'
-            : 'orange';
-    
-        return <Tag color={tagColor}>{statusValue}</Tag>;
+        const statusValue = row.getValue('status') as string
+        const tagColor = statusValue === 'PAID' ? 'green' : statusValue === 'CANCEL' ? 'red' : 'orange'
+
+        return <Tag color={tagColor}>{statusValue}</Tag>
       },
       filterFn: (row, id, value) => value.includes(row.getValue(id))
     },
@@ -214,35 +156,23 @@ export const columns = (
       accessorKey: 'spaceType',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Loại không gian' />,
       cell: ({ row }) => {
-        const spaceType = row.getValue('spaceType') as string;
-    
+        const spaceType = row.getValue('spaceType') as string
+
         // Determine tag color and icon based on the space type
         const getSpaceTypeTag = () => {
           switch (spaceType) {
             case 'Library Space':
-              return (
-                <Tag color="blue"  >
-                  Thư viện
-                </Tag>
-              );
+              return <Tag color='blue'>Thư viện</Tag>
             case 'Meeting Room':
-              return (
-                <Tag color="green">
-                  Phòng họp
-                </Tag>
-              );
+              return <Tag color='green'>Phòng họp</Tag>
             case 'Coffee Space':
-              return (
-                <Tag color="orange" >
-                  Quán cà phê
-                </Tag>
-              );
+              return <Tag color='orange'>Quán cà phê</Tag>
             default:
-              return <Tag>{spaceType}</Tag>; // Default fallback if needed
+              return <Tag>{spaceType}</Tag> // Default fallback if needed
           }
-        };
-    
-        return <div>{getSpaceTypeTag()}</div>;
+        }
+
+        return <div>{getSpaceTypeTag()}</div>
       },
       filterFn: (row, id, value) => value.includes(row.getValue(id))
     },
@@ -250,17 +180,17 @@ export const columns = (
       accessorKey: 'checkin',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Checkin' />,
       cell: ({ row }) => {
-        const checkinStatus = row.getValue('checkin');
-    
+        const checkinStatus = row.getValue('checkin')
+
         return checkinStatus ? (
-          <div className="flex items-center text-green-500">
-            <CheckCircle size={20} className="mr-1" />
+          <div className='flex items-center text-green-500'>
+            <CheckCircle size={20} className='mr-1' />
           </div>
         ) : (
-          <div className="flex items-center text-red-500">
-            <XCircle size={20} className="mr-1" />
+          <div className='flex items-center text-red-500'>
+            <XCircle size={20} className='mr-1' />
           </div>
-        );
+        )
       },
       // filterFn: (row, id, value) => value.includes(row.getValue(id))
       filterFn: (row, id, filterValue) => {
@@ -272,24 +202,23 @@ export const columns = (
       accessorKey: 'transaction',
       header: ({ column }) => <DataTableColumnHeader column={column} title='Xem giao dịch' />,
       cell: ({ row }) => {
-        const bookingId = row.getValue('bookingId') as number;
-        
+        const bookingId = row.getValue('bookingId') as number
+
         const handleViewTransaction = () => {
-          fetchTransactionDetails(bookingId);
-        };
+          fetchTransactionDetails(bookingId)
+        }
 
         return (
           <div>
-            <ButtonAnt 
-              icon={<Eye className='w-6 h-6 text-primary'/>} // Icon to view transaction
+            <ButtonAnt
+              icon={<Eye className='w-6 h-6 text-primary' />} // Icon to view transaction
               onClick={handleViewTransaction}
-              type="link"
+              type='link'
             />
           </div>
-        );
+        )
       },
       enableHiding: false
-    },
-   
+    }
   ]
 }

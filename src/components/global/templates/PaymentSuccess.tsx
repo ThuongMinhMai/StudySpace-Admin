@@ -1,14 +1,11 @@
 import { Link } from 'react-router-dom'
 import paymentSuccess from '../../../assets/welcom.avif'
 // import { useAuth } from '@/auth/AuthProvider'
-import { useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/auth/AuthProvider'
 
 function PaymentSuccess() {
   const { fetchUser } = useAuth()
-  // const queryClient = useQueryClient()
-  // localStorage.removeItem('invoiceData')
-  // queryClient.invalidateQueries({ queryKey: ['userDetail', user?.UserID] })
+  
   const handleLinkClick = () => {
     fetchUser()
   }
