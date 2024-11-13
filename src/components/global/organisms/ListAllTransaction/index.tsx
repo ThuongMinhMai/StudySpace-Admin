@@ -66,6 +66,7 @@ interface Transaction {
   roomName: string | null
   userName: string
   avatar: string
+  hastag:string | null
 }
 interface ApiResponse<T> {
   data: T

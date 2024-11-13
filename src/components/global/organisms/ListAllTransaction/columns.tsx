@@ -4,13 +4,13 @@ import { Tag } from 'antd'
 import { DataTableColumnHeader } from '../table/col-header'
 // import { statuses } from './data/data'
 import {
-  CreditCardFilled // Alternative icon for Debit Card
-  ,
+  CreditCardFilled, // Alternative icon for Debit Card
   CreditCardOutlined,
   DollarOutlined,
   PayCircleOutlined
-} from '@ant-design/icons'; // Import icons from Ant Design
+} from '@ant-design/icons' // Import icons from Ant Design
 import { Badge } from '../../atoms/ui/badge'
+import { formatPrice } from '@/lib/utils'
 
 interface Transaction {
   id: number
@@ -23,6 +23,7 @@ interface Transaction {
   roomName: string | null
   userName: string
   avatar: string
+  hastag: string | null
 }
 export const columns = (
   handleStatusChange: (transaction: Transaction, status: string) => void,
@@ -33,6 +34,22 @@ export const columns = (
     accessorKey: 'id',
     header: ({ column }) => null,
     cell: ({ row }) => null
+  },
+  {
+    accessorKey: 'hastag',
+    header: ({ column }) => <DataTableColumnHeader column={column} title='Mã giao dịch' />,
+    cell: ({ row }) => {
+      const hastag = (row.getValue('hastag') as string) || 'Không có sẵn'
+      return (
+        <div className='flex space-x-2'>
+          {/* <Tooltip title='Chỉnh sửa' className='mr-1'>
+          <Edit2 className='cursor-pointer w-4 text-primary' onClick={() => handleEditName(row.original, row.getValue('StationName'))} />
+          </Tooltip> */}
+          <span className='max-w-[500px] truncate font-medium'>{hastag}</span>
+        </div>
+      )
+    },
+    enableHiding: false
   },
   {
     accessorKey: 'avatar',
@@ -71,7 +88,7 @@ export const columns = (
     accessorKey: 'packageName',
     header: ({ column }) => <DataTableColumnHeader column={column} title='Tên gói' />,
     cell: ({ row }) => {
-      const packageName = row.getValue('packageName') as string // Get the package name
+      const packageName = (row.getValue('packageName') as string) || 'BOOKING' // Get the package name
 
       // Define the color based on the package type
       let color: 'default' | 'success' | 'warning' | 'error' | 'processing' | 'success' | 'info'
@@ -79,6 +96,8 @@ export const columns = (
         color = 'success' // Green for luxury
       } else if (packageName === 'ADVANCE') {
         color = 'warning' // Yellow for advance
+      } else if (packageName === 'BOOKING') {
+        color = 'default'
       } else {
         color = 'processing' // Default for basic or other packages
       }
@@ -87,6 +106,7 @@ export const columns = (
     },
     filterFn: (row, id, value) => value.includes(row.getValue(id))
   },
+
   {
     accessorKey: 'date',
     header: ({ column }) => <DataTableColumnHeader column={column} title='Ngày giao dịch' />,
@@ -155,7 +175,7 @@ export const columns = (
   {
     accessorKey: 'fee',
     header: ({ column }) => <DataTableColumnHeader column={column} title='Chi phí' />,
-    cell: ({ row }) => <div>{row.getValue('fee')}</div>,
+    cell: ({ row }) => <div>{formatPrice(row.getValue('fee'))}</div>,
     filterFn: (row, id, value) => value.includes(row.getValue(id))
   },
   {

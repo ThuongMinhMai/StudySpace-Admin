@@ -13,6 +13,7 @@ import LogoFull2 from '../../../assets/LOGO SS ()-01.png'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/auth/AuthProvider'
 import { fetchUserDetail } from '../../../apis/userAPI'
+import Footer from '../molecules/Footer'
 
 function RouteLayout() {
   const { user, loading, logout } = useAuth()
@@ -120,6 +121,7 @@ function RouteLayout() {
           <Outlet />
         </div>
       </div>
+      <Footer/>
     </div>
   )
 }

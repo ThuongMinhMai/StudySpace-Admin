@@ -53,6 +53,7 @@ interface Transaction {
   status: string
   checkInDate: string
   checkOutDate: string
+  hastag: string | null
 }
 function ListBookingStore() {
   const { user } = useAuth()
@@ -155,6 +156,9 @@ function ListBookingStore() {
           {transactionData ? (
             // If transactionData is available, display its details
             <div className='space-y-2'>
+              <p className='text-gray-700'>
+                <span className='font-medium'>#</span> {transactionData.hastag || 'Không có sẵn'}
+              </p>
               <p className='text-gray-700'>
                 <span className='font-medium'>Tên người dùng:</span> {transactionData.userName}
               </p>
