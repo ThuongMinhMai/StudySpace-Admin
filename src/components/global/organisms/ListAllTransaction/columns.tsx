@@ -45,7 +45,7 @@ export const columns = (
           {/* <Tooltip title='Chỉnh sửa' className='mr-1'>
           <Edit2 className='cursor-pointer w-4 text-primary' onClick={() => handleEditName(row.original, row.getValue('StationName'))} />
           </Tooltip> */}
-          <span className='max-w-[500px] truncate font-medium'>{hastag}</span>
+          <span className='max-w-[500px] truncate font-medium'># {hastag}</span>
         </div>
       )
     },
