@@ -13,6 +13,7 @@ interface Transaction {
   paymentMethod: string
   status: string
   type: string
+  hastag: string
 }
 
 function TransactionStore() {
@@ -77,53 +78,8 @@ function TransactionStore() {
                       {/* Use transaction.id directly here */}
                       <div className='flex items-center justify-between p-4'>
                         <p className='text-sm'>
-                          <strong>Transaction ID:</strong> {transaction.id}
+                          <strong># </strong> {transaction.hastag}
                         </p>
-                        <p className='text-sm'>
-                          <strong>Ngày:</strong> {new Date(transaction.date).toLocaleDateString()}
-                        </p>
-                        <p className='text-sm'>
-                          <strong>Phí:</strong> {transaction.fee.toFixed(2)}VNĐ
-                        </p>
-                        <p className='text-sm'>
-                          <strong>Phương thức thanh toán:</strong> {transaction.paymentMethod}
-                        </p>
-                        <p className='text-sm'>
-                          <strong>Trạng thái:</strong>{' '}
-                          {transaction.status === 'PAID' ? (
-                            <Tag color='green'>{transaction.status}</Tag>
-                          ) : (
-                            <Tag color='red'>{transaction.status}</Tag>
-                          )}
-                        </p>
-                        {/* <Button type='primary' onClick={() => showModal(transaction)}>
-                        View Details
-                      </Button> */}
-                        <p
-                          className={`text-sm font-semibold ${transaction.type === 'Room' ? 'text-blue-500' : 'text-green-500'}`}
-                        >
-                          {' '}
-                          <strong className='text-black font-bold'>Loại: </strong>
-                          {transaction.type}
-                        </p>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </div>
-          </Tabs.TabPane>
-          <Tabs.TabPane tab={<span className='font-medium'>Phòng</span>} key='Room'>
-            <div className=''>
-              {filteredTransactions.length === 0 ? (
-                <div>Không có giao dịch</div>
-              ) : (
-                <div className='space-y-4 mt-4'>
-                  {filteredTransactions.map((transaction, index) => (
-                    <Card key={`${transaction.id}-${index}`} hoverable>
-                      {' '}
-                      {/* Use transaction.id directly here */}
-                      <div className='flex items-center justify-between p-4'>
                         <p className='text-sm'>
                           <strong>Transaction ID:</strong> {transaction.id}
                         </p>
@@ -161,7 +117,7 @@ function TransactionStore() {
               )}
             </div>
           </Tabs.TabPane>
-          <Tabs.TabPane tab={<span className='font-medium'>Gói</span>} key='Package'>
+          <Tabs.TabPane tab={<span className='font-medium'>Phòng</span>} key='ROOM'>
             <div className=''>
               {filteredTransactions.length === 0 ? (
                 <div>Không có giao dịch</div>
@@ -172,6 +128,9 @@ function TransactionStore() {
                       {' '}
                       {/* Use transaction.id directly here */}
                       <div className='flex items-center justify-between p-4'>
+                        <p className='text-sm'>
+                          <strong># </strong> {transaction.hastag}
+                        </p>
                         <p className='text-sm'>
                           <strong>Transaction ID:</strong> {transaction.id}
                         </p>
@@ -196,7 +155,58 @@ function TransactionStore() {
                         View Details
                       </Button> */}
                         <p
-                          className={`text-sm font-semibold ${transaction.type === 'Room' ? 'text-blue-500' : 'text-green-500'}`}
+                          className={`text-sm font-semibold ${transaction.type === 'ROOM' ? 'text-blue-500' : 'text-green-500'}`}
+                        >
+                          {' '}
+                          <strong className='text-black font-bold'>Loại: </strong>
+                          {transaction.type}
+                        </p>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </div>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab={<span className='font-medium'>Gói</span>} key='PACKAGE'>
+            <div className=''>
+              {filteredTransactions.length === 0 ? (
+                <div>Không có giao dịch</div>
+              ) : (
+                <div className='space-y-4 mt-4'>
+                  {filteredTransactions.map((transaction, index) => (
+                    <Card key={`${transaction.id}-${index}`} hoverable>
+                      {' '}
+                      {/* Use transaction.id directly here */}
+                      <div className='flex items-center justify-between p-4'>
+                        <p className='text-sm'>
+                          <strong># </strong> {transaction.hastag}
+                        </p>
+                        <p className='text-sm'>
+                          <strong>Transaction ID:</strong> {transaction.id}
+                        </p>
+                        <p className='text-sm'>
+                          <strong>Ngày:</strong> {new Date(transaction.date).toLocaleDateString()}
+                        </p>
+                        <p className='text-sm'>
+                          <strong>Phí:</strong> {transaction.fee.toFixed(2)}VNĐ
+                        </p>
+                        <p className='text-sm'>
+                          <strong>Phương thức thanh toán:</strong> {transaction.paymentMethod}
+                        </p>
+                        <p className='text-sm'>
+                          <strong>Trạng thái:</strong>{' '}
+                          {transaction.status === 'PAID' ? (
+                            <Tag color='green'>{transaction.status}</Tag>
+                          ) : (
+                            <Tag color='red'>{transaction.status}</Tag>
+                          )}
+                        </p>
+                        {/* <Button type='primary' onClick={() => showModal(transaction)}>
+                        View Details
+                      </Button> */}
+                        <p
+                          className={`text-sm font-semibold ${transaction.type === 'ROOM' ? 'text-blue-500' : 'text-green-500'}`}
                         >
                           <strong className='text-black font-bold'>Loại: </strong>
                           {transaction.type}
@@ -224,6 +234,9 @@ function TransactionStore() {
         {selectedTransaction && (
           <div className='p-4'>
             <h2 className='font-semibold text-xl'>Transaction ID: {selectedTransaction.id}</h2>
+            <p className='text-sm'>
+              <strong># </strong> {selectedTransaction.hastag}
+            </p>
             <p className='text-sm text-gray-500'>
               <strong>Date:</strong> {new Date(selectedTransaction.date).toLocaleDateString()}
             </p>
